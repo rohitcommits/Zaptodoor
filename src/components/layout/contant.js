@@ -1,4 +1,3 @@
-import { useState } from "react";
 import boy from  "../../assets/image copy 4.png"
 import Ecosystem from "../layout/Ecosystem"
 import Slider from "./Slider"

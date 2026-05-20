@@ -361,19 +361,7 @@ function Header() {
               delivery !
             </h1>
 
-            {/* Right side under heading */}
-            <a
-              href="https://play.google.com/store/apps/details?id=com.zaptodoor.user"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                width: "90%",
-                maxWidth: "800px",
-                display: "flex",
-                justifyContent: "flex-end",
-                textDecoration: "none",
-              }}
-            ></a>
+          
           </div>
 
           {/* Search Inputs */}
