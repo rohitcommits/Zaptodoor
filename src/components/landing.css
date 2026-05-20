@@ -1,0 +1,904 @@
+/* =========================
+   GLOBAL RESET & BASE
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  background: #000;
+  color: #fff;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+.hero {
+  width: 100%;
+  height: 100vh;
+  padding: 30px 80px;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.2)),
+    url("https://zaptodoor.com/upload/file_698c2b0f1e0d08.25601906.jfif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+
+/* LOGO */
+.logo img {
+  height: 38px;
+}
+
+/* MENU */
+.menu {
+  list-style: none;
+  display: flex;
+  gap: 32px;
+  margin: 0;
+  align-items: center;
+}
+
+.menu li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* DOWNLOAD BUTTON */
+.download-btn {
+  background: #fff;
+  color: #000;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.download-btn:hover {
+  background: #f1f1f1;
+  color: #000;
+}
+
+/* HERO CONTENT */
+.hero-content {
+  max-width: 620px;
+  margin-top: 130px;
+}
+
+.hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 62px;
+  line-height: 1.15;
+  margin-bottom: 22px;
+  color: #fff;
+}
+
+.hero-content h1 span {
+  color: #f59e0b;
+  font-style: italic;
+}
+
+.hero-content p {
+  color: #d1d5db;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.store-btn img {
+  width: 175px;
+}
+
+/* STICKY NAVBAR */
+.navbar.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #000;
+  padding: 15px 80px;
+  z-index: 999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* MOBILE TOGGLE */
+.mobile-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #fff;
+  margin-left: auto;
+}
+
+.close-menu {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* =========================
+   FOOD HERO SECTION
+========================= */
+.food-hero {
+  position: relative;
+  padding: 50px 20px 200px;
+  background: none;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* CURVED SVG LINES */
+.curve {
+  position: absolute;
+  width: 320px;
+  height: 620px;
+  stroke: #111827;
+  stroke-width: 2;
+  fill: none;
+  opacity: 0.25;
+  z-index: 1;
+}
+
+.curve.left {
+  left: -130px;
+  top: -40px;
+}
+
+.curve.right {
+  right: -130px;
+  top: -40px;
+}
+
+/* TEXT CONTENT */
+.text-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.text-content h1 {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #111827;
+  margin-bottom: 22px;
+}
+
+.text-content .blue {
+  color: #2563eb;
+}
+
+.text-content .orange {
+  color: #f59e0b;
+}
+
+.text-content p {
+  max-width: 620px;
+  margin: 0 auto;
+  font-size: 18px;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+/* FLOATING FOOD IMAGES */
+.food-img {
+  position: absolute;
+  z-index: 2;
+  animation: float 7s ease-in-out infinite;
+}
+
+.food-img.burger {
+  width: 210px;
+  left: 6%;
+  top: 40%;
+}
+
+.food-img.pizza {
+  width: 210px;
+  right: 6%;
+  top: 44%;
+  animation-delay: 1.2s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+  100% { transform: translateY(0); }
+}
+
+/* STATS CARD */
+.stats-card {
+  position: absolute;
+  left: 50%;
+  bottom: -25px;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  padding: 34px 52px;
+  gap: 52px;
+  z-index: 3;
+}
+
+.stat {
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.stat:hover {
+  transform: translateY(-4px);
+}
+
+.stat h3 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.stat span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* STAR RATING */
+.star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.star {
+  font-size: 20px;
+  color: #fbbf24;
+}
+
+/* DIVIDER */
+.divider {
+  width: 1px;
+  height: 46px;
+  background: #e5e7eb;
+}
+
+/* =========================
+   WHY CHOOSE US SECTION
+========================= */
+.choose-section {
+  padding: 50px 0;
+}
+
+.section-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* CARD */
+.choose-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 18px;
+  min-height: 320px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.choose-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.14);
+}
+
+/* IMAGE */
+.card-image {
+  height: 180px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* BACKGROUNDS */
+.bg-orange { background: #fff3e8; }
+.bg-pink   { background: #fff1f7; }
+.bg-blue   { background: #eef6ff; }
+.bg-green  { background: #f1fff7; }
+.bg-purple { background: #f6f1ff; }
+
+/* TEXT */
+.choose-card h5 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.choose-card p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =========================
+   CTA SECTION
+========================= */
+.cta-section {
+  background: linear-gradient(135deg, #1c1c1c 0%, #111 100%);
+  color: #fff;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px auto;
+  overflow: hidden;
+  height: 280px;
+}
+
+.cta-left {
+  max-width: 600px;
+  margin-left: 100px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.brand img {
+  height: 45px;
+}
+
+.cta-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.cta-subtitle {
+  color: #b5b5b5;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.cta-right img {
+  width: 360px;
+  border-radius: 12px;
+  margin-right: 80px;
+}
+
+/* =========================
+   OUR ECOSYSTEM SECTION
+========================= */
+.ecosystem {
+  padding: 50px 20px 70px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.header h2 {
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.header h2 span:first-child {
+  color: #ff6a00;
+}
+
+.header p {
+  margin-top: 10px;
+  color: #6b7280;
+}
+
+/* LAYOUT */
+.eco-wrapper {
+  max-width: 1150px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* SLIDER */
+.slider {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.slide {
+  width: 100%;
+  display: none;
+  border-radius: 18px;
+}
+
+.slide.active {
+  display: block;
+}
+
+/* DOTS */
+.dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: .5;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.dot.active {
+  background: #ff6a00;
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* RIGHT ITEMS */
+.eco-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.eco-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+
+.eco-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.eco-left img.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.eco-text h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.eco-text p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* DOWNLOAD POPUP HOVER */
+.eco-item .download-btn {
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.eco-item .download-btn img.play {
+  width: 140px;
+  transition: .3s ease;
+}
+
+.eco-item .download-btn:hover img.play {
+  transform: scale(1.12);
+}
+
+.popup-text {
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s;
+}
+
+.popup-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #000 transparent transparent transparent;
+}
+
+.eco-item .download-btn:hover .popup-text {
+  opacity: 1;
+  bottom: 135%;
+}
+
+/* =========================
+   FOOTER
+========================= */
+#footer {
+  background-color: #000000;
+  color: #fff;
+}
+
+#footer a {
+  color: #FFD600;
+  transition: color .2s;
+}
+
+#footer a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+#footer .logo img {
+  height: 38px;
+}
+
+/* Support list */
+#footer .support-list li {
+  margin-bottom: .5rem;
+  color: #fff;
+}
+
+/* Social icons */
+#footer .social-links a {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-right: .5rem;
+}
+
+#footer .social-links a:hover {
+  color: #FFD600;
+}
+
+/* Footer links */
+#footer .footer-links h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+#footer .footer-links ul li a {
+  display: block;
+  margin-bottom: .5rem;
+  color: #fff;
+}
+
+#footer .footer-links ul li a:hover {
+  color: #FFD600;
+}
+
+/* Contact */
+#footer .footer-contact h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+#footer .footer-contact p,
+#footer .footer-contact span {
+  color: #fff;
+}
+
+/* Certified logos heading */
+.cert-title {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 3rem;
+  color: #fff;
+  line-height: 1.2;
+}
+
+/* Certificates container */
+.certificates {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Each logo card */
+.certificates img {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  max-width: 100px;
+  max-height: 100px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform .2s;
+}
+
+.certificates img:hover {
+  transform: translateY(-4px);
+}
+
+/* Copyright bar */
+.footer-bottom {
+  background-color: rgba(255, 255, 255, 0.1);
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 2rem;
+  color: #fff;
+  position: relative;
+}
+
+.footer-bottom .copyright-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.footer-bottom .copyright-year {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.footer-bottom .company-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Footer link reset */
+ul li a {
+  text-decoration: none !important;
+}
+
+.footer-about a {
+  text-decoration: none !important;
+}
+
+/* =========================
+   RESPONSIVE STYLES
+========================= */
+
+/* Hero & Navbar Mobile */
+@media (max-width: 768px) {
+  .hero {
+    padding: 25px;
+    height: auto;
+  }
+
+  .navbar.sticky {
+    padding: 15px 25px;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  .menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: auto;
+    background: #000;
+    flex-direction: column;
+    padding: 40px 25px;
+    gap: 20px;
+    transition: 0.3s;
+    z-index: 1000;
+    align-items: flex-start;
+  }
+
+  .menu.active {
+    right: 0;
+  }
+
+  .close-menu {
+    display: block;
+    align-self: flex-end;
+  }
+
+  .navbar > .download-btn {
+    display: none !important;
+  }
+
+  .hero-content h1 {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 1268px) {
+  .hero {
+    height: auto;
+  }
+}
+
+/* Food Hero Responsive */
+@media (max-width: 768px) {
+  .text-content h1 {
+    font-size: 38px;
+  }
+
+  .food-img {
+    display: none;
+  }
+
+  .stats-card {
+    flex-direction: row;
+    gap: 0px;
+    padding: 30px 10px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+  }
+
+  .stat h3 {
+    font-size: 20px;
+  }
+
+  .stat span {
+    font-size: 10px;
+  }
+
+  .curve.left {
+    left: -130px;
+    top: -40px;
+  }
+}
+
+/* Why Choose Us Mobile Slider */
+@media (max-width: 768px) {
+  .mobile-slider {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 16px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .mobile-slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-slider .col {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+
+  .card-image img {
+    object-fit: fill;
+  }
+}
+
+/* CTA Section Responsive */
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 10px 25px;
+  }
+
+  .cta-left {
+    max-width: 587px;
+    margin-left: 10px;
+  }
+
+  .brand img {
+    height: 30px;
+  }
+
+  .cta-title {
+    font-size: 13px;
+  }
+
+  .cta-subtitle {
+    font-size: 10px;
+  }
+
+  .cta-right img {
+    width: 200px;
+    padding-left: 10px;
+  }
+
+  .store-btn img {
+    width: 95px;
+  }
+}
+
+/* Ecosystem Responsive */
+@media (max-width: 900px) {
+  .eco-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    border: 2px solid #000;
+    border-radius: 12px;
+    padding: 20px;
+    background: #fff;
+    transition: .3s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  }
+}
+
+@media (max-width: 768px) {
+  .slide {
+    width: 96%;
+  }
+
+  .eco-text h3 {
+    font-size: 13px;
+  }
+
+  .eco-text p {
+    font-size: 0px;
+  }
+}

@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./components/layout/layout";
+import contant from "./components/layout/contant";
+import LandingPage from "./components/LandingPage";
+import  Slide from "./components/layout/Slider"
+import Aboutus from "./components/layout/About"
+
+import {Clone} from "./components/Clone"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ fontFamily: "Quicksand" }}>
+      <Router>
+        <Routes>
+          <Route path="/layout" element={<Layout />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/clone" element={<Clone />} />
+           <Route path="/About" element={<Aboutus />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
