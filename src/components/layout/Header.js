@@ -1,12 +1,11 @@
 import { useState } from "react";
 import logo from "../../assets/logozaptodoor.png";
-import BgVideo from "../../assets/vidssave.com Restaurant food cinematic video advertisement 1080P.mp4";
-import Bg2video from "../../assets/IMG_1531.MOV"
-import { MapPin, Search, Menu, X, Import } from "lucide-react";
-import play from "../../assets/image.png"
-import bulk from "../../assets/image copy.png"
-import mom from "../../assets/image copy 2.png"
-import food from "../../assets/image copy 3.png"
+
+import Bg2video from "../../assets/IMG_1531.MOV";
+import { MapPin, Search, Menu, X } from "lucide-react";
+import bulk from "../../assets/image copy.png";
+import mom from "../../assets/image copy 2.png";
+import food from "../../assets/image copy 3.png";
 import { Link } from "react-router-dom";
 
 function Header() {
@@ -15,30 +14,35 @@ function Header() {
   const cards = [
     {
       title: "EAT IN",
-      image: food
-    },{      title: "Take Away",
-      image: "https://www.shutterstock.com/shutterstock/photos/2314029789/display_1500/stock-photo-espresso-coffee-extraction-from-a-professional-coffee-machine-with-a-bottomless-filter-close-up-of-2314029789.jpg"
-
+      image: food,
+    },
+    {
+      title: "Take Away",
+      image:
+        "https://www.shutterstock.com/shutterstock/photos/2314029789/display_1500/stock-photo-espresso-coffee-extraction-from-a-professional-coffee-machine-with-a-bottomless-filter-close-up-of-2314029789.jpg",
     },
     {
       title: "mom chef",
-      image: mom
+      image: mom,
     },
     {
       title: "bulk",
-      image: bulk
-    }
-  ]; 
-  
+      image: bulk,
+    },
+  ];
+
   return (
     <>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      />
       <div
         style={{
           width: "100%",
           minHeight: "100vh",
           position: "relative",
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         {/* Background Video */}
@@ -54,7 +58,7 @@ function Header() {
             width: "100%",
             height: "100vh",
             objectFit: "cover",
-            zIndex: -2
+            zIndex: -2,
           }}
         >
           <source src={Bg2video} type="video/mp4" />
@@ -66,7 +70,7 @@ function Header() {
             position: "absolute",
             inset: 0,
             background: "rgba(0,0,0,0.5)",
-            zIndex: -1
+            zIndex: -1,
           }}
         />
 
@@ -84,7 +88,7 @@ function Header() {
             flexWrap: "wrap",
             gap: "10px",
             position: "relative",
-            zIndex: 1000
+            zIndex: 1000,
           }}
         >
           <img
@@ -93,7 +97,7 @@ function Header() {
             style={{
               width: "130px",
               height: "55px",
-              objectFit: "contain"
+              objectFit: "contain",
             }}
           />
 
@@ -105,30 +109,30 @@ function Header() {
               gap: "25px",
               fontSize: "16px",
               flexWrap: "wrap",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <strong>Home</strong>
-<Link
-  to="/About"
-  onClick={() => setIsDrawerOpen(false)}
-  style={{
-    color: "inherit",
-    textDecoration: "none",
-    display: "inline-block",
-  }}
->
-  <strong
-    style={{
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: "inherit",
-      fontWeight: "inherit",
-    }}
-  >
-    About Us
-  </strong>
-</Link>
+            <Link
+              to="/About"
+              onClick={() => setIsDrawerOpen(false)}
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              <strong
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                }}
+              >
+                About Us
+              </strong>
+            </Link>
             <strong>Press Release</strong>
             <strong>Services</strong>
             <strong>Contact</strong>
@@ -143,7 +147,7 @@ function Header() {
               background: "rgba(180,140,255,0.2)",
               backdropFilter: "blur(10px)",
               cursor: "pointer",
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}
           >
             <a
@@ -155,7 +159,7 @@ function Header() {
                 textDecoration: "none",
                 display: "flex",
                 alignItems: "center",
-                gap: "8px"
+                gap: "8px",
               }}
             >
               <i className="bi bi-google-play"></i>
@@ -173,7 +177,7 @@ function Header() {
               border: "none",
               color: "#fff",
               cursor: "pointer",
-              padding: "10px"
+              padding: "10px",
             }}
           >
             <Menu size={30} />
@@ -191,7 +195,7 @@ function Header() {
                 inset: 0,
                 background: "rgba(0,0,0,0.7)",
                 zIndex: 2000,
-                backdropFilter: "blur(5px)"
+                backdropFilter: "blur(5px)",
               }}
             />
 
@@ -213,7 +217,7 @@ function Header() {
                 gap: "30px",
                 transform: isDrawerOpen ? "translateX(0)" : "translateX(100%)",
                 transition: "transform 0.3s ease",
-                boxShadow: "-10px 0 30px rgba(0,0,0,0.5)"
+                boxShadow: "-10px 0 30px rgba(0,0,0,0.5)",
               }}
             >
               {/* Close Button */}
@@ -225,7 +229,7 @@ function Header() {
                   border: "none",
                   color: "#fff",
                   cursor: "pointer",
-                  padding: "10px"
+                  padding: "10px",
                 }}
               >
                 <X size={30} />
@@ -237,33 +241,53 @@ function Header() {
                   display: "flex",
                   flexDirection: "column",
                   gap: "25px",
-                  fontSize: "20px"
+                  fontSize: "20px",
                 }}
               >
-                <strong style={{ color: "#fff", cursor: "pointer" }} onClick={() => setIsDrawerOpen(false)}>Home</strong>
-<Link
-  to="/about"
-  onClick={() => setIsDrawerOpen(false)}
-  style={{
-    color: "inherit",
-    textDecoration: "none",
-    display: "inline-block",
-  }}
->
-  <strong
-    style={{
-      color: "#fff",
-      cursor: "pointer",
-      fontSize: "inherit",
-      fontWeight: "inherit",
-    }}
-  >
-    About Us
-  </strong>
-</Link>
-                <strong style={{ color: "#fff", cursor: "pointer" }} onClick={() => setIsDrawerOpen(false)}>Press Release</strong>
-                <strong style={{ color: "#fff", cursor: "pointer" }} onClick={() => setIsDrawerOpen(false)}>Services</strong>
-                <strong style={{ color: "#fff", cursor: "pointer" }} onClick={() => setIsDrawerOpen(false)}>Contact</strong>
+                <strong
+                  style={{ color: "#fff", cursor: "pointer" }}
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  Home
+                </strong>
+                <Link
+                  to="/about"
+                  onClick={() => setIsDrawerOpen(false)}
+                  style={{
+                    color: "inherit",
+                    textDecoration: "none",
+                    display: "inline-block",
+                  }}
+                >
+                  <strong
+                    style={{
+                      color: "#fff",
+                      cursor: "pointer",
+                      fontSize: "inherit",
+                      fontWeight: "inherit",
+                    }}
+                  >
+                    About Us
+                  </strong>
+                </Link>
+                <strong
+                  style={{ color: "#fff", cursor: "pointer" }}
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  Press Release
+                </strong>
+                <strong
+                  style={{ color: "#fff", cursor: "pointer" }}
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  Services
+                </strong>
+                <strong
+                  style={{ color: "#fff", cursor: "pointer" }}
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  Contact
+                </strong>
               </div>
 
               {/* Get App Button */}
@@ -276,7 +300,7 @@ function Header() {
                   backdropFilter: "blur(10px)",
                   cursor: "pointer",
                   fontWeight: "bold",
-                  width: "100%"
+                  width: "100%",
                 }}
               >
                 <a
@@ -289,7 +313,7 @@ function Header() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "8px"
+                    gap: "8px",
                   }}
                 >
                   <i className="bi bi-google-play"></i>
@@ -310,7 +334,7 @@ function Header() {
             paddingBottom: "40px",
             color: "#bdc3c7",
             paddingLeft: "20px",
-            paddingRight: "20px"
+            paddingRight: "20px",
           }}
         >
           <div
@@ -318,7 +342,7 @@ function Header() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              width: "100%"
+              width: "100%",
             }}
           >
             {/* Heading */}
@@ -330,14 +354,11 @@ function Header() {
                 maxWidth: "950px",
                 lineHeight: "1.3",
                 color: "#bdc3c7",
-                marginBottom: "15px"
+                marginBottom: "15px",
               }}
             >
-              Welcome To{" "}
-              <b style={{ color: "#6c5ce7" }}>
-                Zaptodoor 
-              </b>Food delivery !
-              
+              Welcome To <b style={{ color: "#6c5ce7" }}>Zaptodoor</b>Food
+              delivery !
             </h1>
 
             {/* Right side under heading */}
@@ -350,11 +371,9 @@ function Header() {
                 maxWidth: "800px",
                 display: "flex",
                 justifyContent: "flex-end",
-                textDecoration: "none"
+                textDecoration: "none",
               }}
-            >
-             
-            </a>
+            ></a>
           </div>
 
           {/* Search Inputs */}
@@ -366,7 +385,7 @@ function Header() {
               marginTop: "25px",
               justifyContent: "space-around",
               flexWrap: "wrap",
-              gap: "20px"
+              gap: "20px",
             }}
           >
             {/* LOCATION */}
@@ -374,7 +393,7 @@ function Header() {
               style={{
                 position: "relative",
                 flex: "1 1 250px",
-                minWidth: "200px"
+                minWidth: "200px",
               }}
             >
               <MapPin
@@ -385,7 +404,7 @@ function Header() {
                   left: "15px",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  zIndex: 2
+                  zIndex: 2,
                 }}
               />
 
@@ -401,7 +420,7 @@ function Header() {
                   color: "#fff",
                   fontSize: "16px",
                   outline: "none",
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
                 }}
               />
             </div>
@@ -411,7 +430,7 @@ function Header() {
               style={{
                 position: "relative",
                 flex: "1.5 1 300px",
-                minWidth: "200px"
+                minWidth: "200px",
               }}
             >
               <Search
@@ -422,7 +441,7 @@ function Header() {
                   left: "15px",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  zIndex: 2
+                  zIndex: 2,
                 }}
               />
 
@@ -438,11 +457,11 @@ function Header() {
                   color: "#fff",
                   fontSize: "16px",
                   outline: "none",
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
                 }}
               />
             </div>
-          </div> 
+          </div>
 
           {/* Cards */}
           <div
@@ -453,7 +472,7 @@ function Header() {
               flexWrap: "wrap",
               justifyContent: "center",
               paddingLeft: "20px",
-              paddingRight: "20px"
+              paddingRight: "20px",
             }}
           >
             {cards.map((item) => (
@@ -472,15 +491,14 @@ function Header() {
                   cursor: "pointer",
                   position: "relative",
                   overflow: "hidden",
-                  flexShrink: 0
+                  flexShrink: 0,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform =
                     "translateY(-10px) scale(1.03)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform =
-                    "translateY(0px) scale(1)";
+                  e.currentTarget.style.transform = "translateY(0px) scale(1)";
                 }}
               >
                 {/* Background Image */}
@@ -494,7 +512,7 @@ function Header() {
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    zIndex: -2
+                    zIndex: -2,
                   }}
                 />
 
@@ -505,7 +523,7 @@ function Header() {
                     inset: 0,
                     background:
                       "linear-gradient(rgba(0,0,0,0.5), rgba(108,92,231,0.6))",
-                    zIndex: -1
+                    zIndex: -1,
                   }}
                 />
 
@@ -513,7 +531,7 @@ function Header() {
                 <div
                   style={{
                     fontSize: "45px",
-                    marginBottom: "15px"
+                    marginBottom: "15px",
                   }}
                 >
                   {item.icon}
@@ -530,7 +548,7 @@ function Header() {
                     fontSize: "clamp(22px, 4vw, 28px)",
                     fontWeight: "bold",
                     color: "#fff",
-                    width: "70%"
+                    width: "70%",
                   }}
                 >
                   {item.title.toUpperCase()}
@@ -550,14 +568,14 @@ function Header() {
                     background: "rgba(255,255,255,0.15)",
                     backdropFilter: "blur(10px)",
                     border: "1px solid rgba(255,255,255,0.3)",
-                    boxShadow: "0 4px 15px rgba(0,0,0,0.4)"
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
                   }}
                 >
                   UPTO{" "}
                   <span
                     style={{
                       color: "#FFD700",
-                      fontSize: "clamp(20px, 4vw, 24px)"
+                      fontSize: "clamp(20px, 4vw, 24px)",
                     }}
                   >
                     60% OFF
@@ -578,7 +596,7 @@ function Header() {
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "25px",
-                    boxShadow: "0 5px 15px rgba(108,92,231,0.6)"
+                    boxShadow: "0 5px 15px rgba(108,92,231,0.6)",
                   }}
                 >
                   →
