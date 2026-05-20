@@ -1,11 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/layout";
 
-
-
-import Aboutus from "./components/layout/About"
-
-import {Clone} from "./components/Clone"
+import Aboutus from "./components/layout/About";
 
 function App() {
   return (
@@ -13,9 +9,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/layout" element={<Layout />} />
-      
-          <Route path="/clone" element={<Clone />} />
-           <Route path="/About" element={<Aboutus />} />
+          <Route path="/About" element={<Aboutus />} />
         </Routes>
       </Router>
     </div>
