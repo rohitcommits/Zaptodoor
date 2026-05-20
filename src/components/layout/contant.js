@@ -47,15 +47,6 @@ export default function Contant() {
   },
 ];
 
-
-const ECOSYSTEM = [
-  { logo: 'https://zaptodoor.com/upload/file_69733d54bd8048.36718955.webp', title: 'Customer App', subtitle: 'For Food Lovers', desc: 'Browse local restaurants, track orders live, get doorstep delivery.', color: '#22c55e', link: 'https://play.google.com/store/apps/details?id=com.zaptodoor.user' },
-  { logo: 'https://zaptodoor.com/upload/file_697b161f5a3f51.12535101.png', title: 'Business App', subtitle: 'For Restaurant & Store Owners', desc: 'Manage orders, track deliveries live, and grow your customer base.', color: '#3b82f6', link: 'https://play.google.com/store/apps/details?id=com.zaptodoor.business' },
-  { logo: 'https://zaptodoor.com/upload/file_69733ce12b7270.37050481.webp', title: 'Rider App', subtitle: 'For Delivery Partners', desc: 'Earn on your own schedule. Smart navigation. Maximise daily income.', color: '#7c3aed', link: 'https://play.google.com/store/apps/details?id=com.zaptodoor.delivery' }
-];
-const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [hoveredBadge, setHoveredBadge] = useState(null);
-
   return (
     <main style={{ width: '100%', overflowX: 'hidden' }}>
       {/* HERO */}
