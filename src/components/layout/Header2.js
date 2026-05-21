@@ -39,31 +39,37 @@ function HeaderPage() {
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       />
 
-      <header
-        style={{
-          width: "100%",
-          height: "70px",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 1000,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 48px",
-          boxSizing: "border-box",
-          background: scrolled
-            ? "rgba(8, 5, 22, 0.85)"
-            : "rgba(8, 5, 22, 0.4)",
-          backdropFilter: "blur(18px)",
-          WebkitBackdropFilter: "blur(18px)",
-          borderBottom: scrolled
-            ? "1px solid rgba(140, 100, 255, 0.15)"
-            : "1px solid rgba(255,255,255,0.06)",
-          transition: "all 0.35s ease",
-          fontFamily: "'DM Sans', sans-serif",
-        }}
-      >
+   <header
+  style={{
+    width: "100%",
+    height: "70px",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "0 48px",
+    boxSizing: "border-box",
+    
+
+    // ✅ DARK PURPLE BACKGROUND
+    background: scrolled
+      ? "rgba(32, 12, 60, 0.92)"
+      : "rgba(45, 16, 84, 0.88)",
+
+    backdropFilter: "blur(18px)",
+    WebkitBackdropFilter: "blur(18px)",
+
+    borderBottom: scrolled
+      ? "1px solid rgba(180, 140, 255, 0.18)"
+      : "1px solid rgba(255,255,255,0.08)",
+
+    transition: "all 0.35s ease",
+    fontFamily: "'DM Sans', sans-serif",
+  }}
+>
         {/* ── Glow strip ── */}
         <div style={{
           position: "absolute",

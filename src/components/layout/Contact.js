@@ -2,26 +2,39 @@ import React from "react";
 import Footer from "./Footer";
 import Headerpage from "./Header2.js";
 
+const inputStyle = {
+  width: "100%",
+  padding: "16px",
+  borderRadius: "16px",
+  border: "1px solid #e5e7eb",
+  outline: "none",
+  background: "#f9fafb",
+  fontSize: "15px",
+  color: "#111827",
+  boxSizing: "border-box",
+};
+
 const ContactPage = () => {
   return (
     <div
       style={{
         fontFamily: "'Poppins', sans-serif",
-        background: "#f8fafc",
+        background: "#f4f5fb",
         overflowX: "hidden",
         minHeight: "100vh",
       }}
     >
-        <Headerpage/>
+      <Headerpage />
+
       {/* HERO SECTION */}
       <section
         style={{
           position: "relative",
-          height: "120px",
-          padding: "20px",
+          minHeight: "120px",
+          padding: "20px 15px",
           textAlign: "center",
           background:
-            "linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#6d28d9 100%)",
+            "linear-gradient(135deg,#0b0417 0%,#160a2e 40%,#6d28d9 100%)",
           color: "#fff",
           display: "flex",
           flexDirection: "column",
@@ -30,14 +43,16 @@ const ContactPage = () => {
           overflow: "hidden",
         }}
       >
+        {/* GLOW EFFECT */}
         <div
           style={{
             position: "absolute",
             width: "220px",
             height: "220px",
-            background: "rgba(255,255,255,0.08)",
+            background: "rgba(168,85,247,0.16)",
+            filter: "blur(40px)",
             borderRadius: "50%",
-            top: "-100px",
+            top: "-120px",
             left: "-80px",
           }}
         />
@@ -47,7 +62,8 @@ const ContactPage = () => {
             position: "absolute",
             width: "180px",
             height: "180px",
-            background: "rgba(255,255,255,0.05)",
+            background: "rgba(124,58,237,0.14)",
+            filter: "blur(35px)",
             borderRadius: "50%",
             bottom: "-100px",
             right: "-60px",
@@ -56,12 +72,13 @@ const ContactPage = () => {
 
         <h1
           style={{
-            fontSize: "34px",
+            fontSize: "clamp(28px,4vw,48px)",
             fontWeight: "700",
             marginBottom: "6px",
             position: "relative",
             zIndex: 2,
-            lineHeight: "1",
+            letterSpacing: "-0.5px",
+            lineHeight: "1.1",
           }}
         >
           Contact <span style={{ color: "#c084fc" }}>Us</span>
@@ -71,11 +88,12 @@ const ContactPage = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            gap: "8px",
+            gap: "6px",
             fontSize: "13px",
             position: "relative",
             zIndex: 2,
             opacity: 0.9,
+            flexWrap: "wrap",
           }}
         >
           <span>Home</span>
@@ -100,23 +118,27 @@ const ContactPage = () => {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))",
             gap: "35px",
-            alignItems: "start",
+            alignItems: "stretch",
           }}
         >
           {/* LEFT CARD */}
           <div
             style={{
-              background: "#fff",
-              borderRadius: "28px",
-              padding: "35px",
-              boxShadow: "0 10px 35px rgba(0,0,0,0.08)",
+              background: "rgba(255,255,255,0.75)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,255,255,0.4)",
+              borderRadius: "30px",
+              padding: "38px",
+              boxShadow: "0 10px 45px rgba(109,40,217,0.12)",
             }}
           >
             <h2
               style={{
-                fontSize: "30px",
+                fontSize: "32px",
                 marginBottom: "35px",
                 color: "#111827",
+                fontWeight: "700",
               }}
             >
               Get in Touch
@@ -127,32 +149,38 @@ const ContactPage = () => {
               style={{
                 display: "flex",
                 gap: "18px",
-                marginBottom: "30px",
+                marginBottom: "28px",
+                alignItems: "flex-start",
               }}
             >
               <div
                 style={{
-                  minWidth: "55px",
-                  height: "55px",
-                  borderRadius: "14px",
-                  background: "#7c3aed",
+                  minWidth: "58px",
+                  height: "58px",
+                  borderRadius: "18px",
+                  background:
+                    "linear-gradient(135deg,#7c3aed,#9333ea)",
                   color: "#fff",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "22px",
+                  fontSize: "24px",
+                  boxShadow: "0 10px 25px rgba(124,58,237,0.35)",
                 }}
               >
-                📍
+                🏢
               </div>
 
               <div
                 style={{
                   lineHeight: "1.8",
                   color: "#4b5563",
+                  fontSize: "15px",
                 }}
               >
-                <strong>ZAPTODOOR PRIVATE LIMITED</strong>
+                <strong style={{ color: "#111827" }}>
+                  ZAPTODOOR PRIVATE LIMITED
+                </strong>
                 <br />
                 Gwalior, Madhya Pradesh
               </div>
@@ -163,35 +191,35 @@ const ContactPage = () => {
               style={{
                 display: "flex",
                 gap: "18px",
-                marginBottom: "30px",
+                marginBottom: "28px",
+                alignItems: "flex-start",
               }}
             >
               <div
                 style={{
-                  minWidth: "55px",
-                  height: "55px",
-                  borderRadius: "14px",
-                  background: "#7c3aed",
+                  minWidth: "58px",
+                  height: "58px",
+                  borderRadius: "18px",
+                  background:
+                    "linear-gradient(135deg,#7c3aed,#9333ea)",
                   color: "#fff",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "22px",
+                  fontSize: "24px",
+                  boxShadow: "0 10px 25px rgba(124,58,237,0.35)",
                 }}
               >
-                📞
+                ☎️
               </div>
 
-              <div
-                style={{
-                  lineHeight: "2",
-                }}
-              >
+              <div style={{ lineHeight: "2" }}>
                 <a
                   href="tel:+919200018690"
                   style={{
                     color: "#4b5563",
                     textDecoration: "none",
+                    fontSize: "15px",
                   }}
                 >
                   +91 9200018690
@@ -204,6 +232,7 @@ const ContactPage = () => {
                   style={{
                     color: "#4b5563",
                     textDecoration: "none",
+                    fontSize: "15px",
                   }}
                 >
                   +91 83700 83744 (IVR)
@@ -217,22 +246,25 @@ const ContactPage = () => {
                 display: "flex",
                 gap: "18px",
                 marginBottom: "35px",
+                alignItems: "flex-start",
               }}
             >
               <div
                 style={{
-                  minWidth: "55px",
-                  height: "55px",
-                  borderRadius: "14px",
-                  background: "#7c3aed",
+                  minWidth: "58px",
+                  height: "58px",
+                  borderRadius: "18px",
+                  background:
+                    "linear-gradient(135deg,#7c3aed,#9333ea)",
                   color: "#fff",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "22px",
+                  fontSize: "24px",
+                  boxShadow: "0 10px 25px rgba(124,58,237,0.35)",
                 }}
               >
-                ✉️
+                📩
               </div>
 
               <div>
@@ -241,6 +273,7 @@ const ContactPage = () => {
                   style={{
                     color: "#4b5563",
                     textDecoration: "none",
+                    fontSize: "15px",
                   }}
                 >
                   info@zaptodoor.com
@@ -251,13 +284,14 @@ const ContactPage = () => {
             {/* MAP */}
             <div
               style={{
-                borderRadius: "20px",
+                borderRadius: "24px",
                 overflow: "hidden",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
               }}
             >
               <iframe
                 title="map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.662177972788!2d78.17027697498769!3d26.207665490034653!2m3!1f0!2f0!3f0!2i1024!2i768!4f13.1!3m3!1m2!1s0x3976c570bc507f51%3A0xbb925da31503b827!2sZaptodoor!5e0!3m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.662177972788!2d78.17027697498769!3d26.207665490034653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c570bc507f51%3A0xbb925da31503b827!2sZaptodoor!5e0!3m2!1sen!2sin"
                 width="100%"
                 height="320"
                 style={{
@@ -273,16 +307,20 @@ const ContactPage = () => {
           <div
             style={{
               background: "#fff",
-              borderRadius: "28px",
-              padding: "35px",
-              boxShadow: "0 10px 35px rgba(0,0,0,0.08)",
+              borderRadius: "30px",
+              padding: "40px",
+              boxShadow: "0 10px 45px rgba(109,40,217,0.12)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
             }}
           >
             <h2
               style={{
-                fontSize: "30px",
+                fontSize: "32px",
                 marginBottom: "35px",
                 color: "#111827",
+                fontWeight: "700",
               }}
             >
               Send a Message
@@ -292,135 +330,46 @@ const ContactPage = () => {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "22px",
+                  gridTemplateColumns:
+                    "repeat(auto-fit,minmax(220px,1fr))",
+                  gap: "20px",
                 }}
               >
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "10px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Full Name *
-                  </label>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  style={inputStyle}
+                />
 
-                  <input
-                    type="text"
-                    placeholder="Your Name"
-                    style={{
-                      width: "100%",
-                      padding: "15px",
-                      borderRadius: "14px",
-                      border: "1px solid #ddd",
-                      outline: "none",
-                    }}
-                  />
-                </div>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  style={inputStyle}
+                />
 
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "10px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Email *
-                  </label>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  style={inputStyle}
+                />
 
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    style={{
-                      width: "100%",
-                      padding: "15px",
-                      borderRadius: "14px",
-                      border: "1px solid #ddd",
-                      outline: "none",
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "10px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Phone *
-                  </label>
-
-                  <input
-                    type="tel"
-                    placeholder="10-digit number"
-                    style={{
-                      width: "100%",
-                      padding: "15px",
-                      borderRadius: "14px",
-                      border: "1px solid #ddd",
-                      outline: "none",
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "10px",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Subject
-                  </label>
-
-                  <input
-                    type="text"
-                    placeholder="Message subject"
-                    style={{
-                      width: "100%",
-                      padding: "15px",
-                      borderRadius: "14px",
-                      border: "1px solid #ddd",
-                      outline: "none",
-                    }}
-                  />
-                </div>
+                <input
+                  type="text"
+                  placeholder="Subject"
+                  style={inputStyle}
+                />
               </div>
 
-              <div
+              <textarea
+                rows="7"
+                placeholder="Write your message..."
                 style={{
-                  marginTop: "22px",
+                  ...inputStyle,
+                  marginTop: "20px",
+                  resize: "none",
+                  paddingTop: "18px",
                 }}
-              >
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "10px",
-                    fontWeight: "600",
-                  }}
-                >
-                  Message *
-                </label>
-
-                <textarea
-                  rows="7"
-                  placeholder="Write your message..."
-                  style={{
-                    width: "100%",
-                    padding: "18px",
-                    borderRadius: "18px",
-                    border: "1px solid #ddd",
-                    resize: "none",
-                    outline: "none",
-                  }}
-                ></textarea>
-              </div>
+              ></textarea>
 
               <button
                 type="submit"
@@ -431,11 +380,13 @@ const ContactPage = () => {
                     "linear-gradient(135deg,#7c3aed,#9333ea)",
                   color: "#fff",
                   border: "none",
-                  padding: "16px",
-                  borderRadius: "16px",
+                  padding: "17px",
+                  borderRadius: "18px",
                   fontSize: "16px",
                   fontWeight: "600",
                   cursor: "pointer",
+                  boxShadow:
+                    "0 12px 30px rgba(124,58,237,0.35)",
                 }}
               >
                 Send Message →
@@ -444,7 +395,8 @@ const ContactPage = () => {
           </div>
         </div>
       </section>
-      <Footer/>
+
+      <Footer />
     </div>
   );
 };
