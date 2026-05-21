@@ -34,97 +34,117 @@ const About = () => {
   const styles = {
     container: {
       margin: 0,
+
       padding: 0,
       boxSizing: "border-box",
       fontFamily: "'DM Sans', Arial, sans-serif",
       background: "#08051a",
     },
 
-    hero: {
-      position: "relative",
-      background: "linear-gradient(160deg, #0f0b28 0%, #1a0e3a 60%, #0c0820 100%)",
-      padding: "90px 20px 80px",
-      textAlign: "center",
-      overflow: "hidden",
-      borderBottom: "1px solid rgba(140,100,255,0.12)",
-    },
+hero: {
+  position: "relative",
+  background: "linear-gradient(160deg, #0f0b28 0%, #1a0e3a 60%, #0c0820 100%)",
+  height: "120px",
+  marginTop: "20px",
 
-    heroShape: {
-      position: "absolute",
-      borderRadius: "50%",
-      background: "rgba(120,80,255,0.08)",
-      pointerEvents: "none",
-    },
+  paddingTop: "10px",
+  paddingLeft: "20px",
+  paddingRight: "20px",
+  paddingBottom: "clamp(12px, 3vw, 30px)", // responsive
 
-    heroTitle: {
-      fontSize: "clamp(36px, 6vw, 60px)",
-      fontWeight: "800",
-      color: "#f0eeff",
-      marginBottom: "12px",
-      position: "relative",
-      zIndex: 1,
-      fontFamily: "'Syne', sans-serif",
-      letterSpacing: "-0.02em",
-      lineHeight: 1.1,
-    },
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  textAlign: "center",
+  overflow: "hidden",
+  borderBottom: "1px solid rgba(140,100,255,0.12)",
+},
 
-    heroTitleSpan: {
-      background: "linear-gradient(90deg, #a78bfa, #7c5af5, #c084fc)",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      backgroundClip: "text",
-    },
+heroShape: {
+  position: "absolute",
+  borderRadius: "50%",
+  background: "rgba(120,80,255,0.08)",
+  pointerEvents: "none",
+},
 
-    heroSubtitle: {
-      fontSize: "17px",
-      color: "rgba(255,255,255,0.45)",
-      marginBottom: "24px",
-      position: "relative",
-      zIndex: 1,
-      fontWeight: 300,
-    },
+heroTitle: {
+  fontSize: "clamp(26px,4vw,40px)",
+  fontWeight: "800",
+  color: "#f0eeff",
+  marginBottom: "4px",
+  position: "relative",
+  zIndex: 1,
+  fontFamily: "'Syne', sans-serif",
+  letterSpacing: "-0.02em",
+  lineHeight: 1,
+},
 
-    breadcrumb: {
-      display: "flex",
-      justifyContent: "center",
-      gap: "8px",
-      color: "rgba(255,255,255,0.35)",
-      position: "relative",
-      zIndex: 1,
-      fontSize: "14px",
-      alignItems: "center",
-    },
+heroTitleSpan: {
+  background: "linear-gradient(90deg, #b3a1e9, #8266f1, #c084fc)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
+},
 
-    breadcrumbLink: {
-      color: "#a78bfa",
-      textDecoration: "none",
-      fontWeight: 500,
-    },
+heroSubtitle: {
+  fontSize: "13px",
+  color: "rgba(255,255,255,0.45)",
+  marginBottom: "6px",
+  position: "relative",
+  zIndex: 1,
+  fontWeight: 300,
+  lineHeight: "1.2",
+},
 
-    breadcrumbCurrent: {
-      color: "rgba(255,255,255,0.65)",
-    },
+breadcrumb: {
+  display: "flex",
+  justifyContent: "center",
+  gap: "6px",
+  color: "rgba(255,255,255,0.35)",
+  position: "relative",
+  zIndex: 1,
+  fontSize: "11px",
+  alignItems: "center",
+},
+
+breadcrumbLink: {
+  color: "#a78bfa",
+  textDecoration: "none",
+  fontWeight: 500,
+},
+
+breadcrumbCurrent: {
+  color: "rgba(255,255,255,0.65)",
+},
 
     // ✅ White + purple light background
-    pageBg: {
-      background: "linear-gradient(160deg, #ffffff 0%, #f5f0ff 50%, #ede5ff 100%)",
-      padding: "60px 20px 80px",
-      minHeight: "100vh",
-    },
+   contentWrapper: {
+  width: "100%",
+  maxWidth: "100%",
+  margin: "0 auto",
+  padding: "0 10px", // left-right sirf 10px
+},
 
-    contentWrapper: {
-      maxWidth: "860px",
-      margin: "0 auto",
-    },
+contentCard: {
+  width: "100%",
+  background: "#ffffff",
+  borderRadius: "20px",
+  padding: "clamp(20px, 3vw, 40px)",
+  border: "1px solid rgba(140,100,255,0.2)",
+  boxShadow: "0 8px 40px rgba(120,80,255,0.1)",
+},
+
+pageBg: {
+background: "linear-gradient(135deg, #a795e0, #a497e5, #ede9fe)",
+  padding: "60px 0 80px", // yaha side padding hata diya
+  minHeight: "100vh",
+},
+
+ 
 
     // ✅ Light card for white bg
-    contentCard: {
-      background: "#ffffff",
-      borderRadius: "20px",
-      padding: "clamp(28px, 5vw, 52px)",
-      border: "1px solid rgba(140,100,255,0.2)",
-      boxShadow: "0 8px 40px rgba(120,80,255,0.1)",
-    },
+   
 
     lastUpdated: {
       fontSize: "0.8rem",

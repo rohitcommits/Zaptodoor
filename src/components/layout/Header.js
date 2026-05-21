@@ -112,7 +112,27 @@ function Header() {
               justifyContent: "center",
             }}
           >
-            <strong>Home</strong>
+            
+              <Link
+              to="/"
+              onClick={() => setIsDrawerOpen(false)}
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              <strong
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                }}
+              >
+              Home  
+              </strong>
+            </Link>
             <Link
               to="/About"
               onClick={() => setIsDrawerOpen(false)}
@@ -133,9 +153,68 @@ function Header() {
                 About Us
               </strong>
             </Link>
-            <strong>Press Release</strong>
-            <strong>Services</strong>
-            <strong>Contact</strong>
+            <Link
+              to="/Pressrelease"
+              onClick={() => setIsDrawerOpen(false)}
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              <strong
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                }}
+              >
+                Press Release
+              </strong>
+            </Link>
+            
+              <Link
+              to="/Services"
+              onClick={() => setIsDrawerOpen(false)}
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              <strong
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                }}
+              >
+                Services
+              </strong>
+            </Link>
+              <Link
+              to="/Contact"
+              onClick={() => setIsDrawerOpen(false)}
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "inline-block",
+              }}
+            >
+              <strong
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                }}
+              >
+                Contact
+              </strong>
+            </Link>
+         
           </div>
 
           <button

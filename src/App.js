@@ -2,6 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/layout";
 
 import Aboutus from "./components/layout/About";
+import ServicesPage from "./components/layout/Services";
+import ContactPage from "./components/layout/Contact";
+import Pressrelease from "./components/layout/Pressrelease"
 
 function App() {
   return (
@@ -10,6 +13,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />} />
           <Route path="/About" element={<Aboutus />} />
+          <Route path="/Services" element={<ServicesPage />} />
+          <Route path="/Contact" element={<ContactPage />} />
+          <Route path="/Pressrelease" element={<Pressrelease />} />
         </Routes>
       </Router>
     </div>

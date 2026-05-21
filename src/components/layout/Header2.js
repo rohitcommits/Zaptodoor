@@ -6,9 +6,9 @@ import { Link, useLocation } from "react-router-dom";
 const NAV = [
   { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
-  { label: "Press Release", to: null },
-  { label: "Services", to: null },
-  { label: "Contact", to: null },
+  { label: "Press Release", to: "/Pressrelease" },
+  { label: "Services", to: "/Services" },
+  { label: "Contact", to: "/Contact" },
 ];
 
 function HeaderPage() {

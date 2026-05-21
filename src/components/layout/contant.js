@@ -49,165 +49,149 @@ export default function Contant() {
   return (
     <main style={{ width: '100%', overflowX: 'hidden' }}>
       {/* HERO */}
-      <section style={{
-        position: 'relative',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '120px 20px 80px',
-        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle at 70% 30%, rgba(124,58,237,0.1) 0%, transparent 50%)',
-          pointerEvents: 'none'
-        }} />
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '60px',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          <div>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'white',
-              padding: '8px 20px',
-              borderRadius: '50px',
-              fontSize: '14px',
-              fontWeight: 500,
-              marginBottom: '24px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-            }}>
-              <span style={{
-                width: '8px',
-                height: '8px',
-                background: '#22c55e',
-                borderRadius: '50%',
-                display: 'inline-block',
-                animation: 'pulse 2s infinite'
-              }} />
-              Delivering across Gwalior & beyond
-            </div>
-            <h1 style={{
-              fontSize: 'clamp(36px, 5vw, 64px)',
-              fontWeight: 800,
-              lineHeight: 1.1,
-              margin: '0 0 24px',
-              color: '#0f172a'
-            }}>
-              Food you love,<br /><em style={{ color: '#7c3aed', fontStyle: 'normal' }}>delivered fast.</em>
-            </h1>
-            <p style={{
-              fontSize: '18px',
-              color: '#64748b',
-              lineHeight: 1.6,
-              marginBottom: '32px',
-              maxWidth: '500px'
-            }}>
-              Fresh flavours from 361+ restaurant partners, straight to your door.
-              Free delivery within 2 km. Every order, every time.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <a href="https://play.google.com/store/apps/details?id=com.zaptodoor.user" style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                background: '#7c3aed',
-                color: 'white',
-                padding: '16px 32px',
-                borderRadius: '12px',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: '16px',
-                width: 'fit-content',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(124,58,237,0.3)'
-              }} target="_blank" rel="noreferrer">
-                <i className="bi bi-google-play" /> Order Now
-              </a>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ color: '#f59e0b', fontSize: '18px' }}>
-                  {[1,2,3].map(i => <i key={i} className="bi bi-star-fill" />)}
-                  <i className="bi bi-star-half" />
-                  <i className="bi bi-star" />
-                </span>
-                <span style={{ color: '#64748b', fontSize: '14px' }}>3.7 · 1,600+ happy customers</span>
-              </div>
-            </div>
-          </div>
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{
-              background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
-              borderRadius: '40px',
-              // padding: '20px',
-              boxShadow: '0 25px 50px rgba(124,58,237,0.25)',
-              position: 'relative',
-              zIndex: 2
-            }}>
-              <img 
-                src={boy} 
-                alt="App preview" 
-                style={{
-                  width: '100%',
-                  maxWidth: '980px',
-                  height: 'auto',
-                  display: 'block',
-                  borderRadius:"10%"
-                }}
-              />
-            </div>
-            <div style={{
-              position: 'absolute',
-              top: '10%',
-              left: '-10%',
-              width: '80px',
-              height: '80px',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-              animation: 'float 3s ease-in-out infinite',
-              zIndex: 1
-            }}>
-              {/* <img 
-                src="https://zaptodoor.com/upload/file_6974665696f4a8.17625123.png" 
-                alt="" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              /> */}
-            </div>
-            <div style={{
-              position: 'absolute',
-              bottom: '15%',
-              right: '-5%',
-              width: '60px',
-              height: '60px',
-              borderRadius: '15px',
-              overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-              animation: 'float 3s ease-in-out infinite 1s',
-              zIndex: 1
-            }}>
-              {/* <img 
-                src="https://zaptodoor.com/upload/file_6974672d4f2a49.06039686.jpg" 
-                alt="" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              /> */}
-            </div>
-          </div>
-        </div>
-      </section>
+    {/* HERO */}
+<section
+  style={{
+    position: "relative",
+    minHeight: "90vh",
+    display: "flex",
+    alignItems: "center",
+    padding: "0px 20px 60px", // pehle 120px tha
+    marginTop: "0",
+    background:
+      "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+    overflow: "hidden",
+  }}
+>
+  <div
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background:
+        "radial-gradient(circle at 70% 30%, rgba(124,58,237,0.1) 0%, transparent 50%)",
+      pointerEvents: "none",
+    }}
+  />
+
+  <div
+    style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      width: "100%",
+      display: "grid",
+      gridTemplateColumns:
+        "repeat(auto-fit,minmax(300px,1fr))",
+      gap: "60px",
+      alignItems: "center",
+      position: "relative",
+      zIndex: 1,
+    }}
+  >
+    {/* LEFT */}
+    <div>
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "white",
+          padding: "8px 20px",
+          borderRadius: "50px",
+          fontSize: "14px",
+          fontWeight: 500,
+          marginBottom: "20px",
+          boxShadow:
+            "0 2px 8px rgba(0,0,0,0.08)",
+        }}
+      >
+        <span
+          style={{
+            width: "8px",
+            height: "8px",
+            background: "#22c55e",
+            borderRadius: "50%",
+            display: "inline-block",
+            animation: "pulse 2s infinite",
+          }}
+        />
+        Delivering across Gwalior & beyond
+      </div>
+
+      <h1
+        style={{
+          fontSize: "clamp(36px,5vw,64px)",
+          fontWeight: "800",
+          lineHeight: "1.1",
+          margin: "0 0 20px",
+          color: "#0f172a",
+        }}
+      >
+        Food you love,
+        <br />
+        <span style={{ color: "#7c3aed" }}>
+          delivered fast.
+        </span>
+      </h1>
+
+      <p
+        style={{
+          fontSize: "18px",
+          color: "#64748b",
+          lineHeight: "1.6",
+          marginBottom: "25px",
+          maxWidth: "500px",
+        }}
+      >
+        Fresh flavours from 361+ restaurant
+        partners, straight to your door.
+        Free delivery within 2 km.
+      </p>
+
+      <a
+        href="https://play.google.com/store/apps/details?id=com.zaptodoor.user"
+        target="_blank"
+        rel="noreferrer"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "10px",
+          background: "#7c3aed",
+          color: "#fff",
+          padding: "16px 30px",
+          borderRadius: "12px",
+          textDecoration: "none",
+          fontWeight: "600",
+          boxShadow:
+            "0 4px 12px rgba(124,58,237,.3)",
+        }}
+      >
+        <i className="bi bi-google-play" />
+        Order Now
+      </a>
+    </div>
+
+    {/* RIGHT IMAGE */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <img
+        src={boy}
+        alt=""
+        style={{
+          width: "100%",
+          maxWidth: "500px",
+          borderRadius: "25px",
+        }}
+      />
+    </div>
+  </div>
+</section>
 
       {/* STATS */}
    <div
