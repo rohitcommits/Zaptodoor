@@ -8,7 +8,7 @@ function App() {
     <div style={{ fontFamily: "Quicksand" }}>
       <Router>
         <Routes>
-          <Route path="/layout" element={<Layout />} />
+          <Route path="/" element={<Layout />} />
           <Route path="/About" element={<Aboutus />} />
         </Routes>
       </Router>
