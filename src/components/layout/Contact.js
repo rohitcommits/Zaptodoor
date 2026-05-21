@@ -2,16 +2,35 @@ import React from "react";
 import Footer from "./Footer";
 import Headerpage from "./Header2.js";
 
+import {
+  Building2,
+  PhoneCall,
+  Mail,
+} from "lucide-react";
+
 const inputStyle = {
   width: "100%",
-  padding: "16px",
-  borderRadius: "16px",
+  padding: "14px",
+  borderRadius: "14px",
   border: "1px solid #e5e7eb",
   outline: "none",
   background: "#f9fafb",
-  fontSize: "15px",
+  fontSize: "14px",
   color: "#111827",
   boxSizing: "border-box",
+};
+
+const iconBoxStyle = {
+  minWidth: "50px",
+  height: "50px",
+  borderRadius: "14px",
+  background: "#ffffff",
+  color: "#7c3aed",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  border: "1px solid #ede9fe",
+  boxShadow: "0 8px 20px rgba(124,58,237,0.12)",
 };
 
 const ContactPage = () => {
@@ -43,7 +62,7 @@ const ContactPage = () => {
           overflow: "hidden",
         }}
       >
-        {/* GLOW EFFECT */}
+        {/* Glow Effects */}
         <div
           style={{
             position: "absolute",
@@ -77,7 +96,6 @@ const ContactPage = () => {
             marginBottom: "6px",
             position: "relative",
             zIndex: 2,
-            letterSpacing: "-0.5px",
             lineHeight: "1.1",
           }}
         >
@@ -87,13 +105,9 @@ const ContactPage = () => {
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
             gap: "6px",
             fontSize: "13px",
-            position: "relative",
-            zIndex: 2,
             opacity: 0.9,
-            flexWrap: "wrap",
           }}
         >
           <span>Home</span>
@@ -105,7 +119,7 @@ const ContactPage = () => {
       {/* CONTACT SECTION */}
       <section
         style={{
-          padding: "60px 20px",
+          padding: "50px 20px",
           marginTop: "-20px",
           position: "relative",
           zIndex: 10,
@@ -113,30 +127,28 @@ const ContactPage = () => {
       >
         <div
           style={{
-            maxWidth: "1250px",
+            maxWidth: "1050px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))",
-            gap: "35px",
+            gridTemplateColumns:
+              "repeat(auto-fit,minmax(320px,1fr))",
+            gap: "22px",
             alignItems: "stretch",
           }}
         >
           {/* LEFT CARD */}
           <div
             style={{
-              background: "rgba(255,255,255,0.75)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              border: "1px solid rgba(255,255,255,0.4)",
-              borderRadius: "30px",
-              padding: "38px",
-              boxShadow: "0 10px 45px rgba(109,40,217,0.12)",
+              background: "#ffffff",
+              borderRadius: "24px",
+              padding: "28px",
+              boxShadow: "0 15px 40px rgba(15,23,42,0.08)",
             }}
           >
             <h2
               style={{
-                fontSize: "32px",
-                marginBottom: "35px",
+                fontSize: "26px",
+                marginBottom: "28px",
                 color: "#111827",
                 fontWeight: "700",
               }}
@@ -144,38 +156,23 @@ const ContactPage = () => {
               Get in Touch
             </h2>
 
-            {/* ADDRESS */}
+            {/* Address */}
             <div
               style={{
                 display: "flex",
-                gap: "18px",
-                marginBottom: "28px",
-                alignItems: "flex-start",
+                gap: "16px",
+                marginBottom: "24px",
               }}
             >
-              <div
-                style={{
-                  minWidth: "58px",
-                  height: "58px",
-                  borderRadius: "18px",
-                  background:
-                    "linear-gradient(135deg,#7c3aed,#9333ea)",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "24px",
-                  boxShadow: "0 10px 25px rgba(124,58,237,0.35)",
-                }}
-              >
-                🏢
+              <div style={iconBoxStyle}>
+                <Building2 size={22} />
               </div>
 
               <div
                 style={{
-                  lineHeight: "1.8",
+                  lineHeight: "1.7",
                   color: "#4b5563",
-                  fontSize: "15px",
+                  fontSize: "14px",
                 }}
               >
                 <strong style={{ color: "#111827" }}>
@@ -186,40 +183,25 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* PHONE */}
+            {/* Phone */}
             <div
               style={{
                 display: "flex",
-                gap: "18px",
-                marginBottom: "28px",
-                alignItems: "flex-start",
+                gap: "16px",
+                marginBottom: "24px",
               }}
             >
-              <div
-                style={{
-                  minWidth: "58px",
-                  height: "58px",
-                  borderRadius: "18px",
-                  background:
-                    "linear-gradient(135deg,#7c3aed,#9333ea)",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "24px",
-                  boxShadow: "0 10px 25px rgba(124,58,237,0.35)",
-                }}
-              >
-                ☎️
+              <div style={iconBoxStyle}>
+                <PhoneCall size={22} />
               </div>
 
-              <div style={{ lineHeight: "2" }}>
+              <div style={{ lineHeight: "1.9" }}>
                 <a
                   href="tel:+919200018690"
                   style={{
                     color: "#4b5563",
                     textDecoration: "none",
-                    fontSize: "15px",
+                    fontSize: "14px",
                   }}
                 >
                   +91 9200018690
@@ -232,7 +214,7 @@ const ContactPage = () => {
                   style={{
                     color: "#4b5563",
                     textDecoration: "none",
-                    fontSize: "15px",
+                    fontSize: "14px",
                   }}
                 >
                   +91 83700 83744 (IVR)
@@ -240,158 +222,198 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* EMAIL */}
+            {/* Email */}
             <div
               style={{
                 display: "flex",
-                gap: "18px",
-                marginBottom: "35px",
-                alignItems: "flex-start",
+                gap: "16px",
+                marginBottom: "28px",
               }}
             >
-              <div
+              <div style={iconBoxStyle}>
+                <Mail size={22} />
+              </div>
+
+              <a
+                href="mailto:info@zaptodoor.com"
                 style={{
-                  minWidth: "58px",
-                  height: "58px",
-                  borderRadius: "18px",
-                  background:
-                    "linear-gradient(135deg,#7c3aed,#9333ea)",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "24px",
-                  boxShadow: "0 10px 25px rgba(124,58,237,0.35)",
+                  color: "#4b5563",
+                  textDecoration: "none",
+                  fontSize: "14px",
                 }}
               >
-                📩
-              </div>
-
-              <div>
-                <a
-                  href="mailto:info@zaptodoor.com"
-                  style={{
-                    color: "#4b5563",
-                    textDecoration: "none",
-                    fontSize: "15px",
-                  }}
-                >
-                  info@zaptodoor.com
-                </a>
-              </div>
+                info@zaptodoor.com
+              </a>
             </div>
 
-            {/* MAP */}
+            {/* Map */}
             <div
               style={{
-                borderRadius: "24px",
+                borderRadius: "20px",
                 overflow: "hidden",
-                boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
               }}
             >
               <iframe
                 title="map"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.662177972788!2d78.17027697498769!3d26.207665490034653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3976c570bc507f51%3A0xbb925da31503b827!2sZaptodoor!5e0!3m2!1sen!2sin"
                 width="100%"
-                height="320"
-                style={{
-                  border: "0",
-                }}
-                allowFullScreen=""
+                height="250"
+                style={{ border: "0" }}
                 loading="lazy"
-              ></iframe>
+              />
             </div>
           </div>
 
-          {/* RIGHT FORM */}
+          {/* RIGHT CARD */}
           <div
             style={{
               background: "#fff",
-              borderRadius: "30px",
-              padding: "40px",
-              boxShadow: "0 10px 45px rgba(109,40,217,0.12)",
+              borderRadius: "24px",
+              padding: "30px",
+              boxShadow: "0 15px 40px rgba(15,23,42,0.08)",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "space-between",
             }}
           >
-            <h2
-              style={{
-                fontSize: "32px",
-                marginBottom: "35px",
-                color: "#111827",
-                fontWeight: "700",
-              }}
-            >
-              Send a Message
-            </h2>
+            <div>
+              <h2
+                style={{
+                  fontSize: "26px",
+                  marginBottom: "10px",
+                  color: "#111827",
+                  fontWeight: "700",
+                }}
+              >
+                Send a Message
+              </h2>
 
-            <form>
+              {/* Description */}
+              <p
+                style={{
+                  color: "#6b7280",
+                  fontSize: "14px",
+                  marginBottom: "24px",
+                  lineHeight: "1.7",
+                }}
+              >
+                Have questions or need assistance? Fill out
+                the form below and our team will contact you
+                shortly.
+              </p>
+
+              {/* Badges */}
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    "repeat(auto-fit,minmax(220px,1fr))",
-                  gap: "20px",
+                  display: "flex",
+                  gap: "10px",
+                  marginBottom: "25px",
+                  flexWrap: "wrap",
                 }}
               >
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  style={inputStyle}
-                />
-
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  style={inputStyle}
-                />
-
-                <input
-                  type="tel"
-                  placeholder="Phone Number"
-                  style={inputStyle}
-                />
-
-                <input
-                  type="text"
-                  placeholder="Subject"
-                  style={inputStyle}
-                />
+                {[
+                  "24/7 Support",
+                  "Fast Response",
+                  "Secure Contact",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    style={{
+                      background: "#f3e8ff",
+                      color: "#7c3aed",
+                      padding: "8px 14px",
+                      borderRadius: "30px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    {item}
+                  </div>
+                ))}
               </div>
 
-              <textarea
-                rows="7"
-                placeholder="Write your message..."
-                style={{
-                  ...inputStyle,
-                  marginTop: "20px",
-                  resize: "none",
-                  paddingTop: "18px",
-                }}
-              ></textarea>
+              <form>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fit,minmax(200px,1fr))",
+                    gap: "16px",
+                  }}
+                >
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    style={inputStyle}
+                  />
 
-              <button
-                type="submit"
-                style={{
-                  width: "100%",
-                  marginTop: "25px",
-                  background:
-                    "linear-gradient(135deg,#7c3aed,#9333ea)",
-                  color: "#fff",
-                  border: "none",
-                  padding: "17px",
-                  borderRadius: "18px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  boxShadow:
-                    "0 12px 30px rgba(124,58,237,0.35)",
-                }}
-              >
-                Send Message →
-              </button>
-            </form>
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    style={inputStyle}
+                  />
+
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    style={inputStyle}
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Subject"
+                    style={inputStyle}
+                  />
+                </div>
+
+                <textarea
+                  rows="6"
+                  placeholder="Write your message..."
+                  style={{
+                    ...inputStyle,
+                    marginTop: "16px",
+                    resize: "none",
+                  }}
+                />
+
+                <button
+                  type="submit"
+                  style={{
+                    width: "100%",
+                    marginTop: "20px",
+                    background:
+                      "linear-gradient(135deg,#7c3aed,#9333ea)",
+                    color: "#fff",
+                    border: "none",
+                    padding: "15px",
+                    borderRadius: "16px",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    boxShadow:
+                      "0 12px 30px rgba(124,58,237,0.35)",
+                  }}
+                >
+                  Send Message →
+                </button>
+              </form>
+            </div>
+
+            {/* Footer note */}
+            <div
+              style={{
+                marginTop: "25px",
+                textAlign: "center",
+                borderTop: "1px solid #f1f5f9",
+                paddingTop: "16px",
+                color: "#6b7280",
+                fontSize: "13px",
+              }}
+            >
+              Usually replies within{" "}
+              <strong>24 hours</strong>
+            </div>
           </div>
         </div>
       </section>

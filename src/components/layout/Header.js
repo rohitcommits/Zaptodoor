@@ -46,33 +46,35 @@ function Header() {
         }}
       >
         {/* Background Video */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-            objectFit: "cover",
-            zIndex: -2,
-          }}
-        >
-          <source src={Bg2video} type="video/mp4" />
-        </video>
+       {/* Background Video */}
+<video
+  autoPlay
+  loop
+  muted
+  playsInline
+  style={{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%", // full fit
+    minHeight: "100%",
+    objectFit: "cover",
+    zIndex: -2,
+  }}
+>
+  <source src={Bg2video} type="video/mp4" />
+</video>
 
-        {/* Dark Overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            zIndex: -1,
-          }}
-        />
+
+       <div
+  style={{
+    position: "absolute",
+    inset: 0,
+    background: "rgba(0,0,0,0.08)", // very light overlay
+    zIndex: -1,
+  }}
+/>
 
         {/* Navbar */}
         <div
