@@ -2,7 +2,7 @@ import { useState } from "react";
 import logo from "../../assets/logozaptodoor.png";
 
 import Bg2video from "../../assets/IMG_1531.MOV";
-import { MapPin, Search, Menu, X } from "lucide-react";
+import { MapPin, Search, Menu} from "lucide-react";
 import bulk from "../../assets/image copy.png";
 import mom from "../../assets/image copy 2.png";
 import food from "../../assets/image copy 3.png";
