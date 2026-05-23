@@ -61,7 +61,7 @@ minHeight: "100vh",
     height: "100vh",
     minHeight: "100vh",
     objectFit: "cover",
-    objectPosition: "center top", // upar se cut nahi hoga
+    objectPosition: "center -15%", // upar se cut nahi hoga
     zIndex: -2,
   }}
 >
@@ -678,21 +678,136 @@ minHeight: "100vh",
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav {
-            display: none !important;
-          }
-          .mobile-menu-btn {
-            display: block !important;
-          }
-        }
-        @media (min-width: 769px) {
-          .mobile-menu-btn {
-            display: none !important;
-          }
-        }
-      `}</style>
+     <style>{`
+
+/* Prevent horizontal scroll */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  overflow-x:hidden;
+  width:100%;
+}
+
+
+/* =========================
+   MOBILE (0px - 480px)
+========================= */
+@media (max-width:480px){
+
+  /* Hide desktop menu */
+  .desktop-nav{
+    display:none !important;
+  }
+
+  .mobile-menu-btn{
+    display:block !important;
+  }
+
+  /* Navbar */
+  .navbar{
+    padding:0 15px !important;
+    height:65px !important;
+  }
+
+  /* Hero section */
+  .hero{
+    padding-top:35px !important;
+  }
+
+  .hero h1{
+    font-size:28px !important;
+    width:100% !important;
+    line-height:1.4 !important;
+  }
+
+  /* Search boxes */
+  .search-container{
+    flex-direction:column !important;
+    width:100% !important;
+    gap:15px !important;
+  }
+
+  .search-box{
+    width:100% !important;
+  }
+
+  /* Cards */
+  .cards-container{
+    margin-top:35px !important;
+    gap:15px !important;
+  }
+
+  .card{
+    width:100% !important;
+    max-width:320px !important;
+    height:200px !important;
+  }
+
+}
+
+
+/* =========================
+   TABLET (481px - 768px)
+========================= */
+
+@media (min-width:481px) and (max-width:768px){
+
+  .desktop-nav{
+    display:none !important;
+  }
+
+  .mobile-menu-btn{
+    display:block !important;
+  }
+
+  .hero h1{
+    font-size:38px !important;
+  }
+
+  .search-container{
+    flex-wrap:wrap !important;
+    gap:20px !important;
+  }
+
+  .card{
+    width:45% !important;
+    min-width:250px !important;
+  }
+
+}
+
+
+/* =========================
+   LAPTOP/DESKTOP
+========================= */
+
+@media (min-width:769px){
+
+  .desktop-nav{
+    display:flex !important;
+  }
+
+  .mobile-menu-btn{
+    display:none !important;
+  }
+
+  .cards-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .card{
+    width:260px;
+  }
+
+}
+
+`}</style>
     </>
   );
 }
