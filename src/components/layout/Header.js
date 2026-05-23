@@ -185,20 +185,23 @@ function Header() {
           </h1>
 
           {/* Search */}
-         <div
-  style={{
-    display: "flex",
-    gap: "20px",
-    marginTop: "25px",
-    width: "90%",
-    maxWidth: "900px",
-    flexWrap: "wrap",
-  }}
->
+       <div
+            style={{
+              display: "flex",
+              width: "100%",
+              maxWidth: "900px",
+              marginTop: "25px",
+              justifyContent: "space-around",
+              flexWrap: "wrap",
+              gap: "20px",
+            }}
+          >
+            {/* LOCATION */}
             <div
               style={{
-                flex: 1,
                 position: "relative",
+                flex: "1 1 250px",
+                minWidth: "200px",
               }}
             >
               <MapPin
@@ -209,26 +212,33 @@ function Header() {
                   left: "15px",
                   top: "50%",
                   transform: "translateY(-50%)",
+                  zIndex: 2,
                 }}
               />
 
               <input
+                type="text"
                 placeholder="Enter delivery location"
                 style={{
-                  width: "80%",
+                  width: "100%",
                   padding: "18px 18px 18px 45px",
                   borderRadius: "15px",
-                  border: "none",
-                  background: "rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(255,255,255,0.4)",
+                  background: "rgba(0,0,0,0.45)",
                   color: "#fff",
+                  fontSize: "16px",
+                  outline: "none",
+                  boxSizing: "border-box",
                 }}
               />
             </div>
 
+            {/* SEARCH */}
             <div
               style={{
-                flex: 1.5,
                 position: "relative",
+                flex: "1.5 1 300px",
+                minWidth: "200px",
               }}
             >
               <Search
@@ -239,18 +249,23 @@ function Header() {
                   left: "15px",
                   top: "50%",
                   transform: "translateY(-50%)",
+                  zIndex: 2,
                 }}
               />
 
               <input
-                placeholder="Search restaurant..."
+                type="text"
+                placeholder="Search restaurant, food..."
                 style={{
                   width: "100%",
                   padding: "18px 18px 18px 45px",
                   borderRadius: "15px",
-                  border: "none",
-                  background: "rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(255,255,255,0.4)",
+                  background: "rgba(0,0,0,0.45)",
                   color: "#fff",
+                  fontSize: "16px",
+                  outline: "none",
+                  boxSizing: "border-box",
                 }}
               />
             </div>

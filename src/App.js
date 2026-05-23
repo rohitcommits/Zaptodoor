@@ -4,7 +4,8 @@ import Layout from "./components/layout/layout";
 import Aboutus from "./components/layout/About";
 import ServicesPage from "./components/layout/Services";
 import ContactPage from "./components/layout/Contact";
-import Pressrelease from "./components/layout/Pressrelease"
+import Pressrelease from "./components/layout/Pressrelease";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Layout />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/About" element={<Aboutus />} />
           <Route path="/Services" element={<ServicesPage />} />
           <Route path="/Contact" element={<ContactPage />} />
