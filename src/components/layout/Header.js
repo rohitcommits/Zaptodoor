@@ -9,7 +9,7 @@ import food from "../../assets/image copy 3.png";
 import { Link } from "react-router-dom";
 
 function Header() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const [showScanner, setShowScanner] = useState(false);
 
   const cards = [
@@ -141,7 +141,7 @@ function Header() {
 
           <button
             className="mobile-menu-btn"
-            onClick={() => setIsDrawerOpen(true)}
+        
             style={{
               display: "none",
               background: "none",
