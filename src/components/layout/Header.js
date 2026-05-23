@@ -40,7 +40,8 @@ function Header() {
       <div
         style={{
           width: "100%",
-          minHeight: "100vh",
+         height: "100vh",
+minHeight: "100vh",
           position: "relative",
           overflow: "hidden",
         }}
@@ -57,9 +58,10 @@ function Header() {
     top: 0,
     left: 0,
     width: "100%",
-    height: "100%", // full fit
-    minHeight: "100%",
+    height: "100vh",
+    minHeight: "100vh",
     objectFit: "cover",
+    objectPosition: "center top", // upar se cut nahi hoga
     zIndex: -2,
   }}
 >

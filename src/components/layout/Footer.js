@@ -212,7 +212,7 @@ export default function Footer() {
 // };
 const sliderStyles = {
   wrapper: {
-    width: "180px",
+    width: "174px", // sirf 2 cards visible
     height: "90px",
     overflow: "hidden",
     borderRadius: "18px",
@@ -227,7 +227,7 @@ const sliderStyles = {
     display: "flex",
     flexDirection: "row",
     gap: "14px",
-    transition: "0.7s ease",
+    transition: "transform 0.7s ease",
   },
 
   card: {
@@ -246,6 +246,7 @@ const sliderStyles = {
     objectFit: "cover",
   },
 };
+
 
 const styles = {
   footer: {
@@ -391,6 +392,8 @@ const styles = {
 function HorizontalSlider() {
   const [index, setIndex] = useState(0);
 
+  const moveWidth = 94; // 80(card)+14(gap)
+
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
@@ -404,7 +407,7 @@ function HorizontalSlider() {
       <div
         style={{
           ...sliderStyles.track,
-          transform: `translateX(-${index * 78}px)`,
+          transform: `translateX(-${index * moveWidth}px)`,
         }}
       >
         {SLIDES.concat(SLIDES).map((img, i) => (
