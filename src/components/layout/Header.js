@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 
 function Header() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
 
   const cards = [
     {
@@ -37,46 +38,46 @@ function Header() {
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       />
+
       <div
         style={{
           width: "100%",
-         height: "100vh",
-minHeight: "100vh",
+          height: "100vh",
+          minHeight: "100vh",
           position: "relative",
           overflow: "hidden",
         }}
       >
         {/* Background Video */}
-       {/* Background Video */}
-<video
-  autoPlay
-  loop
-  muted
-  playsInline
-  style={{
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100vh",
-    minHeight: "100vh",
-    objectFit: "cover",
-    objectPosition: "center -15%", // upar se cut nahi hoga
-    zIndex: -2,
-  }}
->
-  <source src={Bg2video} type="video/mp4" />
-</video>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100vh",
+            minHeight: "100vh",
+            objectFit: "cover",
+            objectPosition: "center top",
+            zIndex: -2,
+          }}
+        >
+          <source src={Bg2video} type="video/mp4" />
+        </video>
 
-
-       <div
-  style={{
-    position: "absolute",
-    inset: 0,
-    background: "rgba(0,0,0,0.08)", // very light overlay
-    zIndex: -1,
-  }}
-/>
+        {/* Overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.08)",
+            zIndex: -1,
+          }}
+        />
 
         {/* Navbar */}
         <div
@@ -87,12 +88,9 @@ minHeight: "100vh",
             justifyContent: "space-between",
             alignItems: "center",
             padding: "0 40px",
-            boxSizing: "border-box",
             color: "#fff",
-            flexWrap: "wrap",
-            gap: "10px",
-            position: "relative",
             zIndex: 1000,
+            position: "relative",
           }}
         >
           <img
@@ -105,152 +103,42 @@ minHeight: "100vh",
             }}
           />
 
-          {/* Desktop Navigation */}
           <div
             className="desktop-nav"
             style={{
               display: "flex",
               gap: "25px",
-              fontSize: "16px",
-              flexWrap: "wrap",
-              justifyContent: "center",
             }}
           >
-            
-              <Link
+            <Link
               to="/"
-              onClick={() => setIsDrawerOpen(false)}
-              style={{
-                color: "inherit",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
-              <strong
-                style={{
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                }}
-              >
-              Home  
-              </strong>
+              Home
             </Link>
+
             <Link
               to="/About"
-              onClick={() => setIsDrawerOpen(false)}
-              style={{
-                color: "inherit",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
-              <strong
-                style={{
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                }}
-              >
-                About Us
-              </strong>
+              About
             </Link>
+
             <Link
-              to="/Pressrelease"
-              onClick={() => setIsDrawerOpen(false)}
-              style={{
-                color: "inherit",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
-            >
-              <strong
-                style={{
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                }}
-              >
-                Press Release
-              </strong>
-            </Link>
-            
-              <Link
               to="/Services"
-              onClick={() => setIsDrawerOpen(false)}
-              style={{
-                color: "inherit",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
-              <strong
-                style={{
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                }}
-              >
-                Services
-              </strong>
+              Services
             </Link>
-              <Link
+
+            <Link
               to="/Contact"
-              onClick={() => setIsDrawerOpen(false)}
-              style={{
-                color: "inherit",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
-              <strong
-                style={{
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "inherit",
-                  fontWeight: "inherit",
-                }}
-              >
-                Contact
-              </strong>
+              Contact
             </Link>
-         
           </div>
 
-          <button
-            className="desktop-nav"
-            style={{
-              padding: "10px 20px",
-              borderRadius: "10px",
-              border: "1px solid rgba(180,140,255,0.5)",
-              background: "rgba(180,140,255,0.2)",
-              backdropFilter: "blur(10px)",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            <a
-              href="https://play.google.com/store/apps/details?id=com.zaptodoor.user"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: "#fff",
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <i className="bi bi-google-play"></i>
-              Get the App
-            </a>
-          </button>
-
-          {/* Hamburger Menu Button */}
           <button
             className="mobile-menu-btn"
             onClick={() => setIsDrawerOpen(true)}
@@ -259,212 +147,50 @@ minHeight: "100vh",
               background: "none",
               border: "none",
               color: "#fff",
-              cursor: "pointer",
-              padding: "10px",
             }}
           >
             <Menu size={30} />
           </button>
         </div>
 
-        {/* Mobile Drawer */}
-        {isDrawerOpen && (
-          <>
-            {/* Overlay */}
-            <div
-              onClick={() => setIsDrawerOpen(false)}
-              style={{
-                position: "fixed",
-                inset: 0,
-                background: "rgba(0,0,0,0.7)",
-                zIndex: 2000,
-                backdropFilter: "blur(5px)",
-              }}
-            />
-
-            {/* Drawer */}
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                right: 0,
-                width: "80%",
-                maxWidth: "350px",
-                height: "100vh",
-                background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
-                zIndex: 3000,
-                padding: "30px",
-                boxSizing: "border-box",
-                display: "flex",
-                flexDirection: "column",
-                gap: "30px",
-                transform: isDrawerOpen ? "translateX(0)" : "translateX(100%)",
-                transition: "transform 0.3s ease",
-                boxShadow: "-10px 0 30px rgba(0,0,0,0.5)",
-              }}
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setIsDrawerOpen(false)}
-                style={{
-                  alignSelf: "flex-end",
-                  background: "none",
-                  border: "none",
-                  color: "#fff",
-                  cursor: "pointer",
-                  padding: "10px",
-                }}
-              >
-                <X size={30} />
-              </button>
-
-              {/* Navigation Links */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "25px",
-                  fontSize: "20px",
-                }}
-              >
-                <strong
-                  style={{ color: "#fff", cursor: "pointer" }}
-                  onClick={() => setIsDrawerOpen(false)}
-                >
-                  Home
-                </strong>
-                <Link
-                  to="/about"
-                  onClick={() => setIsDrawerOpen(false)}
-                  style={{
-                    color: "inherit",
-                    textDecoration: "none",
-                    display: "inline-block",
-                  }}
-                >
-                  <strong
-                    style={{
-                      color: "#fff",
-                      cursor: "pointer",
-                      fontSize: "inherit",
-                      fontWeight: "inherit",
-                    }}
-                  >
-                    About Us
-                  </strong>
-                </Link>
-                <strong
-                  style={{ color: "#fff", cursor: "pointer" }}
-                  onClick={() => setIsDrawerOpen(false)}
-                >
-                  Press Release
-                </strong>
-                <strong
-                  style={{ color: "#fff", cursor: "pointer" }}
-                  onClick={() => setIsDrawerOpen(false)}
-                >
-                  Services
-                </strong>
-                <strong
-                  style={{ color: "#fff", cursor: "pointer" }}
-                  onClick={() => setIsDrawerOpen(false)}
-                >
-                  Contact
-                </strong>
-              </div>
-
-              {/* Get App Button */}
-              <button
-                style={{
-                  padding: "15px 20px",
-                  borderRadius: "10px",
-                  border: "1px solid rgba(180,140,255,0.5)",
-                  background: "rgba(180,140,255,0.2)",
-                  backdropFilter: "blur(10px)",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  width: "100%",
-                }}
-              >
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.zaptodoor.user"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    color: "#fff",
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                  }}
-                >
-                  <i className="bi bi-google-play"></i>
-                  Get the App
-                </a>
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Hero Section */}
+        {/* Hero */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             paddingTop: "60px",
-            paddingBottom: "40px",
-            color: "#bdc3c7",
-            paddingLeft: "20px",
-            paddingRight: "20px",
+            color: "#fff",
           }}
         >
-          <div
+          <h1
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: "100%",
+              fontSize: "clamp(28px,5vw,55px)",
+              textAlign: "center",
             }}
           >
-            {/* Heading */}
-            <h1
-              style={{
-                fontSize: "clamp(28px, 5vw, 55px)",
-                textAlign: "center",
-                width: "90%",
-                maxWidth: "950px",
-                lineHeight: "1.3",
-                color: "#bdc3c7",
-                marginBottom: "15px",
-              }}
-            >
-              Welcome To <b style={{ color: "#6c5ce7" }}>Zaptodoor</b>Food
-              delivery !
-            </h1>
+            Welcome To{" "}
+            <span style={{ color: "#6c5ce7" }}>
+              Zaptodoor
+            </span>{" "}
+            Food Delivery
+          </h1>
 
-          
-          </div>
-
-          {/* Search Inputs */}
+          {/* Search */}
           <div
             style={{
               display: "flex",
-              width: "100%",
-              maxWidth: "900px",
-              marginTop: "25px",
-              justifyContent: "space-around",
-              flexWrap: "wrap",
               gap: "20px",
+              marginTop: "25px",
+              width: "90%",
+              maxWidth: "900px",
+              flexWrap: "wrap",
             }}
           >
-            {/* LOCATION */}
             <div
               style={{
+                flex: 1,
                 position: "relative",
-                flex: "1 1 250px",
-                minWidth: "200px",
               }}
             >
               <MapPin
@@ -475,33 +201,26 @@ minHeight: "100vh",
                   left: "15px",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  zIndex: 2,
                 }}
               />
 
               <input
-                type="text"
                 placeholder="Enter delivery location"
                 style={{
                   width: "100%",
                   padding: "18px 18px 18px 45px",
                   borderRadius: "15px",
-                  border: "1px solid rgba(255,255,255,0.4)",
-                  background: "rgba(0,0,0,0.45)",
+                  border: "none",
+                  background: "rgba(0,0,0,0.4)",
                   color: "#fff",
-                  fontSize: "16px",
-                  outline: "none",
-                  boxSizing: "border-box",
                 }}
               />
             </div>
 
-            {/* SEARCH */}
             <div
               style={{
+                flex: 1.5,
                 position: "relative",
-                flex: "1.5 1 300px",
-                minWidth: "200px",
               }}
             >
               <Search
@@ -512,23 +231,18 @@ minHeight: "100vh",
                   left: "15px",
                   top: "50%",
                   transform: "translateY(-50%)",
-                  zIndex: 2,
                 }}
               />
 
               <input
-                type="text"
-                placeholder="Search restaurant, food..."
+                placeholder="Search restaurant..."
                 style={{
                   width: "100%",
                   padding: "18px 18px 18px 45px",
                   borderRadius: "15px",
-                  border: "1px solid rgba(255,255,255,0.4)",
-                  background: "rgba(0,0,0,0.45)",
+                  border: "none",
+                  background: "rgba(0,0,0,0.4)",
                   color: "#fff",
-                  fontSize: "16px",
-                  outline: "none",
-                  boxSizing: "border-box",
                 }}
               />
             </div>
@@ -538,276 +252,123 @@ minHeight: "100vh",
           <div
             style={{
               display: "flex",
-              gap: "10px",
+              gap: "15px",
               marginTop: "60px",
               flexWrap: "wrap",
               justifyContent: "center",
-              paddingLeft: "20px",
-              paddingRight: "20px",
             }}
           >
             {cards.map((item) => (
               <div
                 key={item.title}
+                onClick={() => setShowScanner(true)}
                 style={{
-                  width: "clamp(230px, 90vw, 260px)",
+                  width: "260px",
                   height: "230px",
                   borderRadius: "30px",
-                  padding: "25px",
-                  color: "#fff",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  backdropFilter: "blur(15px)",
-                  boxShadow: "0 12px 30px rgba(0,0,0,0.25)",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                  position: "relative",
                   overflow: "hidden",
-                  flexShrink: 0,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform =
-                    "translateY(-10px) scale(1.03)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0px) scale(1)";
+                  position: "relative",
+                  cursor: "pointer",
+                  transition: "0.3s",
                 }}
               >
-                {/* Background Image */}
                 <img
                   src={item.image}
                   alt={item.title}
                   style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    zIndex: -2,
                   }}
                 />
 
-                {/* Dark Overlay */}
                 <div
                   style={{
                     position: "absolute",
                     inset: 0,
                     background:
-                      "linear-gradient(rgba(0,0,0,0.5), rgba(108,92,231,0.6))",
-                    zIndex: -1,
+                      "linear-gradient(rgba(0,0,0,.4),rgba(108,92,231,.5))",
                   }}
                 />
 
-                {/* Icon */}
-                <div
-                  style={{
-                    fontSize: "45px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  {item.icon}
-                </div>
-
-                {/* Title */}
                 <h2
                   style={{
                     position: "absolute",
-                    left: "25px",
                     top: "50%",
-                    transform: "translateY(-50%)",
-                    margin: 0,
-                    fontSize: "clamp(22px, 4vw, 28px)",
-                    fontWeight: "bold",
-                    color: "#fff",
-                    width: "70%",
-                  }}
-                >
-                  {item.title.toUpperCase()}
-                </h2>
-
-                {/* Offer */}
-                <p
-                  style={{
-                    position: "absolute",
-                    bottom: "20px",
-                    right: "20px",
-                    fontSize: "clamp(16px, 3vw, 20px)",
-                    fontWeight: "bold",
-                    color: "#fff",
-                    padding: "8px 14px",
-                    borderRadius: "12px",
-                    background: "rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
-                  }}
-                >
-                  UPTO{" "}
-                  <span
-                    style={{
-                      color: "#FFD700",
-                      fontSize: "clamp(20px, 4vw, 24px)",
-                    }}
-                  >
-                    60% OFF
-                  </span>
-                </p>
-
-                {/* Arrow Button */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "20px",
                     left: "20px",
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "50%",
-                    background: "#6c5ce7",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "25px",
-                    boxShadow: "0 5px 15px rgba(108,92,231,0.6)",
+                    transform: "translateY(-50%)",
+                    color: "#fff",
                   }}
                 >
-                  →
-                </div>
+                  {item.title}
+                </h2>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-     <style>{`
+      {/* QR Popup */}
+      {showScanner && (
+        <>
+          <div
+            onClick={() => setShowScanner(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(0,0,0,.7)",
+              zIndex: 5000,
+            }}
+          />
 
-/* Prevent horizontal scroll */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%,-50%)",
+              zIndex: 6000,
+              background: "#fff",
+              padding: "25px",
+              borderRadius: "20px",
+              textAlign: "center",
+            }}
+          >
+            <button
+              onClick={() => setShowScanner(false)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "10px",
+                border: "none",
+                background: "none",
+                fontSize: "25px",
+                cursor: "pointer",
+              }}
+            >
+              ×
+            </button>
 
-html,body{
-  overflow-x:hidden;
-  width:100%;
-}
+            <h3
+              style={{
+                marginBottom: "15px",
+                color: "#6c5ce7",
+              }}
+            >
+              Scan QR Code
+            </h3>
 
-
-/* =========================
-   MOBILE (0px - 480px)
-========================= */
-@media (max-width:480px){
-
-  /* Hide desktop menu */
-  .desktop-nav{
-    display:none !important;
-  }
-
-  .mobile-menu-btn{
-    display:block !important;
-  }
-
-  /* Navbar */
-  .navbar{
-    padding:0 15px !important;
-    height:65px !important;
-  }
-
-  /* Hero section */
-  .hero{
-    padding-top:35px !important;
-  }
-
-  .hero h1{
-    font-size:28px !important;
-    width:100% !important;
-    line-height:1.4 !important;
-  }
-
-  /* Search boxes */
-  .search-container{
-    flex-direction:column !important;
-    width:100% !important;
-    gap:15px !important;
-  }
-
-  .search-box{
-    width:100% !important;
-  }
-
-  /* Cards */
-  .cards-container{
-    margin-top:35px !important;
-    gap:15px !important;
-  }
-
-  .card{
-    width:100% !important;
-    max-width:320px !important;
-    height:200px !important;
-  }
-
-}
-
-
-/* =========================
-   TABLET (481px - 768px)
-========================= */
-
-@media (min-width:481px) and (max-width:768px){
-
-  .desktop-nav{
-    display:none !important;
-  }
-
-  .mobile-menu-btn{
-    display:block !important;
-  }
-
-  .hero h1{
-    font-size:38px !important;
-  }
-
-  .search-container{
-    flex-wrap:wrap !important;
-    gap:20px !important;
-  }
-
-  .card{
-    width:45% !important;
-    min-width:250px !important;
-  }
-
-}
-
-
-/* =========================
-   LAPTOP/DESKTOP
-========================= */
-
-@media (min-width:769px){
-
-  .desktop-nav{
-    display:flex !important;
-  }
-
-  .mobile-menu-btn{
-    display:none !important;
-  }
-
-  .cards-container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-
-  .card{
-    width:260px;
-  }
-
-}
-
-`}</style>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://zaptodoor.com"
+              alt="scanner"
+              style={{
+                width: "250px",
+                height: "250px",
+              }}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }
