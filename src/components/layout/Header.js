@@ -79,80 +79,88 @@ function Header() {
           }}
         />
 
-        {/* Navbar */}
-        <div
-          style={{
-            width: "100%",
-            height: "75px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0 40px",
-            color: "#fff",
-            zIndex: 1000,
-            position: "relative",
-          }}
-        >
-          <img
-            src={logo}
-            alt="logo"
-            style={{
-              width: "130px",
-              height: "55px",
-              objectFit: "contain",
-            }}
-          />
+    <div
+  style={{
+    width: "100%",
+    height: "75px",
+    display: "flex",
+    alignItems: "center",
+    padding: "0 40px",
+    color: "#fff",
+    zIndex: 1000,
+    position: "relative",
+  }}
+>
+  {/* Logo Left */}
+  <img
+    src={logo}
+    alt="logo"
+    style={{
+      width: "130px",
+      height: "55px",
+      objectFit: "contain",
+      position: "absolute",
+      left: "40px",
+    }}
+  />
 
-          <div
-            className="desktop-nav"
-            style={{
-              display: "flex",
-              gap: "25px",
-            }}
-          >
-            <Link
-              to="/"
-              style={{ color: "#fff", textDecoration: "none" }}
-            >
-              Home
-            </Link>
+  {/* Center Navigation */}
+  <div
+    className="desktop-nav"
+    style={{
+      display: "flex",
+      gap: "35px",
+      margin: "0 auto",
+      alignItems: "center",
+      fontSize: "17px",
+      fontWeight: "600",
+    }}
+  >
+    <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>
+      Home
+    </Link>
 
-            <Link
-              to="/About"
-              style={{ color: "#fff", textDecoration: "none" }}
-            >
-              About
-            </Link>
+    <Link to="/About" style={{ color: "#fff", textDecoration: "none" }}>
+      About
+    </Link>
 
-            <Link
-              to="/Services"
-              style={{ color: "#fff", textDecoration: "none" }}
-            >
-              Services
-            </Link>
+    <Link
+      to="/Pressrelease"
+      style={{ color: "#fff", textDecoration: "none" }}
+    >
+      Press Release
+    </Link>
 
-            <Link
-              to="/Contact"
-              style={{ color: "#fff", textDecoration: "none" }}
-            >
-              Contact
-            </Link>
-          </div>
+    <Link
+      to="/Services"
+      style={{ color: "#fff", textDecoration: "none" }}
+    >
+      Services
+    </Link>
 
-          <button
-            className="mobile-menu-btn"
-        
-            style={{
-              display: "none",
-              background: "none",
-              border: "none",
-              color: "#fff",
-            }}
-          >
-            <Menu size={30} />
-          </button>
-        </div>
+    <Link
+      to="/Contact"
+      style={{ color: "#fff", textDecoration: "none" }}
+    >
+      Contact
+    </Link>
+  </div>
 
+  {/* Mobile Menu */}
+  <button
+    className="mobile-menu-btn"
+    style={{
+      display: "none",
+      background: "none",
+      border: "none",
+      color: "#fff",
+      position: "absolute",
+      right: "40px",
+    }}
+  >
+    <Menu size={30} />
+  </button>
+</div>
         {/* Hero */}
         <div
           style={{
@@ -177,16 +185,16 @@ function Header() {
           </h1>
 
           {/* Search */}
-          <div
-            style={{
-              display: "flex",
-              gap: "20px",
-              marginTop: "25px",
-              width: "90%",
-              maxWidth: "900px",
-              flexWrap: "wrap",
-            }}
-          >
+         <div
+  style={{
+    display: "flex",
+    gap: "20px",
+    marginTop: "25px",
+    width: "90%",
+    maxWidth: "900px",
+    flexWrap: "wrap",
+  }}
+>
             <div
               style={{
                 flex: 1,
@@ -207,7 +215,7 @@ function Header() {
               <input
                 placeholder="Enter delivery location"
                 style={{
-                  width: "100%",
+                  width: "80%",
                   padding: "18px 18px 18px 45px",
                   borderRadius: "15px",
                   border: "none",
