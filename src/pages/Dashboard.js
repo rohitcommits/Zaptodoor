@@ -1,10 +1,24 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Sidebar from "../components/layout/Dashboard/Sidebar";  // Adjust path as needed
+import Sidebar from "../components/layout/Dashboard/Sidebar";
 import DashboardHome from "../components/layout/Dashboard/DashboardHome";
 import DriverTable from "../components/layout/Dashboard/Driver";
 import RestaurantTable from "../components/layout/Dashboard/Restaurant";
 import UsersTable from "../components/layout/Dashboard/Users";
+import OrderTable from "../components/layout/Dashboard/Orders";
+import MainCategoryTable from "../components/layout/Dashboard/MainCategory";
+import CategoriesTable from "../components/layout/Dashboard/Categories"; // ← Add this
+import SubCategoriesTable from "../components/layout/Dashboard/SubCategories"; // ←
+import TicketsTable from "../components/layout/Dashboard/Tickets"; // ← Add this
+import SendNotification from "../components/layout/Dashboard/SendNotifications";
+import LiveStatus from "../components/layout/Dashboard/LiveStatus";
+import Banners from "../components/layout/Dashboard/Banners";
+import FAQ from "../components/layout/Dashboard/Faq";
+import WebBanners from "../components/layout/Dashboard/WebBanners";
+import Pages from "../components/layout/Dashboard/Pages";
+import Services from "../components/layout/Dashboard/Services";
+
+
 
 const Dashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
@@ -74,6 +88,7 @@ const Dashboard = () => {
       />
 
       <main style={styles.mainContent}>
+        {/* Theme Toggle Button */}
         <div
           style={styles.themeToggle}
           onClick={() => setIsDark(!isDark)}
@@ -93,8 +108,20 @@ const Dashboard = () => {
           <Route path="/reports" element={<div style={styles.placeholderPage}>Reports Page</div>} />
           <Route path="/messages" element={<div style={styles.placeholderPage}>Messages Page</div>} />
           <Route path="/Drivers" element={<DriverTable isDark={isDark} />} />
-            <Route path="/Restaurant" element={<RestaurantTable isDark={isDark} />} />
-            <Route path="/Userstable" element={<UsersTable isDark={isDark} />} />
+          <Route path="/Restaurant" element={<RestaurantTable isDark={isDark} />} />
+          <Route path="/Userstable" element={<UsersTable isDark={isDark} />} />
+          <Route path="/orders" element={<OrderTable isDark={isDark} />} />
+          <Route path="/maincategories" element={<MainCategoryTable isDark={isDark} />} />
+          <Route path="/categories" element={<CategoriesTable isDark={isDark} />} /> ← Add this
+          <Route path="/SubCategories" element={<SubCategoriesTable isDark={isDark} />} /> ← Add this
+          <Route path="/tickets" element={<TicketsTable isDark={isDark} />} />
+          <Route path="/livestatus" element={<LiveStatus isDark={isDark} />} />
+          <Route path="/sendnotifications" element={<SendNotification isDark={isDark} />} />
+          <Route path="/banners" element={<Banners isDark={isDark} />} />
+          <Route path="/faq" element={<FAQ isDark={isDark} />} />
+          <Route path="/WebBanners" element={<WebBanners isDark={isDark} />} />
+          <Route path="/pages" element={<Pages isDark={isDark} />} />
+          <Route path="/services" element={<Services isDark={isDark} />} />
         </Routes>
       </main>
     </div>

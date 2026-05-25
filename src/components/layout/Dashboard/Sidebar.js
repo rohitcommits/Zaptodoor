@@ -22,9 +22,8 @@ const menuData = [
                         <polyline points="12 6 12 12 16 14" />
                     </svg>
                 ),
-                hasDropdown: true,
-                sub: ["Analytics", "eCommerce", "CRM"],
-                path: "/dashboard"
+                hasDropdown: false,
+               path: "/dashboard"
             },
         ],
     },
@@ -32,7 +31,7 @@ const menuData = [
         section: "APPS",
         items: [
             {
-                name: "Users",
+                 name: "Users",
                 icon: (
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
@@ -96,30 +95,10 @@ const menuData = [
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                     </svg>
                 ),
-                hasDropdown: true,
-                sub: ["Products", "Orders", "Customers"],
-                path: "/orders"
+                hasDropdown: false,
+           path: "/Dashboard/orders"
             },
-            {
-                name: "Reports",
-                icon: (
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                    </svg>
-                ),
-                hasDropdown: true,
-                sub: ["Overview", "Tasks", "Timeline"],
-                path: "/reports"
-            },
+          
         ],
     },
     {
@@ -143,9 +122,9 @@ const menuData = [
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                     </svg>
                 ),
-                hasDropdown: true,
-                sub: ["Login", "Register", "Forgot Password"],
-                path: "/main-categories"
+                hasDropdown: false,
+               
+                path: "/Dashboard/maincategories"
             },
             {
                 name: "Categories",
@@ -164,9 +143,9 @@ const menuData = [
                         <polyline points="9 22 9 12 15 12 15 22" />
                     </svg>
                 ),
-                hasDropdown: true,
-                sub: ["Pricing", "FAQ", "Blog"],
-                path: "/categories"
+                hasDropdown: false,
+              
+                path: "/Dashboard/categories"
             },
             {
                 name: "Sub Categories",
@@ -187,49 +166,17 @@ const menuData = [
                         <rect x="3" y="14" width="7" height="7" />
                     </svg>
                 ),
-                hasDropdown: true,
-                sub: ["Charts", "Tables", "Forms"],
-                path: "/sub-categories"
+                hasDropdown: false,
+                
+                path: "/Dashboard/SubCategories"
             },
         ],
     },
     {
         section: "CONFIG",
         items: [
-            { 
-                name: "Delivery Fare", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M1 12h4M21 12h4M3 5h4M17 5h4" />
-                        <rect x="5" y="8" width="14" height="12" rx="2" />
-                        <circle cx="8" cy="18" r="2" />
-                        <circle cx="16" cy="18" r="2" />
-                        <path d="M10 10h4" />
-                    </svg>
-                ),
-                path: "/delivery-fare"
-            },
-            { 
-                name: "Platform Fee", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="16" />
-                        <line x1="8" y1="12" x2="16" y2="12" />
-                    </svg>
-                ),
-                path: "/platform-fee"
-            },
-            { 
-                name: "Subscriptions", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                        <circle cx="12" cy="12" r="4" />
-                    </svg>
-                ),
-                path: "/subscriptions"
-            },
+          
+           
             { 
                 name: "MOU Agreements", 
                 icon: (
@@ -243,17 +190,7 @@ const menuData = [
                 ),
                 path: "/mou-agreements"
             },
-            { 
-                name: "Shift Notifications", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                        <circle cx="12" cy="4" r="1.5" />
-                    </svg>
-                ),
-                path: "/shift-notifications"
-            }
+           
         ]
     },
     {
@@ -267,7 +204,7 @@ const menuData = [
                         <path d="M12 8v4M12 16h.01" />
                     </svg>
                 ),
-                path: "/tickets"
+                path: "/Dashboard/tickets"
             },
             { 
                 name: "Send Notifications", 
@@ -276,7 +213,7 @@ const menuData = [
                         <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                     </svg>
                 ),
-                path: "/send-notifications"
+                path: "/Dashboard/sendnotifications"
             },
             { 
                 name: "Live Status", 
@@ -290,38 +227,11 @@ const menuData = [
                         <line x1="20" y1="12" x2="22" y2="12" />
                     </svg>
                 ),
-                path: "/live-status"
+                path: "/Dashboard/livestatus"
             }
         ]
     },
-    {
-        section: "FINANCE",
-        items: [
-            { 
-                name: "Withdrawals", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="12" y1="1" x2="12" y2="23" />
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                        <circle cx="12" cy="21" r="1" />
-                    </svg>
-                ),
-                path: "/withdrawals"
-            },
-            { 
-                name: "Invoices", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <polyline points="14 2 14 8 20 8" />
-                        <line x1="8" y1="13" x2="16" y2="13" />
-                        <line x1="8" y1="17" x2="16" y2="17" />
-                    </svg>
-                ),
-                path: "/invoices"
-            }
-        ]
-    },
+   
     {
         section: "CONTENT",
         items: [
@@ -334,7 +244,7 @@ const menuData = [
                         <circle cx="9" cy="14" r="1.5" />
                     </svg>
                 ),
-                path: "/banners"
+                path: "/Dashboard/banners"
             },
             { 
                 name: "FAQ", 
@@ -345,7 +255,7 @@ const menuData = [
                         <line x1="12" y1="17" x2="12.01" y2="17" />
                     </svg>
                 ),
-                path: "/faq"
+                path: "/Dashboard/faq"
             }
         ]
     },
@@ -362,7 +272,7 @@ const menuData = [
                         <circle cx="7" cy="9" r="1" />
                     </svg>
                 ),
-                path: "/web-banners"
+                path: "/Dashboard/WebBanners"
             },
             { 
                 name: "Pages", 
@@ -374,7 +284,7 @@ const menuData = [
                         <line x1="8" y1="16" x2="12" y2="16" />
                     </svg>
                 ),
-                path: "/pages"
+                path: "/Dashboard/pages"
             },
             { 
                 name: "Services", 

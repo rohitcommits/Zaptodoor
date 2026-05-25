@@ -9,6 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import UsersTable from "./components/layout/Dashboard/Users";
 import RestaurantTable from "./components/layout/Dashboard/Restaurant";
 
+
+// Routes mein add k
 function App() {
   return (
     <div style={{ fontFamily: "Quicksand" }}>
