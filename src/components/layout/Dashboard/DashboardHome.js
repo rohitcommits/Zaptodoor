@@ -1,422 +1,897 @@
-// DashboardHome.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import {
+    AreaChart, Area, BarChart, Bar,
+    PieChart, Pie, Cell, RadialBarChart, RadialBar,
+    XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
+    ResponsiveContainer,
+} from "recharts";
 
-const ORDERS = [
-  { id: 553, final_amount: "275", order_status_user: "delivered",  created_at: "2026-05-23 15:04:58", user_name: "Neeraj Verma",  restaurant_name: "Neeraj Verma" },
-  { id: 552, final_amount: "242", order_status_user: "cancelled",  created_at: "2026-05-20 22:49:31", user_name: "Mehul",          restaurant_name: "Pandit's Rolls and Momos" },
-  { id: 551, final_amount: "337", order_status_user: "cancelled",  created_at: "2026-05-20 16:04:35", user_name: "Yash",           restaurant_name: "Neeraj Verma" },
-  { id: 550, final_amount: "260", order_status_user: "cancelled",  created_at: "2026-05-20 16:02:18", user_name: "Yash",           restaurant_name: "Neeraj Verma" },
-  { id: 549, final_amount: "285", order_status_user: "cancelled",  created_at: "2026-05-20 15:53:24", user_name: "Yash",           restaurant_name: "Neeraj Verma" },
-  { id: 548, final_amount: "262", order_status_user: "cancelled",  created_at: "2026-05-20 15:39:57", user_name: "Neeraj Verma",   restaurant_name: "Neeraj Verma" },
-  { id: 547, final_amount: "262", order_status_user: "cancelled",  created_at: "2026-05-20 15:35:33", user_name: "Neeraj Verma",   restaurant_name: "Neeraj Verma" },
-  { id: 546, final_amount: "239", order_status_user: "cancelled",  created_at: "2026-05-16 11:26:40", user_name: "Neeraj Verma",   restaurant_name: "Shan E Punjab" },
-  { id: 545, final_amount: "254", order_status_user: "delivered",  created_at: "2026-05-12 13:05:40", user_name: "Manglam",        restaurant_name: "Happiness Fast Food Restaurant" },
-  { id: 544, final_amount: "310", order_status_user: "cancelled",  created_at: "2026-05-09 13:11:40", user_name: "Ramsharma",      restaurant_name: "MM Chaap DD Nagar" },
-];
 
-const STATS = {
-  totalOrders: 8, totalDrivers: 182, totalRestaurants: 352,
-  liveOrders: 0, onlineRiders: 2, liveRestaurants: 32,
-  todayOrders: 0, totalUsers: 2605,
-  cashInHand: "1552.00", todayRevenue: "0.00", onlineOrderValue: "0.00",
-};
+// ─── CUSTOM COMPONENTS (Replacing shadcn) ────────────────────────────────────
 
-const WEEKLY = [42, 58, 35, 72, 88, 65, 45];
-const DAYS   = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-// ── Inline SVG icon ────────────────────────────────────────────────────────
-const Icon = ({ d, size = 15, color = "currentColor", sw = 1.75 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-    stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
-    {(Array.isArray(d) ? d : [d]).map((p, i) => <path key={i} d={p} />)}
-  </svg>
+// Custom Card Component
+const Card = ({ children, style }) => (
+    <div style={{ ...style }}>{children}</div>
 );
 
-const ICONS = {
-  package:  "M21 8l-9-5L3 8m18 0v8l-9 5-9-5V8m9 5v5M3 8l9 5",
-  users:    ["M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2","M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75","M9 11a4 4 0 100-8 4 4 0 000 8z"],
-  store:    ["M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z","M9 22V12h6v10"],
-  moto:     "M5 17a2 2 0 100-4 2 2 0 000 4zm14 0a2 2 0 100-4 2 2 0 000 4zM5 17H3v-4l2-3h8l3 4h2m-7 0V9",
-  cash:     ["M12 1v22","M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"],
-  trend:    "M23 6l-9.5 9.5-5-5L1 18",
-  calendar: ["M3 4h18v18H3z","M16 2v4M8 2v4M3 10h18"],
-  search:   ["M11 19a8 8 0 100-16 8 8 0 000 16z","M21 21l-4.35-4.35"],
-  live:     ["M22 12h-4l-3 9L9 3l-3 9H2"],
+const CardHeader = ({ children, style }) => (
+    <div style={{ padding: "16px 20px 0", ...style }}>{children}</div>
+);
+
+const CardTitle = ({ children, style }) => (
+    <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 700, ...style }}>{children}</h3>
+);
+
+const CardContent = ({ children, style }) => (
+    <div style={{ padding: "16px 20px 20px", ...style }}>{children}</div>
+);
+
+// Custom Badge Component
+const Badge = ({ children, style }) => (
+    <span style={{
+        display: "inline-flex",
+        alignItems: "center",
+        borderRadius: "6px",
+        padding: "2px 8px",
+        fontSize: "11px",
+        fontWeight: 600,
+        ...style
+    }}>{children}</span>
+);
+
+// Custom Button Component
+const Button = ({ children, onClick, variant = "default", size = "default", style }) => {
+    const baseStyle = {
+        cursor: "pointer",
+        borderRadius: "8px",
+        fontWeight: 500,
+        transition: "all 0.15s ease",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "6px",
+        ...(size === "icon" && { width: "36px", height: "36px", padding: 0 }),
+        ...(size === "sm" && { padding: "4px 12px", fontSize: "11px", height: "28px" }),
+        ...(size === "default" && { padding: "8px 16px", fontSize: "13px" }),
+        ...(variant === "outline" && {
+            background: "transparent",
+            border: "1px solid",
+        }),
+        ...(variant === "ghost" && {
+            background: "transparent",
+            border: "none",
+        }),
+        ...style
+    };
+    return (
+        <button onClick={onClick} style={baseStyle}>
+            {children}
+        </button>
+    );
 };
 
-// ── Theme tokens ────────────────────────────────────────────────────────────
-const getTheme = (isDark) => isDark
-  ? {
-      pageBg:           "#0c1018",
-      panelBg:          "#141824",
-      panelBorder:      "rgba(255,255,255,0.06)",
-      titleColor:       "#f1f5f9",
-      subColor:         "#475569",
-      labelColor:       "#334155",
-      statVal:          "#f1f5f9",
-      searchBg:         "#0c1018",
-      searchBorder:     "rgba(255,255,255,0.08)",
-      searchFocus:      "rgba(99,102,241,0.5)",
-      searchColor:      "#94a3b8",
-      tdBorder:         "rgba(255,255,255,0.04)",
-      thBorder:         "rgba(255,255,255,0.06)",
-      rowHover:         "#1a1f2e",
-      nameColor:        "#cbd5e1",
-      restColor:        "#64748b",
-      amtColor:         "#fbbf24",
-      orderIdColor:     "#475569",
-      dateColor:        "#475569",
-      barBg:            "rgba(99,102,241,0.25)",
-      barBorder:        "rgba(99,102,241,0.18)",
-      barActiveBg:      "#6366f1",
-      barActiveBorder:  "rgba(99,102,241,0.8)",
-      barLabelActive:   "#818cf8",
-      barDayColor:      "#475569",
-      barDayActive:     "#94a3b8",
-      success:          "#10b981",
-      danger:           "#f43f5e",
-      accent:           "#6366f1",
-      accent2:          "#22d3ee",
-      liveGlow:         "#10b981",
+// Custom Progress Component
+const Progress = ({ value, style }) => (
+    <div style={{
+        height: "6px",
+        borderRadius: "3px",
+        overflow: "hidden",
+        ...style
+    }}>
+        <div style={{
+            width: `${value}%`,
+            height: "100%",
+            background: "#6c63ff",
+            transition: "width 0.3s ease"
+        }} />
+    </div>
+);
+
+// Custom Separator Component
+const Separator = ({ orientation = "horizontal", style }) => (
+    <div style={{
+        ...(orientation === "horizontal" ? { height: "1px", width: "100%" } : { width: "1px", height: "100%" }),
+        ...style
+    }} />
+);
+
+// Custom Dropdown Menu Components
+const DropdownMenu = ({ children }) => {
+    const [open, setOpen] = useState(false);
+    return (
+        <div style={{ position: "relative", display: "inline-block" }}>
+            {React.Children.map(children, child => {
+                if (child.type === DropdownMenuTrigger) {
+                    return React.cloneElement(child, { onClick: () => setOpen(!open) });
+                }
+                if (child.type === DropdownMenuContent) {
+                    return open ? React.cloneElement(child, { onClose: () => setOpen(false) }) : null;
+                }
+                return child;
+            })}
+        </div>
+    );
+};
+
+const DropdownMenuTrigger = ({ children, onClick, asChild }) => {
+    if (asChild) {
+        return React.cloneElement(children, { onClick });
     }
-  : {
-      pageBg:           "#f1f5f9",
-      panelBg:          "#ffffff",
-      panelBorder:      "rgba(0,0,0,0.07)",
-      titleColor:       "#0f172a",
-      subColor:         "#94a3b8",
-      labelColor:       "#c1cbd8",
-      statVal:          "#0f172a",
-      searchBg:         "#f8fafc",
-      searchBorder:     "rgba(0,0,0,0.08)",
-      searchFocus:      "rgba(99,102,241,0.4)",
-      searchColor:      "#475569",
-      tdBorder:         "rgba(0,0,0,0.05)",
-      thBorder:         "rgba(0,0,0,0.07)",
-      rowHover:         "#f8fafc",
-      nameColor:        "#1e293b",
-      restColor:        "#94a3b8",
-      amtColor:         "#d97706",
-      orderIdColor:     "#cbd5e1",
-      dateColor:        "#94a3b8",
-      barBg:            "rgba(99,102,241,0.1)",
-      barBorder:        "rgba(99,102,241,0.15)",
-      barActiveBg:      "#6366f1",
-      barActiveBorder:  "rgba(99,102,241,0.6)",
-      barLabelActive:   "#6366f1",
-      barDayColor:      "#cbd5e1",
-      barDayActive:     "#64748b",
-      success:          "#059669",
-      danger:           "#e11d48",
-      accent:           "#6366f1",
-      accent2:          "#0891b2",
-      liveGlow:         "#059669",
+    return <div onClick={onClick}>{children}</div>;
+};
+
+const DropdownMenuContent = ({ children, align, style, onClose }) => (
+    <div style={{
+        position: "absolute",
+        top: "100%",
+        right: align === "end" ? 0 : "auto",
+        marginTop: "4px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+        minWidth: "150px",
+        zIndex: 50,
+        ...style
+    }}>
+        {React.Children.map(children, child => {
+            if (child.type === DropdownMenuItem) {
+                return React.cloneElement(child, { onClick: () => { child.props.onClick?.(); onClose?.(); } });
+            }
+            return child;
+        })}
+    </div>
+);
+
+const DropdownMenuItem = ({ children, onClick, style }) => (
+    <div onClick={onClick} style={{
+        padding: "8px 12px",
+        fontSize: "12px",
+        cursor: "pointer",
+        transition: "background 0.15s",
+        ...style
+    }}>{children}</div>
+);
+
+// Custom Select Components
+const Select = ({ children, value, onValueChange }) => {
+    const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(value);
+
+    const handleSelect = (val) => {
+        setSelectedValue(val);
+        onValueChange?.(val);
+        setOpen(false);
     };
 
-// ── Avatar ──────────────────────────────────────────────────────────────────
-const Avatar = ({ name, isDark }) => {
-  const initials = name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
-  const hue = (name.charCodeAt(0) * 37) % 360;
-  return (
-    <span style={{
-      width: 28, height: 28, borderRadius: 7, flexShrink: 0,
-      background: isDark ? `hsl(${hue}deg 35% 20%)` : `hsl(${hue}deg 60% 92%)`,
-      border: `1px solid hsl(${hue}deg 40% ${isDark ? "35%" : "78%"})`,
-      color: isDark ? `hsl(${hue}deg 70% 68%)` : `hsl(${hue}deg 55% 38%)`,
-      display: "inline-flex", alignItems: "center", justifyContent: "center",
-      fontSize: 10, fontWeight: 600,
-    }}>{initials}</span>
-  );
+    return (
+        <div style={{ position: "relative" }}>
+            {React.Children.map(children, child => {
+                if (child.type === SelectTrigger) {
+                    return React.cloneElement(child, {
+                        onClick: () => setOpen(!open),
+                        value: selectedValue
+                    });
+                }
+                if (child.type === SelectContent && open) {
+                    return React.cloneElement(child, { onSelect: handleSelect });
+                }
+                return child;
+            })}
+        </div>
+    );
 };
 
-// ── Status badge ────────────────────────────────────────────────────────────
-const Badge = ({ status, t }) => {
-  const ok = status === "delivered";
-  return (
-    <span style={{
-      display: "inline-flex", alignItems: "center", gap: 5,
-      padding: "3px 9px", borderRadius: 20,
-      fontSize: 10, fontWeight: 600, letterSpacing: "0.03em",
-      background: ok ? t.success + "18" : t.danger + "18",
-      color:      ok ? t.success       : t.danger,
-      border:     `1px solid ${ok ? t.success + "35" : t.danger + "35"}`,
+const SelectTrigger = ({ children, onClick, value, style }) => (
+    <div onClick={onClick} style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        cursor: "pointer",
+        borderRadius: "8px",
+        padding: "0 12px",
+        height: "32px",
+        fontSize: "12px",
+        ...style
     }}>
-      <span style={{
-        width: 5, height: 5, borderRadius: "50%", background: "currentColor",
-        boxShadow: ok ? `0 0 5px ${t.success}` : "none",
-      }} />
-      {ok ? "Delivered" : "Cancelled"}
-    </span>
-  );
-};
+        <SelectValue value={value} />
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="6 9 12 15 18 9" />
+        </svg>
+    </div>
+);
 
-// ── Stat card ───────────────────────────────────────────────────────────────
-const StatCard = ({ label, value, iconKey, accent, trend, live, t }) => {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: t.panelBg,
-        border: `1px solid ${hovered ? accent + "50" : t.panelBorder}`,
-        borderRadius: 14,
-        padding: "16px 18px",
-        display: "flex", flexDirection: "column", gap: 9,
-        transition: "all 0.2s ease",
-        cursor: "default",
-        boxShadow: hovered ? `0 0 16px ${accent}12` : "none",
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <span style={{ fontSize: 10, color: t.labelColor, fontWeight: 600,
-          letterSpacing: "0.06em", textTransform: "uppercase" }}>{label}</span>
-        <span style={{
-          width: 30, height: 30, borderRadius: 8,
-          background: accent + "18", border: `1px solid ${accent}28`,
-          display: "flex", alignItems: "center", justifyContent: "center", color: accent,
+const SelectValue = ({ value }) => <span>{value?.charAt(0).toUpperCase() + value?.slice(1)}</span>;
+
+const SelectContent = ({ children, onSelect }) => (
+    <div style={{
+        position: "absolute",
+        top: "100%",
+        left: 0,
+        right: 0,
+        marginTop: "4px",
+        borderRadius: "8px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+        zIndex: 50,
+        overflow: "hidden"
+    }}>
+        {React.Children.map(children, child => {
+            if (child.type === SelectItem) {
+                return React.cloneElement(child, { onSelect });
+            }
+            return child;
+        })}
+    </div>
+);
+
+const SelectItem = ({ children, value, onSelect, style }) => (
+    <div onClick={() => onSelect?.(value)} style={{
+        padding: "8px 12px",
+        fontSize: "12px",
+        cursor: "pointer",
+        transition: "background 0.15s",
+        ...style
+    }}>{children}</div>
+);
+
+// Custom Tooltip Components
+const TooltipProvider = ({ children }) => <div>{children}</div>;
+const Tooltip = ({ children }) => {
+    const [open, setOpen] = useState(false);
+    return (
+        <div style={{ position: "relative", display: "inline-block" }} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+            {React.Children.map(children, child => {
+                if (child.type === TooltipTrigger) return child;
+                if (child.type === TooltipContent && open) return child;
+                return child;
+            })}
+        </div>
+    );
+};
+const TooltipTrigger = ({ children, asChild }) => asChild ? children : <span>{children}</span>;
+const TooltipContent = ({ children, side }) => (
+    <div style={{
+        position: "absolute",
+        bottom: "100%",
+        left: "50%",
+        transform: "translateX(-50%)",
+        marginBottom: "8px",
+        padding: "4px 8px",
+        borderRadius: "6px",
+        fontSize: "11px",
+        whiteSpace: "nowrap",
+        zIndex: 50
+    }}>{children}</div>
+);
+
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const salesData = [
+    { day: "Mon", revenue: 22400, orders: 310 },
+    { day: "Tue", revenue: 38100, orders: 450 },
+    { day: "Wed", revenue: 28700, orders: 350 },
+    { day: "Thu", revenue: 55200, orders: 500 },
+    { day: "Fri", revenue: 42600, orders: 480 },
+    { day: "Sat", revenue: 70300, orders: 600 },
+    { day: "Sun", revenue: 48900, orders: 550 },
+    { day: "Mon", revenue: 60100, orders: 650 },
+    { day: "Tue", revenue: 35400, orders: 400 },
+    { day: "Wed", revenue: 50800, orders: 550 },
+    { day: "Thu", revenue: 65200, orders: 600 },
+    { day: "Fri", revenue: 45700, orders: 500 },
+];
+
+const categoryPieData = [
+    { name: "Electronics", value: 38, color: "#6c63ff" },
+    { name: "Apparel", value: 27, color: "#4fd1c5" },
+    { name: "Home & Living", value: 18, color: "#f97316" },
+    { name: "Accessories", value: 10, color: "#ec4899" },
+    { name: "Others", value: 7, color: "#94a3b8" },
+];
+
+const trafficPieData = [
+    { name: "Organic Search", value: 42, color: "#6c63ff" },
+    { name: "Direct", value: 24, color: "#4fd1c5" },
+    { name: "Social Media", value: 19, color: "#f97316" },
+    { name: "Referral", value: 15, color: "#ec4899" },
+];
+
+const customerGrowthData = [
+    { month: "Jan", new: 1240, returning: 820 },
+    { month: "Feb", new: 1550, returning: 970 },
+    { month: "Mar", new: 1380, returning: 1100 },
+    { month: "Apr", new: 1920, returning: 1250 },
+    { month: "May", new: 1680, returning: 1420 },
+    { month: "Jun", new: 2100, returning: 1580 },
+];
+
+const radialData = [
+    { name: "Revenue", value: 87, fill: "#6c63ff" },
+    { name: "Orders", value: 72, fill: "#4fd1c5" },
+    { name: "Customers", value: 64, fill: "#f97316" },
+    { name: "Conversion", value: 53, fill: "#ec4899" },
+];
+
+const topProducts = [
+    { name: "MacBook Pro 14\"", category: "Electronics", revenue: "$478,295", units: 2847, growth: 12.4, positive: true },
+    { name: "Merino Wool Jacket", category: "Apparel", revenue: "$188,411", units: 1422, growth: 8.1, positive: true },
+    { name: "Ceramic Desk Lamp", category: "Home", revenue: "$89,344", units: 1456, growth: -3.2, positive: false },
+    { name: "ANC Headphones", category: "Electronics", revenue: "$234,565", units: 985, growth: 21.7, positive: true },
+    { name: "Leather Weekender", category: "Accessories", revenue: "$71,032", units: 1996, growth: 5.9, positive: true },
+];
+
+const statCards = [
+    {
+        label: "Total Revenue", value: "$748.14M", change: "+17.98%", positive: true,
+        sub: "vs last month",
+        gradient: "linear-gradient(135deg,#e0f2fe 0%,#bae6fd 100%)",
+        gradientDark: "linear-gradient(135deg,#0c2d48 0%,#0a2038 100%)",
+        iconBg: "#0ea5e9", iconColor: "#fff",
+        Icon: () => (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+        ),
+    },
+    {
+        label: "Total Orders", value: "3,541", change: "+11.57%", positive: true,
+        sub: "vs last month",
+        gradient: "linear-gradient(135deg,#dcfce7 0%,#bbf7d0 100%)",
+        gradientDark: "linear-gradient(135deg,#052e16 0%,#04231e 100%)",
+        iconBg: "#22c55e", iconColor: "#fff",
+        Icon: () => (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+        ),
+    },
+    {
+        label: "New Customers", value: "24.9k", change: "-2.41%", positive: false,
+        sub: "vs last month",
+        gradient: "linear-gradient(135deg,#fce7f3 0%,#fbcfe8 100%)",
+        gradientDark: "linear-gradient(135deg,#3b0a22 0%,#2d0718 100%)",
+        iconBg: "#ec4899", iconColor: "#fff",
+        Icon: () => (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+        ),
+    },
+    {
+        label: "Conversion Rate", value: "18.0%", change: "+7.21%", positive: true,
+        sub: "vs last month",
+        gradient: "linear-gradient(135deg,#ede9fe 0%,#ddd6fe 100%)",
+        gradientDark: "linear-gradient(135deg,#1e1045 0%,#170d36 100%)",
+        iconBg: "#7c3aed", iconColor: "#fff",
+        Icon: () => (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+            </svg>
+        ),
+    },
+];
+
+// ─── THEME ────────────────────────────────────────────────────────────────────
+const getT = (d) => ({
+    bg: d ? "#0c1018" : "#f0f4ff",
+    surface: d ? "#141824" : "#ffffff",
+    surfaceAlt: d ? "#1c2133" : "#f4f7ff",
+    border: d ? "rgba(255,255,255,0.07)" : "#e2e8f5",
+    text: d ? "#f1f5f9" : "#0f172a",
+    textMuted: d ? "#64748b" : "#94a3b8",
+    textSub: d ? "#94a3b8" : "#64748b",
+    shadow: d ? "0 4px 28px rgba(0,0,0,0.45)" : "0 4px 28px rgba(99,102,241,0.10)",
+    shadowSm: d ? "0 2px 10px rgba(0,0,0,0.35)" : "0 2px 10px rgba(99,102,241,0.07)",
+    chartGrid: d ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)",
+    tooltipBg: d ? "#1e2535" : "#ffffff",
+    accent: "#6c63ff",
+});
+
+// ─── CHART TOOLTIP ────────────────────────────────────────────────────────────
+const ChartTip = ({ active, payload, label, isDark }) => {
+    const t = getT(isDark);
+    if (!active || !payload?.length) return null;
+    return (
+        <div style={{
+            background: t.tooltipBg, border: `1px solid ${t.border}`,
+            borderRadius: "10px", padding: "10px 14px",
+            boxShadow: t.shadow, fontSize: "12px", fontFamily: "'DM Sans',sans-serif",
         }}>
-          <Icon d={ICONS[iconKey]} size={14} sw={2} />
-        </span>
-      </div>
-      <div style={{ fontSize: 24, fontWeight: 600, color: t.statVal,
-        letterSpacing: "-0.02em", lineHeight: 1 }}>{value}</div>
-      {trend && (
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          {live && <span style={{ width: 6, height: 6, borderRadius: "50%",
-            background: t.liveGlow, boxShadow: `0 0 6px ${t.liveGlow}` }} />}
-          <span style={{ fontSize: 11, color: live ? t.liveGlow : t.subColor,
-            fontWeight: 500 }}>{trend}</span>
+            {label && <p style={{ color: t.textMuted, marginBottom: "6px", fontWeight: 600 }}>{label}</p>}
+            {payload.map((p, i) => (
+                <p key={i} style={{ color: p.color, fontWeight: 600, margin: "2px 0" }}>
+                    {p.name}: {typeof p.value === "number" && p.value > 999 ? `$${(p.value / 1000).toFixed(1)}k` : p.value}
+                </p>
+            ))}
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
-// ── Bar chart ───────────────────────────────────────────────────────────────
-const BarChart = ({ t }) => {
-  const max = Math.max(...WEEKLY);
-  const [activeIdx, setActiveIdx] = useState(null);
-  return (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 150, paddingTop: 24 }}>
-      {WEEKLY.map((v, i) => {
-        const pct   = (v / max) * 100;
-        const isAct = activeIdx === i;
-        return (
-          <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column",
-            alignItems: "center", gap: 6 }}
-            onMouseEnter={() => setActiveIdx(i)}
-            onMouseLeave={() => setActiveIdx(null)}>
-            <span style={{
-              fontSize: 10, fontWeight: 600, padding: "2px 6px", borderRadius: 20,
-              background: isAct ? t.accent + "18" : "transparent",
-              color: isAct ? t.barLabelActive : "transparent",
-              border: isAct ? `1px solid ${t.accent}28` : "1px solid transparent",
-              transition: "all 0.15s",
-            }}>{v}</span>
-            <div style={{
-              width: "100%",
-              height: `${pct * 1.1}px`,
-              borderRadius: "5px 5px 3px 3px",
-              background: isAct ? t.barActiveBg : t.barBg,
-              border:     `1px solid ${isAct ? t.barActiveBorder : t.barBorder}`,
-              transition: "all 0.18s ease",
-              cursor: "default",
-            }} />
-            <span style={{ fontSize: 10, fontWeight: 500,
-              color: isAct ? t.barDayActive : t.barDayColor }}>{DAYS[i]}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-// ── Dashboard Home ──────────────────────────────────────────────────────────
-const DashboardHome = ({ isDark = true }) => {
-  const [search, setSearch] = useState("");
-  const [dateStr, setDateStr] = useState("");
-  const t = getTheme(isDark);
-
-  useEffect(() => {
-    setDateStr(new Date().toLocaleDateString("en-IN", {
-      weekday: "short", day: "numeric", month: "short", year: "numeric",
-    }));
-  }, []);
-
-  const filtered = ORDERS.filter(o =>
-    o.user_name.toLowerCase().includes(search.toLowerCase()) ||
-    o.restaurant_name.toLowerCase().includes(search.toLowerCase()) ||
-    o.id.toString().includes(search)
-  );
-
-  const overviewCards = [
-    { label: "Total orders",    value: STATS.totalOrders,                        iconKey: "package",  accent: t.accent },
-    { label: "Total users",     value: STATS.totalUsers.toLocaleString("en-IN"), iconKey: "users",    accent: "#818cf8" },
-    { label: "Restaurants",     value: STATS.totalRestaurants,                   iconKey: "store",    accent: "#f59e0b" },
-    { label: "Drivers",         value: STATS.totalDrivers,                       iconKey: "moto",     accent: t.success },
-    { label: "Cash in hand",    value: "₹" + Number(STATS.cashInHand).toLocaleString("en-IN"), iconKey: "cash", accent: "#34d399" },
-    { label: "Today's revenue", value: "₹" + STATS.todayRevenue,                 iconKey: "trend",    accent: t.accent2 },
-  ];
-
-  const liveCards = [
-    { label: "Live orders",      value: STATS.liveOrders,      iconKey: "live",     accent: t.success, trend: "Active now",   live: true },
-    { label: "Online riders",    value: STATS.onlineRiders,    iconKey: "moto",     accent: t.accent2, trend: "Available",    live: true },
-    { label: "Live restaurants", value: STATS.liveRestaurants, iconKey: "store",    accent: "#f59e0b", trend: "Open now",     live: true },
-    { label: "Today's orders",   value: STATS.todayOrders,     iconKey: "calendar", accent: "#a78bfa", trend: "So far today", live: false },
-  ];
-
-  const panel = {
-    background: t.panelBg,
-    border: `1px solid ${t.panelBorder}`,
-    borderRadius: 16,
-    padding: "20px 22px",
-    marginBottom: 14,
-    transition: "background 0.2s, border-color 0.2s",
-  };
-
-  const sectionLabel = {
-    fontSize: 10, fontWeight: 600, color: t.labelColor,
-    textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 10,
-  };
-
-  return (
-    <div style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif",
-      background: t.pageBg, minHeight: "100vh", padding: "28px 32px 40px",
-      transition: "background 0.2s" }}>
-
-      {/* Top bar */}
-      <div style={{ display: "flex", justifyContent: "space-between",
-        alignItems: "center", marginBottom: 26,
-        paddingBottom: 18, borderBottom: `1px solid ${t.panelBorder}` }}>
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 600, color: t.titleColor,
-            letterSpacing: "-0.01em" }}>Dashboard</div>
-          <div style={{ fontSize: 11, color: t.subColor, marginTop: 2 }}>Welcome back, John</div>
-        </div>
-        <div style={{ fontSize: 12, color: t.subColor,
-          background: t.panelBg, border: `1px solid ${t.panelBorder}`,
-          padding: "7px 14px", borderRadius: 10,
-          display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%",
-            background: t.liveGlow, boxShadow: `0 0 7px ${t.liveGlow}` }} />
-          {dateStr}
-        </div>
-      </div>
-
-      {/* Overview */}
-      <div style={sectionLabel}>Overview</div>
-      <div style={{ display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 12 }}>
-        {overviewCards.map((c, i) => <StatCard key={i} {...c} t={t} />)}
-      </div>
-
-      {/* Live */}
-      <div style={{ ...sectionLabel, marginTop: 8 }}>Live status</div>
-      <div style={{ display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 22 }}>
-        {liveCards.map((c, i) => <StatCard key={i} {...c} t={t} />)}
-      </div>
-
-      {/* Chart */}
-      <div style={panel}>
-        <div style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", marginBottom: 4 }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: t.titleColor,
-            letterSpacing: "-0.01em" }}>Weekly performance</span>
-          <span style={{ fontSize: 11, color: t.subColor }}>Orders · Mon – Sun</span>
-        </div>
-        <BarChart t={t} />
-      </div>
-
-      {/* Orders */}
-      <div style={panel}>
-        <div style={{ display: "flex", justifyContent: "space-between",
-          alignItems: "center", marginBottom: 18 }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: t.titleColor,
-            letterSpacing: "-0.01em" }}>Recent orders</span>
-          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-            <span style={{ position: "absolute", left: 10, pointerEvents: "none" }}>
-              <Icon d={ICONS.search} size={13} sw={2} color={t.labelColor} />
-            </span>
-            <input
-              type="text"
-              placeholder="Search orders…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{
-                background: t.searchBg,
-                border: `1px solid ${t.searchBorder}`,
-                borderRadius: 10,
-                padding: "8px 12px 8px 32px",
-                fontSize: 12,
-                color: t.searchColor,
-                outline: "none",
-                width: 210,
-                transition: "border-color 0.15s",
-              }}
-              onFocus={e  => (e.target.style.borderColor = t.searchFocus)}
-              onBlur={e   => (e.target.style.borderColor = t.searchBorder)}
-            />
-          </div>
-        </div>
-
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-            <thead>
-              <tr>
-                {["Order", "Customer", "Restaurant", "Amount", "Status", "Date"].map(h => (
-                  <th key={h} style={{
-                    textAlign: "left", padding: "0 12px 12px",
-                    fontSize: 10, fontWeight: 600, color: t.labelColor,
-                    textTransform: "uppercase", letterSpacing: "0.06em",
-                    borderBottom: `1px solid ${t.thBorder}`,
-                  }}>{h}</th>
+// ─── MORE MENU ────────────────────────────────────────────────────────────────
+const MoreMenu = ({ isDark, items = ["View Details", "Export CSV", "Refresh"] }) => {
+    const t = getT(isDark);
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" style={{ width: "28px", height: "28px", color: t.textMuted }}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                        <circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" />
+                    </svg>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "10px", minWidth: "150px" }}>
+                {items.map(i => (
+                    <DropdownMenuItem key={i} style={{ fontSize: "12px", color: t.text, fontFamily: "'DM Sans',sans-serif", cursor: "pointer", padding: "8px 12px" }}>
+                        {i}
+                    </DropdownMenuItem>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 && (
-                <tr><td colSpan={6} style={{ textAlign: "center",
-                  padding: 28, color: t.labelColor, fontSize: 12 }}>No orders found</td></tr>
-              )}
-              {filtered.map(o => {
-                const d = new Date(o.created_at);
-                const dateLabel = d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
-                return (
-                  <tr key={o.id}
-                    onMouseEnter={e => Array.from(e.currentTarget.cells).forEach(
-                      td => (td.style.background = t.rowHover))}
-                    onMouseLeave={e => Array.from(e.currentTarget.cells).forEach(
-                      td => (td.style.background = "transparent"))}
-                    style={{ transition: "background 0.12s", cursor: "default" }}>
-                    <td style={{ padding: "12px", borderBottom: `1px solid ${t.tdBorder}`,
-                      color: t.orderIdColor, fontFamily: "monospace", fontSize: 11 }}>#{o.id}</td>
-                    <td style={{ padding: "12px", borderBottom: `1px solid ${t.tdBorder}` }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                        <Avatar name={o.user_name} isDark={isDark} />
-                        <span style={{ color: t.nameColor, fontWeight: 500 }}>{o.user_name}</span>
-                      </div>
-                    </td>
-                    <td style={{ padding: "12px", borderBottom: `1px solid ${t.tdBorder}`,
-                      color: t.restColor }}>{o.restaurant_name}</td>
-                    <td style={{ padding: "12px", borderBottom: `1px solid ${t.tdBorder}`,
-                      color: t.amtColor, fontWeight: 600,
-                      fontVariantNumeric: "tabular-nums" }}>₹{o.final_amount}</td>
-                    <td style={{ padding: "12px", borderBottom: `1px solid ${t.tdBorder}` }}>
-                      <Badge status={o.order_status_user} t={t} />
-                    </td>
-                    <td style={{ padding: "12px", borderBottom: `1px solid ${t.tdBorder}`,
-                      color: t.dateColor, fontVariantNumeric: "tabular-nums" }}>{dateLabel}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+};
+
+// ─── HEADER ───────────────────────────────────────────────────────────────────
+const Header = ({ isDark }) => {
+    const t = getT(isDark);
+    const navIcons = [
+        { label: "Settings", path: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" },
+        { label: "Notifications", path: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0" },
+        { label: "Calendar", path: "M8 2v4 M16 2v4 M3 10h18 M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" },
+    ];
+    return (
+        <div style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            padding: "12px 28px", background: t.surface,
+            borderBottom: `1px solid ${t.border}`,
+            position: "sticky", top: 0, zIndex: 50, boxShadow: t.shadowSm,
+        }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <Button variant="outline" size="icon" style={{ background: t.surfaceAlt, borderColor: t.border, color: t.textMuted, width: "36px", height: "36px" }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15">
+                        <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </Button>
+                <div style={{
+                    display: "flex", alignItems: "center", gap: "10px",
+                    background: t.surfaceAlt, border: `1px solid ${t.border}`,
+                    borderRadius: "10px", padding: "8px 16px", width: "260px",
+                }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke={t.textMuted} strokeWidth="2" width="14" height="14">
+                        <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <span style={{ fontSize: "13px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Search…</span>
+                </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <TooltipProvider>
+                    {navIcons.map(({ label, path }) => (
+                        <Tooltip key={label}>
+                            <TooltipTrigger asChild>
+                                <Button variant="outline" size="icon" style={{ background: t.surfaceAlt, borderColor: t.border, color: t.textSub, width: "36px", height: "36px" }}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                                        <path d={path} />
+                                    </svg>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">{label}</TooltipContent>
+                        </Tooltip>
+                    ))}
+                </TooltipProvider>
+                <Separator orientation="vertical" style={{ height: "24px", background: t.border, margin: "0 4px" }} />
+                <div style={{
+                    width: "34px", height: "34px", borderRadius: "50%",
+                    background: "linear-gradient(135deg,#6c63ff,#4fd1c5)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "13px", color: "#fff", fontWeight: 700, cursor: "pointer",
+                    border: `2px solid ${t.border}`,
+                }}>A</div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
+};
+
+// ─── STAT CARD ────────────────────────────────────────────────────────────────
+const StatCard = ({ card, isDark }) => {
+    const t = getT(isDark);
+    return (
+        <Card style={{
+            background: isDark ? card.gradientDark : card.gradient,
+            border: `1px solid ${t.border}`, borderRadius: "16px",
+            boxShadow: t.shadowSm, overflow: "hidden", position: "relative",
+        }}>
+            <div style={{
+                position: "absolute", right: "-18px", top: "-18px",
+                width: "96px", height: "96px", borderRadius: "50%",
+                background: `${card.iconBg}1a`, pointerEvents: "none",
+                border: `1px solid ${card.iconBg}33`,
+            }} />
+            <CardHeader style={{ paddingBottom: 0 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                    <p style={{ margin: 0, fontSize: "11px", fontWeight: 600, letterSpacing: "0.6px", textTransform: "uppercase", color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)", fontFamily: "'DM Sans',sans-serif" }}>
+                        {card.label}
+                    </p>
+                    <div style={{
+                        width: "40px", height: "40px", borderRadius: "10px",
+                        background: card.iconBg, display: "flex", alignItems: "center",
+                        justifyContent: "center", color: card.iconColor,
+                        boxShadow: `0 4px 14px ${card.iconBg}55`, flexShrink: 0,
+                    }}>
+                        <card.Icon />
+                    </div>
+                </div>
+                <p style={{ margin: "8px 0 0", fontSize: "30px", fontWeight: 800, color: isDark ? "#fff" : "#0f172a", fontFamily: "'DM Sans',sans-serif", lineHeight: 1.1 }}>
+                    {card.value}
+                </p>
+            </CardHeader>
+            <CardContent style={{ paddingTop: "10px" }}>
+                <Separator style={{ background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.07)", marginBottom: "10px" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Badge style={{
+                        background: card.positive ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)",
+                        color: card.positive ? "#10b981" : "#ef4444",
+                        border: "none", fontSize: "11px", fontWeight: 700, padding: "3px 8px",
+                    }}>
+                        {card.change}
+                    </Badge>
+                    <span style={{ fontSize: "11px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>{card.sub}</span>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── SALES AREA CHART ─────────────────────────────────────────────────────────
+const SalesChart = ({ isDark }) => {
+    const t = getT(isDark);
+    const [period, setPeriod] = useState("weekly");
+    return (
+        <Card style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "16px", boxShadow: t.shadowSm }}>
+            <CardHeader>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
+                    <div>
+                        <CardTitle style={{ fontSize: "15px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>Revenue Overview</CardTitle>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Total earnings and order volume</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <div style={{ textAlign: "right" }}>
+                            <p style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>$36.1k</p>
+                            <Badge style={{ background: "rgba(16,185,129,0.12)", color: "#10b981", border: "none", fontSize: "10px", padding: "1px 7px" }}>↑ 2.15%</Badge>
+                        </div>
+                        <Select value={period} onValueChange={setPeriod}>
+                            <SelectTrigger style={{ width: "108px", height: "32px", fontSize: "12px", background: t.surfaceAlt, borderColor: t.border, color: t.textSub, fontFamily: "'DM Sans',sans-serif" }}>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {["daily", "weekly", "monthly", "yearly"].map(v => (
+                                    <SelectItem key={v} value={v} style={{ fontSize: "12px", color: t.text, fontFamily: "'DM Sans',sans-serif" }}>
+                                        {v.charAt(0).toUpperCase() + v.slice(1)}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <MoreMenu isDark={isDark} />
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={220}>
+                    <AreaChart data={salesData} margin={{ top: 10, right: 0, left: -15, bottom: 0 }}>
+                        <defs>
+                            <linearGradient id="gRev" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#6c63ff" stopOpacity={0.35} />
+                                <stop offset="95%" stopColor="#6c63ff" stopOpacity={0} />
+                            </linearGradient>
+                            <linearGradient id="gOrd" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#4fd1c5" stopOpacity={0.25} />
+                                <stop offset="95%" stopColor="#4fd1c5" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke={t.chartGrid} />
+                        <XAxis dataKey="day" tick={{ fontSize: 11, fill: t.textMuted, fontFamily: "'DM Sans',sans-serif" }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fontSize: 10, fill: t.textMuted, fontFamily: "'DM Sans',sans-serif" }} axisLine={false} tickLine={false} tickFormatter={v => `$${v / 1000}k`} />
+                        <RechartsTooltip content={<ChartTip isDark={isDark} />} />
+                        <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#6c63ff" strokeWidth={2.5} fill="url(#gRev)" />
+                        <Area type="monotone" dataKey="orders" name="Orders" stroke="#4fd1c5" strokeWidth={2} fill="url(#gOrd)" strokeDasharray="4 2" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── CATEGORY PIE ─────────────────────────────────────────────────────────────
+const CategoryPie = ({ isDark }) => {
+    const t = getT(isDark);
+    const [active, setActive] = useState(null);
+    const ROUNDING = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+        const RADIAN = Math.PI / 180;
+        const r = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + r * Math.cos(-midAngle * RADIAN);
+        const y = cy + r * Math.sin(-midAngle * RADIAN);
+        return percent > 0.08 ? (
+            <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={700} fontFamily="'DM Sans',sans-serif">
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+        ) : null;
+    };
+    return (
+        <Card style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "16px", boxShadow: t.shadowSm }}>
+            <CardHeader>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <CardTitle style={{ fontSize: "15px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>Sales by Category</CardTitle>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Revenue distribution</p>
+                    </div>
+                    <MoreMenu isDark={isDark} />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                        <Pie
+                            data={categoryPieData} cx="50%" cy="50%"
+                            innerRadius={50} outerRadius={85}
+                            paddingAngle={3} dataKey="value"
+                            labelLine={false} label={ROUNDING}
+                            onMouseEnter={(_, i) => setActive(i)}
+                            onMouseLeave={() => setActive(null)}
+                        >
+                            {categoryPieData.map((entry, i) => (
+                                <Cell
+                                    key={i} fill={entry.color}
+                                    opacity={active === null || active === i ? 1 : 0.45}
+                                    stroke="none"
+                                />
+                            ))}
+                        </Pie>
+                        <RechartsTooltip content={<ChartTip isDark={isDark} />} />
+                    </PieChart>
+                </ResponsiveContainer>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "4px" }}>
+                    {categoryPieData.map((d, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <div style={{ width: "8px", height: "8px", borderRadius: "2px", background: d.color, flexShrink: 0 }} />
+                                <span style={{ fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>{d.name}</span>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <Progress value={d.value} style={{ width: "60px", height: "4px", background: t.surfaceAlt }} />
+                                <span style={{ fontSize: "12px", fontWeight: 600, color: t.text, fontFamily: "'DM Sans',sans-serif", minWidth: "28px", textAlign: "right" }}>{d.value}%</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── TRAFFIC PIE ─────────────────────────────────────────────────────────────
+const TrafficPie = ({ isDark }) => {
+    const t = getT(isDark);
+    return (
+        <Card style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "16px", boxShadow: t.shadowSm }}>
+            <CardHeader>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <CardTitle style={{ fontSize: "15px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>Traffic Sources</CardTitle>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Visitor acquisition</p>
+                    </div>
+                    <MoreMenu isDark={isDark} />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                        <Pie data={trafficPieData} cx="50%" cy="50%" outerRadius={85} paddingAngle={3} dataKey="value" stroke="none">
+                            {trafficPieData.map((e, i) => <Cell key={i} fill={e.color} />)}
+                        </Pie>
+                        <RechartsTooltip content={<ChartTip isDark={isDark} />} />
+                    </PieChart>
+                </ResponsiveContainer>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "4px" }}>
+                    {trafficPieData.map((d, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: d.color }} />
+                                <span style={{ fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>{d.name}</span>
+                            </div>
+                            <span style={{ fontSize: "12px", fontWeight: 600, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>{d.value}%</span>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── CUSTOMER GROWTH BAR ──────────────────────────────────────────────────────
+const CustomerGrowthBar = ({ isDark }) => {
+    const t = getT(isDark);
+    return (
+        <Card style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "16px", boxShadow: t.shadowSm }}>
+            <CardHeader>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <CardTitle style={{ fontSize: "15px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>Customer Growth</CardTitle>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>New vs returning customers</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <Badge style={{ background: "rgba(16,185,129,0.12)", color: "#10b981", border: "none", fontSize: "11px", fontWeight: 700 }}>+4% MoM</Badge>
+                        <MoreMenu isDark={isDark} />
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div style={{ display: "flex", alignItems: "center", gap: "24px", marginBottom: "16px" }}>
+                    <div>
+                        <p style={{ margin: 0, fontSize: "28px", fontWeight: 800, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>87%</p>
+                        <p style={{ margin: 0, fontSize: "11px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Retention rate</p>
+                    </div>
+                    <Progress value={87} style={{ flex: 1, height: "8px", background: t.surfaceAlt }} />
+                </div>
+                <ResponsiveContainer width="100%" height={160}>
+                    <BarChart data={customerGrowthData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barGap={3}>
+                        <CartesianGrid strokeDasharray="3 3" stroke={t.chartGrid} />
+                        <XAxis dataKey="month" tick={{ fontSize: 10, fill: t.textMuted, fontFamily: "'DM Sans',sans-serif" }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fontSize: 10, fill: t.textMuted, fontFamily: "'DM Sans',sans-serif" }} axisLine={false} tickLine={false} />
+                        <RechartsTooltip content={<ChartTip isDark={isDark} />} />
+                        <Bar dataKey="new" name="New" fill="#6c63ff" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="returning" name="Returning" fill={isDark ? "#2d3748" : "#e2e8f0"} radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                </ResponsiveContainer>
+                <Separator style={{ background: t.border, margin: "12px 0 8px" }} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px" }}>
+                    {[{ label: "New Customers", color: "#6c63ff" }, { label: "Returning", color: isDark ? "#2d3748" : "#cbd5e1" }].map(l => (
+                        <div key={l.label} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                            <div style={{ width: "8px", height: "8px", borderRadius: "2px", background: l.color }} />
+                            <span style={{ fontSize: "11px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>{l.label}</span>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── RADIAL KPI GAUGES ────────────────────────────────────────────────────────
+const KpiGauges = ({ isDark }) => {
+    const t = getT(isDark);
+    return (
+        <Card style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "16px", boxShadow: t.shadowSm }}>
+            <CardHeader>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <CardTitle style={{ fontSize: "15px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>KPI Performance</CardTitle>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Target achievement rates</p>
+                    </div>
+                    <MoreMenu isDark={isDark} />
+                </div>
+            </CardHeader>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={200}>
+                    <RadialBarChart cx="50%" cy="50%" innerRadius="25%" outerRadius="90%" data={radialData} startAngle={180} endAngle={-180}>
+                        <RadialBar minAngle={15} background={{ fill: t.surfaceAlt }} clockWise dataKey="value" cornerRadius={6} />
+                        <RechartsTooltip content={<ChartTip isDark={isDark} />} />
+                    </RadialBarChart>
+                </ResponsiveContainer>
+                <Separator style={{ background: t.border, margin: "8px 0 12px" }} />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                    {radialData.map(d => (
+                        <div key={d.name} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <div style={{ width: "10px", height: "10px", borderRadius: "3px", background: d.fill, flexShrink: 0 }} />
+                            <div>
+                                <p style={{ margin: 0, fontSize: "11px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>{d.name}</p>
+                                <p style={{ margin: 0, fontSize: "13px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>{d.value}%</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── TOP PRODUCTS TABLE ───────────────────────────────────────────────────────
+const TopProducts = ({ isDark }) => {
+    const t = getT(isDark);
+    const categoryColors = { Electronics: "#6c63ff", Apparel: "#4fd1c5", Home: "#f97316", Accessories: "#ec4899" };
+    return (
+        <Card style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: "16px", boxShadow: t.shadowSm }}>
+            <CardHeader>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <CardTitle style={{ fontSize: "15px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>Top Products</CardTitle>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>By revenue this period</p>
+                    </div>
+                    <div style={{ display: "flex", gap: "6px" }}>
+                        <Button variant="outline" size="sm" style={{ fontSize: "11px", height: "28px", background: t.surfaceAlt, borderColor: t.border, color: t.textSub, fontFamily: "'DM Sans',sans-serif" }}>
+                            Export
+                        </Button>
+                        <MoreMenu isDark={isDark} items={["View All Products", "Sort by Units", "Sort by Revenue"]} />
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent style={{ paddingTop: 0 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 80px", gap: "8px", padding: "0 8px 8px", borderBottom: `1px solid ${t.border}` }}>
+                    {["Product", "Category", "Revenue", "Units", "Growth"].map(h => (
+                        <span key={h} style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.6px", textTransform: "uppercase", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>{h}</span>
+                    ))}
+                </div>
+                {topProducts.map((p, i) => (
+                    <div key={i}
+                        style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 80px", gap: "8px", padding: "10px 8px", borderBottom: i < topProducts.length - 1 ? `1px solid ${t.border}` : "none", alignItems: "center", cursor: "pointer", borderRadius: "8px", transition: "background 0.15s" }}
+                        onMouseEnter={e => e.currentTarget.style.background = t.surfaceAlt}
+                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                    >
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{
+                                width: "32px", height: "32px", borderRadius: "8px",
+                                background: `${categoryColors[p.category] || "#94a3b8"}22`,
+                                border: `1px solid ${categoryColors[p.category] || "#94a3b8"}44`,
+                                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                            }}>
+                                <div style={{ width: "12px", height: "12px", borderRadius: "3px", background: categoryColors[p.category] || "#94a3b8" }} />
+                            </div>
+                            <span style={{ fontSize: "13px", fontWeight: 600, color: t.text, fontFamily: "'DM Sans',sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</span>
+                        </div>
+                        <Badge variant="outline" style={{ fontSize: "10px", fontFamily: "'DM Sans',sans-serif", borderColor: `${categoryColors[p.category] || "#94a3b8"}55`, color: categoryColors[p.category] || t.textMuted, background: `${categoryColors[p.category] || "#94a3b8"}11`, width: "fit-content" }}>
+                            {p.category}
+                        </Badge>
+                        <span style={{ fontSize: "13px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>{p.revenue}</span>
+                        <span style={{ fontSize: "13px", color: t.textSub, fontFamily: "'DM Sans',sans-serif" }}>{p.units.toLocaleString()}</span>
+                        <Badge style={{
+                            background: p.positive ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.12)",
+                            color: p.positive ? "#10b981" : "#ef4444",
+                            border: "none", fontSize: "11px", fontWeight: 700,
+                            width: "fit-content",
+                        }}>
+                            {p.positive ? "↑" : "↓"} {Math.abs(p.growth)}%
+                        </Badge>
+                    </div>
+                ))}
+            </CardContent>
+        </Card>
+    );
+};
+
+// ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
+const DashboardHome = ({ isDark = true }) => {
+    const t = getT(isDark);
+    return (
+        <div style={{ minHeight: "100vh", background: t.bg, fontFamily: "'DM Sans',sans-serif" }}>
+            <Header isDark={isDark} />
+            <div style={{ padding: "0 28px 40px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 0 16px" }}>
+                    <div>
+                        <h1 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: t.text, fontFamily: "'DM Sans',sans-serif" }}>Ecommerce</h1>
+                        <p style={{ margin: "2px 0 0", fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Welcome back — here's your store performance</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontSize: "12px", color: t.textMuted, fontFamily: "'DM Sans',sans-serif" }}>Dashboards</span>
+                        <span style={{ color: t.textMuted }}>›</span>
+                        <Badge style={{ background: "rgba(108,99,255,0.12)", color: "#6c63ff", border: "none", fontSize: "12px", fontWeight: 600 }}>Ecommerce</Badge>
+                    </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "16px", marginBottom: "20px" }}>
+                    {statCards.map(c => <StatCard key={c.label} card={c} isDark={isDark} />)}
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 280px 280px", gap: "16px", marginBottom: "20px", alignItems: "start" }}>
+                    <SalesChart isDark={isDark} />
+                    <CategoryPie isDark={isDark} />
+                    <TrafficPie isDark={isDark} />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "20px" }}>
+                    <CustomerGrowthBar isDark={isDark} />
+                    <KpiGauges isDark={isDark} />
+                </div>
+
+                <TopProducts isDark={isDark} />
+            </div>
+        </div>
+    );
 };
 
 export default DashboardHome;
