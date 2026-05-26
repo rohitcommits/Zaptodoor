@@ -23,6 +23,7 @@ import FooterCertificates from "../components/layout/Dashboard/FooterCertificate
 import DevFeedback from "../components/layout/Dashboard/DevFeedback";
 import AddNewRestaurant from "../components/layout/Dashboard/Restaurant/AddRestaurants.js";
 import ExportRestaurantsModal from "../components/layout/Dashboard/Restaurant/ExportRestaurantsModal.js";
+import PressRelease from "../components/layout/Dashboard/PressRelease.js";
 
 // Routes mein add karein
 
@@ -147,6 +148,8 @@ const Dashboard = () => {
           <Route path="/devfeedback" element={<DevFeedback isDark={isDark} />} />
           <Route path="/addrestaurant" element={<AddNewRestaurant isDark={isDark} />} />
           <Route path="/ExportRestaurantsModal" element={<ExportRestaurantsModal isDark={isDark} />} />
+          
+          <Route path="/PressRelease" element={<PressRelease isDark={isDark} />} />
           
         </Routes>
       </main>

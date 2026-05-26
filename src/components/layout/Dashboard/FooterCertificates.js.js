@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICONS
@@ -52,18 +52,393 @@ const ShowIcon = () => (
   </svg>
 );
 
+const CloseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const UploadIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" y1="3" x2="12" y2="15" />
+  </svg>
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO DATA
 // ─────────────────────────────────────────────────────────────────────────────
 const demoCertificates = [
-  { id: 1, sn: 1, title: "DPIIT", description: "", link: "", status: "Active" },
-  { id: 2, sn: 2, title: "Gincube", description: "", link: "", status: "Active" },
-  { id: 3, sn: 3, title: "FSSAI", description: "", link: "", status: "Active" },
-  { id: 4, sn: 4, title: "GST", description: "GST", link: "", status: "Hidden" },
-  { id: 5, sn: 5, title: "Smart City", description: "", link: "", status: "Active" },
-  { id: 6, sn: 6, title: "MSME", description: "", link: "", status: "Active" },
-  { id: 7, sn: 7, title: "ISO", description: "", link: "", status: "Active" },
+  { id: 1, sn: 1, title: "DPIIT", description: "Department for Promotion of Industry and Internal Trade", link: "https://www.dpiit.gov.in", status: "Active", imageUrl: null },
+  { id: 2, sn: 2, title: "Gincube", description: "Gincube certification", link: "https://www.gincube.com", status: "Active", imageUrl: null },
+  { id: 3, sn: 3, title: "FSSAI", description: "Food Safety and Standards Authority of India", link: "https://www.fssai.gov.in", status: "Active", imageUrl: null },
+  { id: 4, sn: 4, title: "GST", description: "Goods and Services Tax", link: "https://www.gst.gov.in", status: "Hidden", imageUrl: null },
+  { id: 5, sn: 5, title: "Smart City", description: "Smart City Mission", link: "https://smartcities.gov.in", status: "Active", imageUrl: null },
+  { id: 6, sn: 6, title: "MSME", description: "Micro, Small and Medium Enterprises", link: "https://www.msme.gov.in", status: "Active", imageUrl: null },
+  { id: 7, sn: 7, title: "ISO", description: "International Organization for Standardization", link: "https://www.iso.org", status: "Active", imageUrl: null },
 ];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADD CERTIFICATE DIALOG COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+const AddCertificateDialog = ({ isDark, onClose, onSave, editingCert }) => {
+  const [formData, setFormData] = useState({
+    title: editingCert?.title || "",
+    description: editingCert?.description || "",
+    link: editingCert?.link || "",
+    status: editingCert?.status || "Active",
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(editingCert?.imageUrl || null);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (file) => {
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileInput = (e) => {
+    const file = e.target.files[0];
+    handleImageChange(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      handleImageChange(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!formData.title.trim()) {
+      return;
+    }
+    
+    const maxSn = editingCert?.sn || 0;
+    
+    onSave({
+      title: formData.title,
+      description: formData.description || "",
+      link: formData.link || "",
+      status: formData.status,
+      imageFile,
+      imageUrl: imagePreview,
+      sn: maxSn,
+    });
+    onClose();
+  };
+
+  const dialogStyles = {
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+      backdropFilter: "blur(4px)",
+    },
+    dialog: {
+      width: "90%",
+      maxWidth: "540px",
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "20px",
+      boxShadow: "0 25px 40px -12px rgba(0,0,0,0.4)",
+      overflow: "hidden",
+      animation: "fadeIn 0.2s ease-out",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "18px 24px",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+    },
+    title: {
+      fontSize: "20px",
+      fontWeight: 700,
+      color: isDark ? "#f1f5f9" : "#0f172a",
+      margin: 0,
+    },
+    closeBtn: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: isDark ? "#94a3b8" : "#64748b",
+      padding: "4px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "8px",
+    },
+    body: {
+      padding: "24px",
+      maxHeight: "65vh",
+      overflowY: "auto",
+    },
+    formGroup: {
+      marginBottom: "20px",
+    },
+    label: {
+      display: "block",
+      marginBottom: "8px",
+      fontSize: "13px",
+      fontWeight: 600,
+      color: isDark ? "#cbd5e1" : "#334155",
+    },
+    required: {
+      color: "#ef4444",
+      marginLeft: "4px",
+    },
+    input: {
+      width: "100%",
+      padding: "12px 14px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      transition: "all 0.2s",
+      boxSizing: "border-box",
+    },
+    textarea: {
+      width: "100%",
+      padding: "12px 14px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      transition: "all 0.2s",
+      fontFamily: "inherit",
+      resize: "vertical",
+      minHeight: "80px",
+      boxSizing: "border-box",
+    },
+    imageUploadArea: {
+      border: `2px dashed ${dragActive ? '#3b82f6' : (isDark ? '#1e2740' : '#e2e8f0')}`,
+      borderRadius: "16px",
+      padding: "20px",
+      textAlign: "center",
+      cursor: "pointer",
+      transition: "all 0.2s",
+      background: isDark ? "rgba(59,130,246,0.05)" : "rgba(59,130,246,0.02)",
+      marginTop: "8px",
+    },
+    imagePreview: {
+      width: "100%",
+      maxHeight: "140px",
+      objectFit: "cover",
+      borderRadius: "12px",
+      marginTop: "16px",
+    },
+    uploadIcon: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "12px",
+    },
+    uploadText: {
+      fontSize: "14px",
+      fontWeight: 500,
+      color: isDark ? "#94a3b8" : "#64748b",
+    },
+    uploadHint: {
+      fontSize: "11px",
+      color: isDark ? "#4a5568" : "#94a3b8",
+      marginTop: "6px",
+    },
+    select: {
+      width: "100%",
+      padding: "12px 14px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      cursor: "pointer",
+    },
+    footer: {
+      display: "flex",
+      justifyContent: "flex-end",
+      gap: "12px",
+      padding: "16px 24px",
+      borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#0f1520" : "#fafcff",
+    },
+    cancelBtn: {
+      padding: "10px 20px",
+      background: "transparent",
+      border: isDark ? "1px solid #2a3a5a" : "1px solid #cbd5e1",
+      borderRadius: "10px",
+      fontSize: "14px",
+      fontWeight: 500,
+      color: isDark ? "#94a3b8" : "#475569",
+      cursor: "pointer",
+      transition: "all 0.2s",
+    },
+    saveBtn: {
+      padding: "10px 24px",
+      background: "#4a6cf7",
+      border: "none",
+      borderRadius: "10px",
+      fontSize: "14px",
+      fontWeight: 600,
+      color: "#fff",
+      cursor: "pointer",
+      transition: "all 0.2s",
+    },
+  };
+
+  return (
+    <div style={dialogStyles.overlay} onClick={onClose}>
+      <div style={dialogStyles.dialog} onClick={(e) => e.stopPropagation()}>
+        <div style={dialogStyles.header}>
+          <h3 style={dialogStyles.title}>{editingCert ? "Edit Certificate" : "Add Footer Certificate"}</h3>
+          <button style={dialogStyles.closeBtn} onClick={onClose}>
+            <CloseIcon />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={dialogStyles.body}>
+            {/* Image Upload Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Image</label>
+              <div
+                style={dialogStyles.imageUploadArea}
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml"
+                  onChange={handleFileInput}
+                  style={{ display: "none" }}
+                />
+                <div style={dialogStyles.uploadIcon}>
+                  <UploadIcon />
+                </div>
+                <div style={dialogStyles.uploadText}>
+                  {imagePreview ? "Change Image" : "Upload Image"}
+                </div>
+                <div style={dialogStyles.uploadHint}>
+                  PNG, JPG, SVG up to 5MB
+                </div>
+                {imagePreview && (
+                  <img src={imagePreview} alt="Preview" style={dialogStyles.imagePreview} />
+                )}
+              </div>
+            </div>
+
+            {/* Title Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>
+                Title <span style={dialogStyles.required}>*</span>
+              </label>
+              <input
+                type="text"
+                name="title"
+                style={dialogStyles.input}
+                placeholder="Enter certificate title"
+                value={formData.title}
+                onChange={handleChange}
+                required
+                autoFocus
+              />
+            </div>
+
+            {/* Description Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Description</label>
+              <textarea
+                name="description"
+                style={dialogStyles.textarea}
+                placeholder="Enter certificate description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Link URL Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Link URL</label>
+              <input
+                type="url"
+                name="link"
+                style={dialogStyles.input}
+                placeholder="https://example.com/certificate"
+                value={formData.link}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Status Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Status</label>
+              <select
+                name="status"
+                style={dialogStyles.select}
+                value={formData.status}
+                onChange={handleChange}
+              >
+                <option value="Active">Active</option>
+                <option value="Hidden">Hidden</option>
+              </select>
+            </div>
+          </div>
+          <div style={dialogStyles.footer}>
+            <button type="button" style={dialogStyles.cancelBtn} onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" style={dialogStyles.saveBtn}>
+              {editingCert ? "Update" : "Save"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUB-COMPONENTS
@@ -83,15 +458,20 @@ const StatusBadge = ({ status, isDark }) => {
   );
 };
 
-const ImagePlaceholder = ({ isDark }) => (
+const ImagePlaceholder = ({ isDark, imageUrl, title }) => (
   <div style={{
     width: "40px", height: "40px", borderRadius: "8px",
     background: isDark ? "#1e2740" : "#f1f5f9",
     display: "flex", alignItems: "center", justifyContent: "center",
     fontSize: "18px",
     border: isDark ? "1px solid #2a3145" : "1px solid #e2e8f0",
+    overflow: "hidden",
   }}>
-    📜
+    {imageUrl ? (
+      <img src={imageUrl} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    ) : (
+      "📜"
+    )}
   </div>
 );
 
@@ -102,12 +482,14 @@ const FooterCertificates = ({ isDark = true }) => {
   const [certificates, setCertificates] = useState(demoCertificates);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingCert, setEditingCert] = useState(null);
   const itemsPerPage = 10;
 
   // Filter certificates
   const filteredCertificates = certificates.filter(cert =>
     cert.title.toLowerCase().includes(search.toLowerCase()) ||
-    cert.description.toLowerCase().includes(search.toLowerCase())
+    (cert.description && cert.description.toLowerCase().includes(search.toLowerCase()))
   );
 
   // Pagination
@@ -125,19 +507,55 @@ const FooterCertificates = ({ isDark = true }) => {
   };
 
   const handleDelete = (id) => {
-    setCertificates(prev => prev.filter(cert => cert.id !== id));
+    if (window.confirm("Are you sure you want to delete this certificate?")) {
+      setCertificates(prev => prev.filter(cert => cert.id !== id));
+    }
   };
 
   const handleEdit = (cert) => {
-    alert(`Edit certificate: ${cert.title}`);
+    setEditingCert(cert);
+    setIsDialogOpen(true);
   };
 
   const handleView = (cert) => {
-    alert(`View certificate: ${cert.title}\nDescription: ${cert.description || "N/A"}\nLink: ${cert.link || "N/A"}`);
+    alert(`Title: ${cert.title}\nDescription: ${cert.description || "—"}\nLink: ${cert.link || "—"}`);
   };
 
   const handleAdd = () => {
-    alert("Add new footer certificate");
+    setEditingCert(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveCert = (certData) => {
+    if (editingCert) {
+      // Update existing certificate
+      setCertificates(prev => prev.map(cert =>
+        cert.id === editingCert.id
+          ? {
+              ...cert,
+              title: certData.title,
+              description: certData.description,
+              link: certData.link,
+              status: certData.status,
+              imageUrl: certData.imageUrl || cert.imageUrl,
+            }
+          : cert
+      ));
+    } else {
+      // Add new certificate
+      const newId = Math.max(...certificates.map(c => c.id), 0) + 1;
+      const newSn = Math.max(...certificates.map(c => c.sn), 0) + 1;
+      const newCert = {
+        id: newId,
+        sn: newSn,
+        title: certData.title,
+        description: certData.description,
+        link: certData.link,
+        status: certData.status,
+        imageUrl: certData.imageUrl,
+      };
+      setCertificates(prev => [newCert, ...prev]);
+    }
   };
 
   const styles = {
@@ -198,7 +616,7 @@ const FooterCertificates = ({ isDark = true }) => {
     table: {
       width: "100%",
       borderCollapse: "collapse",
-      minWidth: "800px",
+      minWidth: "850px",
     },
     th: {
       padding: "14px 16px",
@@ -229,12 +647,17 @@ const FooterCertificates = ({ isDark = true }) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: "4px",
-      transition: "color 0.15s",
     },
     titleCell: {
       fontWeight: 600,
       color: isDark ? "#f1f5f9" : "#1e293b",
+    },
+    descriptionCell: {
+      maxWidth: "250px",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      color: isDark ? "#94a3b8" : "#64748b",
     },
     footer: {
       display: "flex",
@@ -286,6 +709,13 @@ const FooterCertificates = ({ isDark = true }) => {
 
   return (
     <div style={styles.container}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+      
       {/* Header with Search and Add Button */}
       <div style={styles.header}>
         <div style={styles.searchWrapper}>
@@ -315,7 +745,7 @@ const FooterCertificates = ({ isDark = true }) => {
               <th style={styles.th}>Image</th>
               <th style={styles.th}>Title</th>
               <th style={styles.th}>Description</th>
-              <th style={styles.th}>Link</th>
+              <th style={styles.th}>Link URL</th>
               <th style={styles.th}>Status</th>
               <th style={styles.th}>Actions</th>
             </tr>
@@ -324,10 +754,22 @@ const FooterCertificates = ({ isDark = true }) => {
             {paginatedCertificates.map((cert) => (
               <tr key={cert.id}>
                 <td style={styles.td}>{cert.sn}</td>
-                <td style={styles.td}><ImagePlaceholder isDark={isDark} /></td>
+                <td style={styles.td}>
+                  <ImagePlaceholder isDark={isDark} imageUrl={cert.imageUrl} title={cert.title} />
+                </td>
                 <td style={{...styles.td, ...styles.titleCell}}>{cert.title}</td>
-                <td style={styles.td}>{cert.description || "—"}</td>
-                <td style={styles.td}>{cert.link || "—"}</td>
+                <td style={{...styles.td, ...styles.descriptionCell}} title={cert.description}>
+                  {cert.description || "—"}
+                </td>
+                <td style={styles.td}>
+                  {cert.link ? (
+                    <a href={cert.link} target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6", textDecoration: "none", fontSize: "12px" }}>
+                      {cert.link.length > 30 ? cert.link.substring(0, 27) + "..." : cert.link}
+                    </a>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td style={styles.td}><StatusBadge status={cert.status} isDark={isDark} /></td>
                 <td style={styles.td}>
                   <div style={styles.actions}>
@@ -396,6 +838,19 @@ const FooterCertificates = ({ isDark = true }) => {
           </button>
         </div>
       </div>
+
+      {/* Add/Edit Certificate Dialog */}
+      {isDialogOpen && (
+        <AddCertificateDialog
+          isDark={isDark}
+          onClose={() => {
+            setIsDialogOpen(false);
+            setEditingCert(null);
+          }}
+          onSave={handleSaveCert}
+          editingCert={editingCert}
+        />
+      )}
     </div>
   );
 };

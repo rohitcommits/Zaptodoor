@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICONS
@@ -52,6 +52,21 @@ const ShowIcon = () => (
   </svg>
 );
 
+const CloseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const UploadIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" y1="3" x2="12" y2="15" />
+  </svg>
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO DATA
 // ─────────────────────────────────────────────────────────────────────────────
@@ -61,47 +76,460 @@ const demoServices = [
     sn: 5, 
     title: "Join us as a Franchise", 
     description: "Join Zaptodoor as a franchise partner, delivering convenience and reliability while growing your business in the booming delivery industry!", 
-    button: "Join us as a Franchise", 
+    buttonName: "Join us as a Franchise",
+    buttonLink: "/franchise",
     status: "Active", 
-    image: null 
+    imageUrl: null 
   },
   { 
     id: 2, 
     sn: 4, 
     title: "Join us as a Delivery Person", 
     description: "Join Zaptodoor as a delivery partner and earn while delivering convenience with flexibility and growth opportunities!", 
-    button: "Join us as a Delivery Person", 
+    buttonName: "Join us as a Delivery Person",
+    buttonLink: "/delivery-partner",
     status: "Active", 
-    image: null 
+    imageUrl: null 
   },
   { 
     id: 3, 
     sn: 3, 
     title: "Join us as a Sales Executive", 
     description: "Join Zaptodoor as a Sales Executive and drive growth by building valuable partnerships in the delivery industry!", 
-    button: "Join us as a Sales Executive", 
+    buttonName: "Join us as a Sales Executive",
+    buttonLink: "/sales-executive",
     status: "Hidden", 
-    image: null 
+    imageUrl: null 
   },
   { 
     id: 4, 
     sn: 2, 
     title: "Join us as a Restaurant", 
     description: "Partner with Zaptodoor to grow your restaurant's customer base and deliver meals seamlessly. Expand your reach and boost your business today!", 
-    button: "Join us as a Restaurant", 
+    buttonName: "Join us as a Restaurant",
+    buttonLink: "/restaurant-partner",
     status: "Active", 
-    image: null 
+    imageUrl: null 
   },
   { 
     id: 5, 
     sn: 1, 
     title: "Join Us as a Sales Trainee!", 
     description: "Kickstart your career with Zaptodoor! Gain hands-on experience in sales, develop customer interaction skills, and learn business strategies. Grow your expertise and step into a successful future!", 
-    button: "Join Us as a Sales Trainee!", 
+    buttonName: "Join Us as a Sales Trainee!",
+    buttonLink: "/sales-trainee",
     status: "Hidden", 
-    image: null 
+    imageUrl: null 
   },
 ];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADD SERVICE DIALOG COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+const AddServiceDialog = ({ isDark, onClose, onSave, editingService }) => {
+  const [formData, setFormData] = useState({
+    title: editingService?.title || "",
+    description: editingService?.description || "",
+    buttonName: editingService?.buttonName || "",
+    buttonLink: editingService?.buttonLink || "",
+    status: editingService?.status || "Active",
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(editingService?.imageUrl || null);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (file) => {
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileInput = (e) => {
+    const file = e.target.files[0];
+    handleImageChange(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      handleImageChange(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!formData.title.trim()) {
+      return;
+    }
+    
+    const maxSn = editingService?.sn || 0;
+    
+    onSave({
+      title: formData.title,
+      description: formData.description || "",
+      buttonName: formData.buttonName || "",
+      buttonLink: formData.buttonLink || "",
+      status: formData.status,
+      imageFile,
+      imageUrl: imagePreview,
+      sn: maxSn,
+    });
+    onClose();
+  };
+
+  const dialogStyles = {
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+      backdropFilter: "blur(4px)",
+    },
+    dialog: {
+      width: "90%",
+      maxWidth: "560px",
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "20px",
+      boxShadow: "0 25px 40px -12px rgba(0,0,0,0.4)",
+      overflow: "hidden",
+      animation: "fadeIn 0.2s ease-out",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "18px 24px",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+    },
+    title: {
+      fontSize: "20px",
+      fontWeight: 700,
+      color: isDark ? "#f1f5f9" : "#0f172a",
+      margin: 0,
+    },
+    closeBtn: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: isDark ? "#94a3b8" : "#64748b",
+      padding: "4px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "8px",
+    },
+    body: {
+      padding: "24px",
+      maxHeight: "65vh",
+      overflowY: "auto",
+    },
+    formGroup: {
+      marginBottom: "20px",
+    },
+    label: {
+      display: "block",
+      marginBottom: "8px",
+      fontSize: "13px",
+      fontWeight: 600,
+      color: isDark ? "#cbd5e1" : "#334155",
+    },
+    required: {
+      color: "#ef4444",
+      marginLeft: "4px",
+    },
+    input: {
+      width: "100%",
+      padding: "12px 14px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      transition: "all 0.2s",
+      boxSizing: "border-box",
+    },
+    textarea: {
+      width: "100%",
+      padding: "12px 14px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      transition: "all 0.2s",
+      fontFamily: "inherit",
+      resize: "vertical",
+      minHeight: "100px",
+      boxSizing: "border-box",
+    },
+    imageUploadArea: {
+      border: `2px dashed ${dragActive ? '#3b82f6' : (isDark ? '#1e2740' : '#e2e8f0')}`,
+      borderRadius: "16px",
+      padding: "24px",
+      textAlign: "center",
+      cursor: "pointer",
+      transition: "all 0.2s",
+      background: isDark ? "rgba(59,130,246,0.05)" : "rgba(59,130,246,0.02)",
+      marginTop: "8px",
+    },
+    imagePreview: {
+      width: "100%",
+      maxHeight: "160px",
+      objectFit: "cover",
+      borderRadius: "12px",
+      marginTop: "16px",
+    },
+    uploadIcon: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "12px",
+    },
+    uploadText: {
+      fontSize: "14px",
+      fontWeight: 500,
+      color: isDark ? "#94a3b8" : "#64748b",
+      marginBottom: "6px",
+    },
+    uploadHint: {
+      fontSize: "11px",
+      color: isDark ? "#4a5568" : "#94a3b8",
+    },
+    select: {
+      width: "100%",
+      padding: "12px 14px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      cursor: "pointer",
+    },
+    radioGroup: {
+      display: "flex",
+      gap: "24px",
+      marginTop: "8px",
+    },
+    radioLabel: {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      cursor: "pointer",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+    },
+    radio: {
+      width: "16px",
+      height: "16px",
+      cursor: "pointer",
+    },
+    footer: {
+      display: "flex",
+      justifyContent: "flex-end",
+      gap: "12px",
+      padding: "16px 24px",
+      borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#0f1520" : "#fafcff",
+    },
+    cancelBtn: {
+      padding: "10px 20px",
+      background: "transparent",
+      border: isDark ? "1px solid #2a3a5a" : "1px solid #cbd5e1",
+      borderRadius: "10px",
+      fontSize: "14px",
+      fontWeight: 500,
+      color: isDark ? "#94a3b8" : "#475569",
+      cursor: "pointer",
+      transition: "all 0.2s",
+    },
+    saveBtn: {
+      padding: "10px 24px",
+      background: "#4a6cf7",
+      border: "none",
+      borderRadius: "10px",
+      fontSize: "14px",
+      fontWeight: 600,
+      color: "#fff",
+      cursor: "pointer",
+      transition: "all 0.2s",
+    },
+  };
+
+  return (
+    <div style={dialogStyles.overlay} onClick={onClose}>
+      <div style={dialogStyles.dialog} onClick={(e) => e.stopPropagation()}>
+        <div style={dialogStyles.header}>
+          <h3 style={dialogStyles.title}>{editingService ? "Edit Service" : "Add Service"}</h3>
+          <button style={dialogStyles.closeBtn} onClick={onClose}>
+            <CloseIcon />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={dialogStyles.body}>
+            {/* Title Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>
+                Title <span style={dialogStyles.required}>*</span>
+              </label>
+              <input
+                type="text"
+                name="title"
+                style={dialogStyles.input}
+                placeholder="Enter service title"
+                value={formData.title}
+                onChange={handleChange}
+                required
+                autoFocus
+              />
+            </div>
+
+            {/* Description Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Description</label>
+              <textarea
+                name="description"
+                style={dialogStyles.textarea}
+                placeholder="Enter service description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Image Upload Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Image</label>
+              <div
+                style={dialogStyles.imageUploadArea}
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg, image/webp"
+                  onChange={handleFileInput}
+                  style={{ display: "none" }}
+                />
+                <div style={dialogStyles.uploadIcon}>
+                  <UploadIcon />
+                </div>
+                <div style={dialogStyles.uploadText}>
+                  {imagePreview ? "Change Image" : "Upload Image"}
+                </div>
+                <div style={dialogStyles.uploadHint}>
+                  PNG, JPG, WebP up to 10MB
+                </div>
+                {imagePreview && (
+                  <img src={imagePreview} alt="Preview" style={dialogStyles.imagePreview} />
+                )}
+              </div>
+            </div>
+
+            {/* Button Name Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Button Name</label>
+              <input
+                type="text"
+                name="buttonName"
+                style={dialogStyles.input}
+                placeholder="e.g., Join Now, Learn More, Apply Now"
+                value={formData.buttonName}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Button Link Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Button Link</label>
+              <input
+                type="text"
+                name="buttonLink"
+                style={dialogStyles.input}
+                placeholder="e.g., /join, /apply, /learn-more"
+                value={formData.buttonLink}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Status Field */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Status</label>
+              <div style={dialogStyles.radioGroup}>
+                <label style={dialogStyles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="status"
+                    value="Active"
+                    checked={formData.status === "Active"}
+                    onChange={handleChange}
+                    style={dialogStyles.radio}
+                  />
+                  Active
+                </label>
+                <label style={dialogStyles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="status"
+                    value="Hidden"
+                    checked={formData.status === "Hidden"}
+                    onChange={handleChange}
+                    style={dialogStyles.radio}
+                  />
+                  Hidden
+                </label>
+              </div>
+            </div>
+          </div>
+          <div style={dialogStyles.footer}>
+            <button type="button" style={dialogStyles.cancelBtn} onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" style={dialogStyles.saveBtn}>
+              {editingService ? "Update Service" : "Save Service"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUB-COMPONENTS
@@ -121,7 +549,7 @@ const StatusBadge = ({ status, isDark }) => {
   );
 };
 
-const ImagePlaceholder = ({ sn, isDark }) => (
+const ImagePlaceholder = ({ isDark, imageUrl, title }) => (
   <div style={{
     width: "50px", height: "50px", borderRadius: "8px",
     background: isDark ? "#1e2740" : "#f1f5f9",
@@ -129,8 +557,13 @@ const ImagePlaceholder = ({ sn, isDark }) => (
     fontSize: "12px", fontWeight: 500,
     color: isDark ? "#64748b" : "#94a3b8",
     border: isDark ? "1px solid #2a3145" : "1px solid #e2e8f0",
+    overflow: "hidden",
   }}>
-    Image
+    {imageUrl ? (
+      <img src={imageUrl} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    ) : (
+      "🖼️"
+    )}
   </div>
 );
 
@@ -141,6 +574,8 @@ const Services = ({ isDark = true }) => {
   const [services, setServices] = useState(demoServices);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingService, setEditingService] = useState(null);
   const itemsPerPage = 10;
 
   // Filter services
@@ -164,19 +599,57 @@ const Services = ({ isDark = true }) => {
   };
 
   const handleDelete = (id) => {
-    setServices(prev => prev.filter(s => s.id !== id));
+    if (window.confirm("Are you sure you want to delete this service?")) {
+      setServices(prev => prev.filter(s => s.id !== id));
+    }
   };
 
   const handleEdit = (service) => {
-    alert(`Edit service: ${service.title}`);
+    setEditingService(service);
+    setIsDialogOpen(true);
   };
 
   const handleView = (service) => {
-    alert(`View service: ${service.title}\n\n${service.description}`);
+    alert(`Title: ${service.title}\n\nDescription: ${service.description}\n\nButton: ${service.buttonName || "—"}\nLink: ${service.buttonLink || "—"}`);
   };
 
   const handleAddService = () => {
-    alert("Add new service");
+    setEditingService(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveService = (serviceData) => {
+    if (editingService) {
+      // Update existing service
+      setServices(prev => prev.map(s =>
+        s.id === editingService.id
+          ? {
+              ...s,
+              title: serviceData.title,
+              description: serviceData.description,
+              buttonName: serviceData.buttonName,
+              buttonLink: serviceData.buttonLink,
+              status: serviceData.status,
+              imageUrl: serviceData.imageUrl || s.imageUrl,
+            }
+          : s
+      ));
+    } else {
+      // Add new service
+      const newId = Math.max(...services.map(s => s.id), 0) + 1;
+      const newSn = Math.max(...services.map(s => s.sn), 0) + 1;
+      const newService = {
+        id: newId,
+        sn: newSn,
+        title: serviceData.title,
+        description: serviceData.description,
+        buttonName: serviceData.buttonName,
+        buttonLink: serviceData.buttonLink,
+        status: serviceData.status,
+        imageUrl: serviceData.imageUrl,
+      };
+      setServices(prev => [newService, ...prev]);
+    }
   };
 
   const styles = {
@@ -280,6 +753,15 @@ const Services = ({ isDark = true }) => {
       textOverflow: "ellipsis",
       color: isDark ? "#94a3b8" : "#64748b",
     },
+    buttonBadge: {
+      display: "inline-block",
+      padding: "4px 8px",
+      borderRadius: "6px",
+      fontSize: "11px",
+      fontWeight: 500,
+      background: isDark ? "rgba(59,130,246,0.15)" : "rgba(59,130,246,0.1)",
+      color: "#3b82f6",
+    },
     footer: {
       display: "flex",
       alignItems: "center",
@@ -330,6 +812,13 @@ const Services = ({ isDark = true }) => {
 
   return (
     <div style={styles.container}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+      
       {/* Header with Search and Add Button */}
       <div style={styles.header}>
         <div style={styles.searchWrapper}>
@@ -368,12 +857,27 @@ const Services = ({ isDark = true }) => {
             {paginatedServices.map((service) => (
               <tr key={service.id}>
                 <td style={styles.td}>{service.sn}</td>
-                <td style={styles.td}><ImagePlaceholder sn={service.sn} isDark={isDark} /></td>
+                <td style={styles.td}>
+                  <ImagePlaceholder isDark={isDark} imageUrl={service.imageUrl} title={service.title} />
+                </td>
                 <td style={{...styles.td, ...styles.titleCell}}>{service.title}</td>
                 <td style={{...styles.td, ...styles.descriptionCell}} title={service.description}>
                   {service.description}
                 </td>
-                <td style={styles.td}>{service.button}</td>
+                <td style={styles.td}>
+                  {service.buttonName ? (
+                    <div>
+                      <span style={styles.buttonBadge}>{service.buttonName}</span>
+                      {service.buttonLink && (
+                        <div style={{ fontSize: "10px", color: isDark ? "#4a5568" : "#94a3b8", marginTop: "2px" }}>
+                          {service.buttonLink}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td style={styles.td}><StatusBadge status={service.status} isDark={isDark} /></td>
                 <td style={styles.td}>
                   <div style={styles.actions}>
@@ -407,7 +911,7 @@ const Services = ({ isDark = true }) => {
       {/* Footer with Rows and Pagination */}
       <div style={styles.footer}>
         <div style={styles.pageInfo}>
-          Rows: 20 | {filteredServices.length} of {filteredServices.length} — Page {currentPage}/{totalPages || 1}
+          Rows: {filteredServices.length} of {filteredServices.length} — Page {currentPage}/{totalPages || 1}
         </div>
         <div style={styles.pagination}>
           <button 
@@ -442,6 +946,19 @@ const Services = ({ isDark = true }) => {
           </button>
         </div>
       </div>
+
+      {/* Add/Edit Service Dialog */}
+      {isDialogOpen && (
+        <AddServiceDialog
+          isDark={isDark}
+          onClose={() => {
+            setIsDialogOpen(false);
+            setEditingService(null);
+          }}
+          onSave={handleSaveService}
+          editingService={editingService}
+        />
+      )}
     </div>
   );
 };

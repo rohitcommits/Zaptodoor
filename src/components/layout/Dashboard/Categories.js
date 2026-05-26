@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO DATA
 // ─────────────────────────────────────────────────────────────────────────────
 const demoCategories = [
-  { id: 132, imageId: 145, name: "Main Course", mainCategory: "Main Course", subCategories: 10, status: "Active" },
-  { id: 131, imageId: 144, name: "ice", mainCategory: "Ice Cream", subCategories: 1, status: "Active" },
-  { id: 130, imageId: 143, name: "create new", mainCategory: "Breakfast", subCategories: 1, status: "Active" },
-  { id: 129, imageId: 142, name: "Side Dishes", mainCategory: "Breads", subCategories: 0, status: "Active" },
-  { id: 128, imageId: 141, name: "Foodiestan", mainCategory: "Breads", subCategories: 0, status: "Active" },
-  { id: 127, imageId: 140, name: "Foodiestan", mainCategory: "Breads", subCategories: 0, status: "Active" },
-  { id: 126, imageId: 139, name: "unknown", mainCategory: "Breads", subCategories: 0, status: "Active" },
-  { id: 125, imageId: 138, name: "Combo", mainCategory: "Breads", subCategories: 0, status: "Active" },
-  { id: 124, imageId: 137, name: "Sweets & Desserts", mainCategory: "Breads", subCategories: 1, status: "Active" },
-  { id: 123, imageId: 136, name: "Burgers", mainCategory: "Breads", subCategories: 0, status: "Active" },
+  { id: 132, imageId: 145, name: "Main Course", mainCategory: "Main Course", subCategories: 10, description: "Main course dishes for lunch and dinner", status: "Active", imageUrl: null },
+  { id: 131, imageId: 144, name: "ice", mainCategory: "Ice Cream", subCategories: 1, description: "Delicious ice cream flavors", status: "Active", imageUrl: null },
+  { id: 130, imageId: 143, name: "create new", mainCategory: "Breakfast", subCategories: 1, description: "Breakfast items", status: "Active", imageUrl: null },
+  { id: 129, imageId: 142, name: "Side Dishes", mainCategory: "Breads", subCategories: 0, description: "Side dishes to complement meals", status: "Active", imageUrl: null },
+  { id: 128, imageId: 141, name: "Foodiestan", mainCategory: "Breads", subCategories: 0, description: "Foodiestan specials", status: "Active", imageUrl: null },
+  { id: 127, imageId: 140, name: "Foodiestan", mainCategory: "Breads", subCategories: 0, description: "Foodiestan specials", status: "Active", imageUrl: null },
+  { id: 126, imageId: 139, name: "unknown", mainCategory: "Breads", subCategories: 0, description: "", status: "Active", imageUrl: null },
+  { id: 125, imageId: 138, name: "Combo", mainCategory: "Breads", subCategories: 0, description: "Combo meals", status: "Active", imageUrl: null },
+  { id: 124, imageId: 137, name: "Sweets & Desserts", mainCategory: "Breads", subCategories: 1, description: "Sweet treats and desserts", status: "Active", imageUrl: null },
+  { id: 123, imageId: 136, name: "Burgers", mainCategory: "Breads", subCategories: 0, description: "Juicy burgers", status: "Active", imageUrl: null },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -65,6 +65,20 @@ const PlusIcon = () => (
   </svg>
 );
 
+const CloseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
+
+const UploadIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" y1="3" x2="12" y2="15"/>
+  </svg>
+);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SUB-COMPONENTS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -83,7 +97,7 @@ const StatusBadge = ({ status, isDark }) => {
   );
 };
 
-const ImagePlaceholder = ({ imageId, isDark }) => (
+const ImagePlaceholder = ({ imageId, isDark, imageUrl }) => (
   <div style={{
     width: "36px", height: "36px", borderRadius: "8px",
     background: isDark ? "#1e2740" : "#f1f5f9",
@@ -91,19 +105,400 @@ const ImagePlaceholder = ({ imageId, isDark }) => (
     fontSize: "12px", fontWeight: 600,
     color: isDark ? "#64748b" : "#94a3b8",
     border: isDark ? "1px solid #2a3145" : "1px solid #e2e8f0",
+    overflow: "hidden",
   }}>
-    {imageId}
+    {imageUrl ? (
+      <img src={imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+    ) : (
+      imageId || "📷"
+    )}
   </div>
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT - Without full page container (fits inside Dashboard)
+// ADD CATEGORY DIALOG COMPONENT
+// ─────────────────────────────────────────────────────────────────────────────
+const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    mainCategory: "",
+    description: "",
+    status: "Active",
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [idError, setIdError] = useState("");
+  const fileInputRef = useRef(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    
+    // Clear ID error when user types
+    if (name === "id") {
+      setIdError("");
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Validate ID
+    const newId = parseInt(formData.id);
+    if (!formData.id || isNaN(newId)) {
+      setIdError("Please enter a valid ID");
+      return;
+    }
+    if (existingIds.includes(newId)) {
+      setIdError("ID already exists. Please use a unique ID");
+      return;
+    }
+    
+    if (!formData.name.trim()) {
+      return;
+    }
+    
+    onSave({
+      id: newId,
+      name: formData.name,
+      mainCategory: formData.mainCategory || "Uncategorized",
+      description: formData.description || "",
+      status: formData.status,
+      imageFile,
+      imageUrl: imagePreview,
+    });
+    onClose();
+  };
+
+  const dialogStyles = {
+    overlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+      backdropFilter: "blur(4px)",
+    },
+    dialog: {
+      width: "90%",
+      maxWidth: "520px",
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "16px",
+      boxShadow: "0 20px 35px -10px rgba(0,0,0,0.3)",
+      overflow: "hidden",
+      animation: "fadeIn 0.2s ease-out",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "18px 24px",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+    },
+    title: {
+      fontSize: "18px",
+      fontWeight: 600,
+      color: isDark ? "#f1f5f9" : "#0f172a",
+      margin: 0,
+    },
+    closeBtn: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: isDark ? "#94a3b8" : "#64748b",
+      padding: "4px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: "8px",
+    },
+    body: {
+      padding: "24px",
+      maxHeight: "60vh",
+      overflowY: "auto",
+    },
+    formGroup: {
+      marginBottom: "20px",
+    },
+    label: {
+      display: "block",
+      marginBottom: "8px",
+      fontSize: "13px",
+      fontWeight: 500,
+      color: isDark ? "#cbd5e1" : "#334155",
+    },
+    required: {
+      color: "#ef4444",
+      marginLeft: "4px",
+    },
+    input: {
+      width: "100%",
+      padding: "10px 12px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "10px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      transition: "all 0.2s",
+      boxSizing: "border-box",
+    },
+    textarea: {
+      width: "100%",
+      padding: "10px 12px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "10px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      transition: "all 0.2s",
+      fontFamily: "inherit",
+      resize: "vertical",
+      minHeight: "80px",
+      boxSizing: "border-box",
+    },
+    select: {
+      width: "100%",
+      padding: "10px 12px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "10px",
+      fontSize: "14px",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      outline: "none",
+      cursor: "pointer",
+    },
+    errorInput: {
+      border: "1px solid #ef4444",
+    },
+    errorText: {
+      fontSize: "11px",
+      color: "#ef4444",
+      marginTop: "4px",
+    },
+    imageUploadArea: {
+      border: isDark ? "1px dashed #3b82f6" : "1px dashed #3b82f6",
+      borderRadius: "12px",
+      padding: "16px",
+      textAlign: "center",
+      cursor: "pointer",
+      transition: "all 0.2s",
+      background: isDark ? "rgba(59,130,246,0.05)" : "rgba(59,130,246,0.02)",
+      marginTop: "8px",
+    },
+    imagePreview: {
+      width: "100%",
+      maxHeight: "150px",
+      objectFit: "cover",
+      borderRadius: "8px",
+      marginTop: "12px",
+    },
+    uploadIcon: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "8px",
+    },
+    uploadText: {
+      fontSize: "13px",
+      color: isDark ? "#94a3b8" : "#64748b",
+    },
+    uploadHint: {
+      fontSize: "11px",
+      color: isDark ? "#4a5568" : "#94a3b8",
+      marginTop: "6px",
+    },
+    rowTwoColumns: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "16px",
+    },
+    footer: {
+      display: "flex",
+      justifyContent: "flex-end",
+      gap: "12px",
+      padding: "16px 24px",
+      borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#0f1520" : "#fafcff",
+    },
+    cancelBtn: {
+      padding: "8px 18px",
+      background: "transparent",
+      border: isDark ? "1px solid #2a3a5a" : "1px solid #cbd5e1",
+      borderRadius: "8px",
+      fontSize: "13px",
+      fontWeight: 500,
+      color: isDark ? "#94a3b8" : "#475569",
+      cursor: "pointer",
+    },
+    saveBtn: {
+      padding: "8px 20px",
+      background: "#4a6cf7",
+      border: "none",
+      borderRadius: "8px",
+      fontSize: "13px",
+      fontWeight: 600,
+      color: "#fff",
+      cursor: "pointer",
+    },
+  };
+
+  return (
+    <div style={dialogStyles.overlay} onClick={onClose}>
+      <div style={dialogStyles.dialog} onClick={(e) => e.stopPropagation()}>
+        <div style={dialogStyles.header}>
+          <h3 style={dialogStyles.title}>Add New Category</h3>
+          <button style={dialogStyles.closeBtn} onClick={onClose}>
+            <CloseIcon />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={dialogStyles.body}>
+            {/* ID and Name in two columns */}
+            <div style={dialogStyles.rowTwoColumns}>
+              <div style={dialogStyles.formGroup}>
+                <label style={dialogStyles.label}>
+                  ID <span style={dialogStyles.required}>*</span>
+                </label>
+                <input
+                  type="number"
+                  name="id"
+                  style={{ ...dialogStyles.input, ...(idError ? dialogStyles.errorInput : {}) }}
+                  placeholder="Enter category ID"
+                  value={formData.id}
+                  onChange={handleChange}
+                  required
+                />
+                {idError && <div style={dialogStyles.errorText}>{idError}</div>}
+              </div>
+              <div style={dialogStyles.formGroup}>
+                <label style={dialogStyles.label}>
+                  Name <span style={dialogStyles.required}>*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  style={dialogStyles.input}
+                  placeholder="Enter category name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            {/* Main Category */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Main Category</label>
+              <input
+                type="text"
+                name="mainCategory"
+                style={dialogStyles.input}
+                placeholder="Enter main category (e.g., Breads, Ice Cream, Breakfast)"
+                value={formData.mainCategory}
+                onChange={handleChange}
+                list="mainCategoryOptions"
+              />
+              <datalist id="mainCategoryOptions">
+                <option>Breads</option>
+                <option>Ice Cream</option>
+                <option>Breakfast</option>
+                <option>Main Course</option>
+                <option>Burgers</option>
+                <option>Side Dishes</option>
+                <option>Sweets & Desserts</option>
+              </datalist>
+            </div>
+
+            {/* Description */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Description</label>
+              <textarea
+                name="description"
+                style={dialogStyles.textarea}
+                placeholder="Enter category description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Image Upload */}
+            <div style={dialogStyles.formGroup}>
+              <label style={dialogStyles.label}>Image</label>
+              <div 
+                style={dialogStyles.imageUploadArea}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+                <div style={dialogStyles.uploadIcon}>
+                  <UploadIcon />
+                </div>
+                <div style={dialogStyles.uploadText}>
+                  {imagePreview ? "Change Image" : "Click to upload image"}
+                </div>
+                <div style={dialogStyles.uploadHint}>
+                  Supports JPG, PNG, GIF (Max 5MB)
+                </div>
+                {imagePreview && (
+                  <img src={imagePreview} alt="Preview" style={dialogStyles.imagePreview} />
+                )}
+              </div>
+            </div>
+          </div>
+          <div style={dialogStyles.footer}>
+            <button type="button" style={dialogStyles.cancelBtn} onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" style={dialogStyles.saveBtn}>
+              Save Category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAIN COMPONENT - With Dialog
 // ─────────────────────────────────────────────────────────────────────────────
 const CategoriesTable = ({ isDark = true }) => {
   const [categories, setCategories] = useState(demoCategories);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const itemsPerPage = 10;
+
+  // Get existing IDs for validation
+  const existingIds = categories.map(cat => cat.id);
 
   // Filter categories
   const filteredCategories = categories.filter(cat =>
@@ -127,10 +522,26 @@ const CategoriesTable = ({ isDark = true }) => {
     ));
   };
 
-  // Styles based on theme (without minHeight: 100vh)
+  // Add new category
+  const addCategory = (newCategoryData) => {
+    const newImageId = Math.max(...categories.map(c => c.imageId), 0) + 1;
+    const newCategory = {
+      id: newCategoryData.id,
+      imageId: newImageId,
+      name: newCategoryData.name,
+      mainCategory: newCategoryData.mainCategory,
+      subCategories: 0,
+      description: newCategoryData.description,
+      status: newCategoryData.status,
+      imageUrl: newCategoryData.imageUrl,
+    };
+    setCategories(prev => [newCategory, ...prev]);
+  };
+
+  // Styles based on theme
   const styles = {
     container: {
-      background: "transparent", // Dashboard ka background lega
+      background: "transparent",
       fontFamily: "'Segoe UI', 'DM Sans', sans-serif",
       padding: "20px 24px",
     },
@@ -192,7 +603,7 @@ const CategoriesTable = ({ isDark = true }) => {
     table: {
       width: "100%",
       borderCollapse: "collapse",
-      minWidth: "800px",
+      minWidth: "900px",
     },
     th: {
       padding: "14px 16px",
@@ -209,6 +620,12 @@ const CategoriesTable = ({ isDark = true }) => {
       fontSize: "13px",
       color: isDark ? "#e2e8f0" : "#1e293b",
       borderBottom: isDark ? "1px solid #1a2035" : "1px solid #f1f5f9",
+    },
+    descriptionCell: {
+      maxWidth: "200px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
     },
     actions: {
       display: "flex",
@@ -266,6 +683,13 @@ const CategoriesTable = ({ isDark = true }) => {
 
   return (
     <div style={styles.container}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+      
       {/* Header with Title, Search and Add Button */}
       <div style={styles.header}>
         <h3 style={styles.title}>Categories</h3>
@@ -283,7 +707,7 @@ const CategoriesTable = ({ isDark = true }) => {
               }}
             />
           </div>
-          <button style={styles.addBtn}>
+          <button style={styles.addBtn} onClick={() => setIsDialogOpen(true)}>
             <PlusIcon /> Add
           </button>
         </div>
@@ -298,6 +722,7 @@ const CategoriesTable = ({ isDark = true }) => {
               <th style={styles.th}>Image</th>
               <th style={styles.th}>Name</th>
               <th style={styles.th}>Main Category</th>
+              <th style={styles.th}>Description</th>
               <th style={styles.th}>Sub Categories</th>
               <th style={styles.th}>Status</th>
               <th style={styles.th}>Actions</th>
@@ -307,9 +732,16 @@ const CategoriesTable = ({ isDark = true }) => {
             {paginatedCategories.map((cat) => (
               <tr key={cat.id}>
                 <td style={styles.td}>{cat.id}</td>
-                <td style={styles.td}><ImagePlaceholder imageId={cat.imageId} isDark={isDark} /></td>
+                <td style={styles.td}>
+                  <ImagePlaceholder imageId={cat.imageId} isDark={isDark} imageUrl={cat.imageUrl} />
+                </td>
                 <td style={styles.td}><strong>{cat.name}</strong></td>
                 <td style={styles.td}>{cat.mainCategory}</td>
+                <td style={styles.td}>
+                  <span style={styles.descriptionCell} title={cat.description}>
+                    {cat.description || "—"}
+                  </span>
+                </td>
                 <td style={styles.td}>{cat.subCategories}</td>
                 <td style={styles.td}><StatusBadge status={cat.status} isDark={isDark} /></td>
                 <td style={styles.td}>
@@ -326,7 +758,7 @@ const CategoriesTable = ({ isDark = true }) => {
             ))}
             {paginatedCategories.length === 0 && (
               <tr>
-                <td colSpan={7} style={styles.emptyState}>
+                <td colSpan={8} style={styles.emptyState}>
                   No categories found
                 </td>
               </tr>
@@ -374,6 +806,16 @@ const CategoriesTable = ({ isDark = true }) => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Add Category Dialog */}
+      {isDialogOpen && (
+        <AddCategoryDialog
+          isDark={isDark}
+          onClose={() => setIsDialogOpen(false)}
+          onSave={addCategory}
+          existingIds={existingIds}
+        />
       )}
     </div>
   );

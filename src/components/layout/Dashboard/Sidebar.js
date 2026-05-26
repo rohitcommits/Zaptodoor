@@ -318,7 +318,7 @@ const menuData = [
                         <line x1="18" y1="9" x2="18" y2="15" />
                     </svg>
                 ),
-                path: "/press-release"
+                path: "/Dashboard/PressRelease"
             },
             { 
                 name: "Enquiries", 
