@@ -43,7 +43,7 @@ import PressRelease from "../components/layout/Dashboard/PressRelease.js";
 const Dashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   const t = isDark
     ? { bg: "#0c1018", pageBg: "#0c1018", text: "#94a3b8" }
