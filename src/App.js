@@ -7,7 +7,7 @@ import ContactPage from "./components/layout/Contact";
 import Pressrelease from "./components/layout/Pressrelease";
 import Dashboard from "./pages/Dashboard";
 import UsersTable from "./components/layout/Dashboard/Users";
-import RestaurantTable from "./components/layout/Dashboard/Restaurant";
+
 
 
 // Routes mein add k
@@ -23,7 +23,7 @@ function App() {
           <Route path="/Contact" element={<ContactPage />} />
           <Route path="/Pressrelease" element={<Pressrelease />} />
           <Route path="/UsersTable" element={<UsersTable />} />
-          <Route path="/Restaurant" element={<RestaurantTable />} />
+       
           
         </Routes>
       </Router>

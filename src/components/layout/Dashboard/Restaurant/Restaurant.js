@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import ExportRestaurantsModal from "./ExportRestaurantsModal";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // API CONFIG
@@ -75,12 +77,6 @@ const SearchIcon = () => (
     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
   </svg>
 );
-// const RefreshIcon = () => (
-//   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-//     <polyline points="23 4 23 10 17 10"/>
-//     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-//   </svg>
-// );
 const ChevronLeftIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
     <polyline points="15 18 9 12 15 6"/>
@@ -186,12 +182,13 @@ const Toast = ({ message, type, onClose }) => (
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-const RestaurantTable = () => {
+const RestaurantTable = ({ isDark = true }) => {
+  const navigate = useNavigate();
+  
   // State
   const [restaurants, setRestaurants] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
-//   const [actionLoading, setActionLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -204,10 +201,74 @@ const RestaurantTable = () => {
   const [editForm, setEditForm] = useState({});
   const [toast, setToast] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3500);
+  };
+
+  // Handle Add Restaurant Navigation
+  const handleAddRestaurant = () => {
+    navigate("/dashboard/addrestaurant");
+  };
+
+  // Handle Export Click
+  const handleExportClick = () => {
+    setShowExportModal(true);
+  };
+
+  // Handle Export from Modal
+  const handleExport = (exportConfig) => {
+    console.log("Export Config:", exportConfig);
+    
+    const selectedFields = exportConfig.selectedFields;
+    // const dateRange = exportConfig.dateRange;
+    
+    // Define headers mapping
+    const headers = selectedFields.map(field => {
+      const headerMap = {
+        id: "ID", orgType: "Org Type", contact: "Contact", email: "Email",
+        contactPersonName: "Contact Person Name", prefix: "Prefix", city: "City",
+        state: "State", pinCode: "PIN Code", latitude: "Latitude", longitude: "Longitude",
+        ownerName: "Owner Name", ownerMobile: "Owner Mobile", otherPersonName: "Other Person Name",
+        otherPersonMobile: "Other Person Mobile", bankName: "Bank Name", branch: "Branch",
+        bankType: "Bank Type", accountHolder: "Account Holder", accountNumber: "Account Number",
+        ifsc: "IFSC", bankMobile: "Bank Mobile", upi: "UPI", commission: "Commission (%)",
+        specialCommission: "Special Commission (%)", minimumOrder: "Minimum Order",
+        platformCharge: "Platform Charge", handlingCharge: "Handling Charge (%)",
+        gst: "GST (%)", orderReceivingCharges: "Order Receiving Charges (%)",
+        subscription: "Subscription", paidStatus: "Paid Status", wallet: "Wallet",
+        referralCode: "Referral Code", referredBy: "Referred By", mou: "MOU",
+        status: "Status", scheduleMode: "Schedule Mode", shiftStart: "Shift Start",
+        shiftEnd: "Shift End", openStatus: "Open Status", scheduleApproved: "Schedule Approved",
+        isReady: "Is Ready", remarks: "Remarks", createdAt: "Created At", updatedAt: "Updated At"
+      };
+      return headerMap[field] || field;
+    });
+    
+    // Create CSV data
+    const csvData = mappedRestaurants.map(restro => {
+      return selectedFields.map(field => {
+        const value = restro[field] || '';
+        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      });
+    });
+    
+    const csvContent = [headers, ...csvData].map(row => row.join(',')).join('\n');
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const date = new Date();
+    a.download = `restaurants_export_${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("Exported successfully");
+    setShowExportModal(false);
   };
 
   // Debounce search
@@ -266,7 +327,6 @@ const RestaurantTable = () => {
   // Selection
   const pageIds = mappedRestaurants.map(r => r.id);
   const allPageSelected = pageIds.length > 0 && pageIds.every(id => selected.has(id));
-//   const somePageSelected = pageIds.some(id => selected.has(id)) && !allPageSelected;
 
   const toggleAll = () => {
     setSelected(prev => {
@@ -280,27 +340,8 @@ const RestaurantTable = () => {
   };
   const clearSelection = () => setSelected(new Set());
 
-  // Export CSV
-  const exportToCSV = () => {
-    const headers = ['SN', 'ID', 'Status', 'Ready', 'ON/OFF', 'Shift Start', 'Shift End', 'Restro Name', 'Contact', 'Password'];
-    const csvData = mappedRestaurants.map(r => [
-      r.sn, r.restroId, r.status, r.ready, r.onOff,
-      r.shiftStart || '-', r.shiftEnd || '-', r.name, r.contact, r.password
-    ]);
-    const csvContent = [headers, ...csvData].map(row => row.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'restaurants.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("Exported successfully");
-  };
-
   // Delete handler
   const handleDeleteSelected = async () => {
-    // setActionLoading(true);
     try {
       await apiDeleteRestaurants(Array.from(selected));
       showToast(`${selected.size} restaurant(s) deleted`);
@@ -309,8 +350,6 @@ const RestaurantTable = () => {
       fetchRestaurants();
     } catch (err) {
       showToast(`Delete failed: ${err.message}`, "error");
-    } finally {
-    //   setActionLoading(false);
     }
   };
 
@@ -330,7 +369,6 @@ const RestaurantTable = () => {
   };
 
   const handleEditSave = async () => {
-    // setActionLoading(true);
     try {
       await apiUpdateRestaurant(editRestaurant.id, editForm);
       showToast("Restaurant updated successfully");
@@ -338,8 +376,6 @@ const RestaurantTable = () => {
       fetchRestaurants();
     } catch (err) {
       showToast(`Update failed: ${err.message}`, "error");
-    } finally {
-    //   setActionLoading(false);
     }
   };
 
@@ -348,24 +384,24 @@ const RestaurantTable = () => {
 
   // Styles
   const styles = {
-    container: { minHeight: "100vh", background: "#0d1117", fontFamily: "'DM Sans', sans-serif", padding: "20px 24px" },
+    container: { minHeight: "100vh", background: isDark ? "#0d1117" : "#f8fafc", fontFamily: "'DM Sans', sans-serif", padding: "20px 24px" },
     headerActions: { display: "flex", gap: "12px", marginBottom: "20px" },
     addBtn: { background: "#4a6cf7", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px" },
     exportBtn: { background: "#28a745", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px" },
     filtersBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "15px" },
     searchWrapper: { position: "relative", flex: 1, maxWidth: "350px" },
-    searchInput: { width: "100%", padding: "10px 12px 10px 35px", background: "#141824", border: "1px solid #1e2740", borderRadius: "8px", fontSize: "13px", color: "#f1f5f9", outline: "none" },
+    searchInput: { width: "100%", padding: "10px 12px 10px 35px", background: isDark ? "#141824" : "#ffffff", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px", fontSize: "13px", color: isDark ? "#f1f5f9" : "#1e293b", outline: "none" },
     searchIcon: { position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#3b82f6" },
     filterControls: { display: "flex", gap: "20px", alignItems: "center", flexWrap: "wrap" },
-    filterGroup: { display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "#64748b" },
-    select: { padding: "6px 10px", background: "#141824", border: "1px solid #1e2740", borderRadius: "6px", color: "#f1f5f9", cursor: "pointer" },
-    showHidden: { display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#64748b" },
+    filterGroup: { display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: isDark ? "#64748b" : "#475569" },
+    select: { padding: "6px 10px", background: isDark ? "#141824" : "#ffffff", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "6px", color: isDark ? "#f1f5f9" : "#1e293b", cursor: "pointer" },
+    showHidden: { display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: isDark ? "#64748b" : "#475569" },
     selectionBar: { display: "flex", alignItems: "center", gap: "12px", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)", borderRadius: "8px", padding: "8px 16px", marginBottom: "12px" },
-    tableWrapper: { background: "#141824", border: "1px solid #1e2740", borderRadius: "12px", overflow: "hidden" },
+    tableWrapper: { background: isDark ? "#141824" : "#ffffff", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "12px", overflow: "hidden" },
     table: { width: "100%", borderCollapse: "collapse", minWidth: "1200px" },
-    th: { padding: "13px 14px", textAlign: "left", fontSize: "12px", fontWeight: 700, color: "#3b82f6", borderBottom: "1px solid #1e2740", background: "#0f1520" },
-    td: { padding: "12px 14px", borderBottom: "1px solid #1a2035", fontSize: "13px", color: "#e2e8f0" },
-    pagination: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #1e2740", background: "#0f1520" },
+    th: { padding: "13px 14px", textAlign: "left", fontSize: "12px", fontWeight: 700, color: "#3b82f6", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", background: isDark ? "#0f1520" : "#f8fafc" },
+    td: { padding: "12px 14px", borderBottom: isDark ? "1px solid #1a2035" : "1px solid #f1f5f9", fontSize: "13px", color: isDark ? "#e2e8f0" : "#1e293b" },
+    pagination: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", background: isDark ? "#0f1520" : "#f8fafc" },
   };
 
   return (
@@ -377,8 +413,8 @@ const RestaurantTable = () => {
 
       {/* Header Actions */}
       <div style={styles.headerActions}>
-        <button style={styles.addBtn}>+ Add Restaurant</button>
-        <button style={styles.exportBtn} onClick={exportToCSV}>Export CSV</button>
+        <button style={styles.addBtn} onClick={handleAddRestaurant}>+ Add Restaurant</button>
+        <button style={styles.exportBtn} onClick={handleExportClick}>Export CSV</button>
       </div>
 
       {/* Filters */}
@@ -472,7 +508,7 @@ const RestaurantTable = () => {
                 ))
               ) : mappedRestaurants.length === 0 ? (
                 <tr>
-                  <td colSpan={13} style={{ padding: "60px", textAlign: "center", color: "#64748b" }}>
+                  <td colSpan={13} style={{ padding: "60px", textAlign: "center", color: isDark ? "#64748b" : "#94a3b8" }}>
                     {debouncedSearch ? "No restaurants match your search" : "No restaurants found"}
                   </td>
                 </tr>
@@ -493,8 +529,8 @@ const RestaurantTable = () => {
                     <td style={styles.td}><span style={{ fontFamily: "monospace", fontSize: "11px" }}>{restro.password}</span></td>
                     <td style={styles.td}>
                       <div style={{ display: "flex", gap: "10px" }}>
-                        <button onClick={() => openEdit(restro)} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b" }}><EditIcon /></button>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b" }}><EyeIcon /></button>
+                        <button onClick={() => openEdit(restro)} style={{ background: "none", border: "none", cursor: "pointer", color: isDark ? "#64748b" : "#94a3b8" }}><EditIcon /></button>
+                        <button style={{ background: "none", border: "none", cursor: "pointer", color: isDark ? "#64748b" : "#94a3b8" }}><EyeIcon /></button>
                       </div>
                     </td>
                   </tr>
@@ -506,7 +542,7 @@ const RestaurantTable = () => {
 
         {/* Pagination */}
         <div style={styles.pagination}>
-          <span style={{ fontSize: "12px", color: "#64748b" }}>
+          <span style={{ fontSize: "12px", color: isDark ? "#64748b" : "#94a3b8" }}>
             {loading ? "Loading..." : `Showing ${Math.min((page-1)*perPage+1, total)}–${Math.min(page*perPage, total)} of ${total} restaurants`}
           </span>
           <div style={{ display: "flex", gap: "6px" }}>
@@ -531,19 +567,19 @@ const RestaurantTable = () => {
       {/* Edit Modal */}
       {editRestaurant && (
         <div onClick={() => setEditRestaurant(null)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "420px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Edit Restaurant</h3>
+          <div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#141824" : "#ffffff", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "16px", padding: "28px", width: "420px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: isDark ? "#f1f5f9" : "#1e293b" }}>Edit Restaurant</h3>
             {[{ label: "Restro Name", key: "name" }, { label: "Contact", key: "contact" }, { label: "Password", key: "password" }].map(f => (
               <div key={f.key} style={{ marginBottom: "14px" }}>
-                <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>{f.label}</label>
-                <input value={editForm[f.key] || ""} onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))} style={{ width: "100%", padding: "9px 12px", background: "#0f1520", border: "1px solid #1e2740", borderRadius: "8px", color: "#f1f5f9" }} />
+                <label style={{ fontSize: "11px", color: isDark ? "#64748b" : "#475569", display: "block", marginBottom: "5px" }}>{f.label}</label>
+                <input value={editForm[f.key] || ""} onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))} style={{ width: "100%", padding: "9px 12px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px", color: isDark ? "#f1f5f9" : "#1e293b" }} />
               </div>
             ))}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "20px" }}>
               {[{ label: "Status", key: "status", options: ["Active", "Inactive"] }, { label: "Ready", key: "ready", options: ["Yes", "No"] }, { label: "ON/OFF", key: "onOff", options: ["ON", "OFF"] }].map(f => (
                 <div key={f.key}>
-                  <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>{f.label}</label>
-                  <select value={editForm[f.key] || ""} onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))} style={{ width: "100%", padding: "9px 12px", background: "#0f1520", border: "1px solid #1e2740", borderRadius: "8px", color: "#f1f5f9" }}>
+                  <label style={{ fontSize: "11px", color: isDark ? "#64748b" : "#475569", display: "block", marginBottom: "5px" }}>{f.label}</label>
+                  <select value={editForm[f.key] || ""} onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))} style={{ width: "100%", padding: "9px 12px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px", color: isDark ? "#f1f5f9" : "#1e293b" }}>
                     {f.options.map(o => <option key={o} value={o}>{o}</option>)}
                   </select>
                 </div>
@@ -560,18 +596,27 @@ const RestaurantTable = () => {
       {/* Delete Confirmation Modal */}
       {confirmDelete && (
         <div onClick={() => setConfirmDelete(false)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "16px", padding: "28px", width: "340px", textAlign: "center" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#141824" : "#ffffff", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "16px", padding: "28px", width: "340px", textAlign: "center" }}>
             <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "rgba(239,68,68,0.12)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
               <TrashIcon style={{ color: "#ef4444" }} />
             </div>
-            <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: "#f1f5f9" }}>Delete {selected.size} restaurant{selected.size > 1 ? "s" : ""}?</h3>
-            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>This action cannot be undone.</p>
+            <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: isDark ? "#f1f5f9" : "#1e293b" }}>Delete {selected.size} restaurant{selected.size > 1 ? "s" : ""}?</h3>
+            <p style={{ margin: "0 0 20px", fontSize: "13px", color: isDark ? "#64748b" : "#475569" }}>This action cannot be undone.</p>
             <div style={{ display: "flex", gap: "10px" }}>
               <button onClick={() => setConfirmDelete(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>Cancel</button>
               <button onClick={handleDeleteSelected} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "rgba(239,68,68,0.15)", color: "#ef4444", cursor: "pointer", fontWeight: 700 }}>Delete</button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Export Modal */}
+      {showExportModal && (
+        <ExportRestaurantsModal
+          isDark={isDark}
+          onClose={() => setShowExportModal(false)}
+          onExport={handleExport}
+        />
       )}
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}

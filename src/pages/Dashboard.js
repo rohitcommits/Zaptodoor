@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Sidebar from "../components/layout/Dashboard/Sidebar";
 import DashboardHome from "../components/layout/Dashboard/DashboardHome";
 import DriverTable from "../components/layout/Dashboard/Driver";
-import RestaurantTable from "../components/layout/Dashboard/Restaurant";
+import RestaurantTable from "../components/layout/Dashboard/Restaurant/Restaurant";
 import UsersTable from "../components/layout/Dashboard/Users";
 import OrderTable from "../components/layout/Dashboard/Orders";
 import MainCategoryTable from "../components/layout/Dashboard/MainCategory";
@@ -17,6 +17,25 @@ import FAQ from "../components/layout/Dashboard/Faq";
 import WebBanners from "../components/layout/Dashboard/WebBanners";
 import Pages from "../components/layout/Dashboard/Pages";
 import Services from "../components/layout/Dashboard/Services";
+import ChooseUs from "../components/layout/Dashboard/ChooseUs";
+import Enquiries from "../components/layout/Dashboard/Enquiries";
+import FooterCertificates from "../components/layout/Dashboard/FooterCertificates.js";
+import DevFeedback from "../components/layout/Dashboard/DevFeedback";
+import AddNewRestaurant from "../components/layout/Dashboard/Restaurant/AddRestaurants.js";
+import ExportRestaurantsModal from "../components/layout/Dashboard/Restaurant/ExportRestaurantsModal.js";
+
+// Routes mein add karein
+
+
+// Routes mein add karein
+
+
+
+
+// Routes mein add karein
+
+
+// Routes mein add karein
 
 
 
@@ -89,7 +108,7 @@ const Dashboard = () => {
 
       <main style={styles.mainContent}>
         {/* Theme Toggle Button */}
-        <div
+        {/* <div
           style={styles.themeToggle}
           onClick={() => setIsDark(!isDark)}
           title="Toggle theme"
@@ -98,7 +117,7 @@ const Dashboard = () => {
             {isDark ? "☀️" : "🌙"}
           </span>
           <span style={styles.toggleLabel}>{isDark ? "Light" : "Dark"}</span>
-        </div>
+        </div> */}
 
         <Routes>
           <Route path="/" element={<DashboardHome isDark={isDark} />} />
@@ -121,7 +140,14 @@ const Dashboard = () => {
           <Route path="/faq" element={<FAQ isDark={isDark} />} />
           <Route path="/WebBanners" element={<WebBanners isDark={isDark} />} />
           <Route path="/pages" element={<Pages isDark={isDark} />} />
-          <Route path="/services" element={<Services isDark={isDark} />} />
+          <Route path="/servicesA" element={<Services isDark={isDark} />} />
+          <Route path="/ChooseUs" element={<ChooseUs isDark={isDark} />} />
+          <Route path="/enquiries" element={<Enquiries isDark={isDark} />} />
+          <Route path="/footercertificates" element={<FooterCertificates isDark={isDark} />} />
+          <Route path="/devfeedback" element={<DevFeedback isDark={isDark} />} />
+          <Route path="/addrestaurant" element={<AddNewRestaurant isDark={isDark} />} />
+          <Route path="/ExportRestaurantsModal" element={<ExportRestaurantsModal isDark={isDark} />} />
+          
         </Routes>
       </main>
     </div>

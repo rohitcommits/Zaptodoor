@@ -295,7 +295,7 @@ const menuData = [
                         <circle cx="7" cy="16" r="1" />
                     </svg>
                 ),
-                path: "/services"
+                path: "/Dashboard/servicesA"
             },
             { 
                 name: "Choose Us", 
@@ -307,7 +307,7 @@ const menuData = [
                         <circle cx="12" cy="20" r="1" />
                     </svg>
                 ),
-                path: "/choose-us"
+                path: "/Dashboard/ChooseUs"
             },
             { 
                 name: "Press Release", 
@@ -329,7 +329,7 @@ const menuData = [
                         <circle cx="15" cy="10" r="1" />
                     </svg>
                 ),
-                path: "/enquiries"
+                path: "/Dashboard/enquiries"
             },
             { 
                 name: "Footer Certificates", 
@@ -338,124 +338,12 @@ const menuData = [
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
                 ),
-                path: "/footer-certificates"
+                path: "/Dashboard/footercertificates "
             }
         ]
     },
-    {
-        section: "SETTINGS",
-        items: [
-            { 
-                name: "Regions", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                        <circle cx="12" cy="12" r="3" />
-                    </svg>
-                ),
-                path: "/regions"
-            },
-            { 
-                name: "Staff", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                ),
-                path: "/staff"
-            },
-            { 
-                name: "Roles", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2a10 10 0 0 0-10 10c0 5.5 4.5 10 10 10s10-4.5 10-10a10 10 0 0 0-10-10z" />
-                        <path d="M12 6v6l4 2" />
-                        <circle cx="12" cy="16" r="1" />
-                    </svg>
-                ),
-                path: "/roles"
-            },
-            { 
-                name: "General", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                    </svg>
-                ),
-                path: "/general"
-            }
-        ]
-    },
-    {
-        section: "DEVELOPMENT",
-        items: [
-            { 
-                name: "Maps", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="1 6 8 2 16 5 22 3 22 18 16 21 8 19 1 22 1 6" />
-                        <line x1="8" y1="2" x2="8" y2="19" />
-                        <line x1="16" y1="5" x2="16" y2="21" />
-                        <circle cx="12" cy="11" r="2" />
-                    </svg>
-                ),
-                path: "/maps"
-            },
-            { 
-                name: "App Builder", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-                        <line x1="12" y1="18" x2="12" y2="18" />
-                        <circle cx="12" cy="15" r="1" />
-                    </svg>
-                ),
-                path: "/app-builder"
-            },
-            { 
-                name: "Server", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                        <line x1="3" y1="9" x2="21" y2="9" />
-                        <line x1="9" y1="15" x2="15" y2="15" />
-                        <circle cx="6" cy="15" r="1" />
-                        <circle cx="18" cy="15" r="1" />
-                    </svg>
-                ),
-                path: "/server"
-            },
-            { 
-                name: "AI Settings", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M2 12h2M20 12h2M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M19.07 4.93l-1.41 1.41M6.34 17.66l-1.41 1.41" />
-                        <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
-                    </svg>
-                ),
-                path: "/ai-settings"
-            },
-            { 
-                name: "Database", 
-                icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <ellipse cx="12" cy="5" rx="9" ry="3" />
-                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                        <circle cx="8" cy="12" r="1" />
-                        <circle cx="16" cy="12" r="1" />
-                    </svg>
-                ),
-                path: "/database"
-            }
-        ]
-    },
+   
+
     {
         section: "DEV FEEDBACK",
         items: [
@@ -468,31 +356,31 @@ const menuData = [
                         <circle cx="15" cy="12" r="1" />
                     </svg>
                 ),
-                path: "/dev-feedback"
+                path: "/Dashboard/devfeedback"
             }
         ]
     }
 ];
 
-const ChevronIcon = ({ open }) => (
-    <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        style={{
-            transition: "transform 0.25s ease",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            flexShrink: 0,
-        }}
-    >
-        <polyline points="6 9 12 15 18 9" />
-    </svg>
-);
+// const ChevronIcon = ({ open }) => (
+//     <svg
+//         width="14"
+//         height="14"
+//         viewBox="0 0 24 24"
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="2.5"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//         style={{
+//             transition: "transform 0.25s ease",
+//             transform: open ? "rotate(180deg)" : "rotate(0deg)",
+//             flexShrink: 0,
+//         }}
+//     >
+//         <polyline points="6 9 12 15 18 9" />
+//     </svg>
+// );
 
 const SunIcon = () => (
     <svg
@@ -665,53 +553,59 @@ const Sidebar = ({
             >
                 {/* Logo */}
                 <div
-                    style={{
-                        padding: isSidebarCollapsed ? "20px 0" : "20px 20px 16px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        justifyContent: isSidebarCollapsed ? "center" : "flex-start",
-                        borderBottom: isDark
-                            ? "1px solid rgba(255,255,255,0.06)"
-                            : "1px solid #f1f5f9",
-                        marginBottom: "8px",
-                        flexShrink: 0,
-                    }}
-                >
-                    {/* Logo icon */}
-                    <div style={{ flexShrink: 0 }}>
-                        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                            <path
-                                d="M6 16L16 6L26 16"
-                                stroke="#6c63ff"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <path
-                                d="M6 24L16 14L26 24"
-                                stroke="#4fd1c5"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                opacity="0.7"
-                            />
-                        </svg>
-                    </div>
-                    {!isSidebarCollapsed && (
-                        <span
-                            style={{
-                                fontFamily: "'Segoe UI', sans-serif",
-                                fontWeight: 700,
-                                fontSize: "18px",
-                                letterSpacing: "-0.3px",
-                                ...theme.logo,
-                            }}
-                        >
-                            Semi<span style={theme.logoAccent}>Dash</span>
-                        </span>
-                    )}
-                </div>
+    style={{
+        padding: isSidebarCollapsed ? "20px 0" : "20px 20px 16px",
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        justifyContent: isSidebarCollapsed ? "center" : "flex-start",
+        borderBottom: isDark
+            ? "1px solid rgba(255,255,255,0.06)"
+            : "1px solid #f1f5f9",
+        marginBottom: "8px",
+        flexShrink: 0,
+    }}
+>
+    {/* Logo image */}
+    <div style={{ 
+        flexShrink: 0,
+        width: isSidebarCollapsed ? "32px" : "36px",
+        height: isSidebarCollapsed ? "32px" : "36px",
+        borderRadius: "8px",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: isDark ? "#141824" : "#ffffff",
+    }}>
+        <img 
+            src="https://thumbs.dreamstime.com/b/initial-letter-zd-logotype-company-name-colored-blue-grey-swoosh-design-vector-logo-business-company-identity-initial-199364284.jpg"
+            alt="Logo"
+            style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+            }}
+            onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%236c63ff'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-size='20' font-weight='bold'%3EZD%3C/text%3E%3C/svg%3E";
+            }}
+        />
+    </div>
+    {!isSidebarCollapsed && (
+        <span
+            style={{
+                fontFamily: "'Segoe UI', sans-serif",
+                fontWeight: 700,
+                fontSize: "18px",
+                letterSpacing: "-0.3px",
+                ...theme.logo,
+            }}
+        >
+            Admin<span style={theme.logoAccent}>Panel</span>
+        </span>
+    )}
+</div>
 
                 {/* Scrollable menu */}
                 <div
@@ -856,7 +750,7 @@ const Sidebar = ({
                                                                 opacity: 0.7,
                                                             }}
                                                         >
-                                                            <ChevronIcon open={open} />
+                                                            {/* <ChevronIcon open={open} /> */}
                                                         </span>
                                                     )}
                                                 </>
