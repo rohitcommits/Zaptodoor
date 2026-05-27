@@ -1,149 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DEMO DATA
+// DEMO DATA (Same as before)
 // ─────────────────────────────────────────────────────────────────────────────
 const demoOrders = [
-  {
-    id: 84,
-    orderId: "#553",
-    status: "Active",
-    date: "2026-05-23 15:04:58",
-    restaurant: "Neeraj Verma",
-    user: "Neeraj Verma",
-    payStatus: "paid",
-    payMethod: "COD",
-    restroStatus: "completed",
-    driverStatus: "delivered",
-    userStatus: "delivered",
-    amount: "275"
-  },
-  {
-    id: 83,
-    orderId: "#552",
-    status: "Active",
-    date: "2026-05-20 22:49:31",
-    restaurant: "Pandit's Rolls and Momos",
-    user: "mehul",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "pending",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "242"
-  },
-  {
-    id: 82,
-    orderId: "#551",
-    status: "Active",
-    date: "2026-05-20 16:04:35",
-    restaurant: "Neeraj Verma",
-    user: "Yash",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "pending",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "337"
-  },
-  {
-    id: 81,
-    orderId: "#550",
-    status: "Active",
-    date: "2026-05-20 16:02:18",
-    restaurant: "Neeraj Verma",
-    user: "Yash",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "pending",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "260"
-  },
-  {
-    id: 80,
-    orderId: "#549",
-    status: "Active",
-    date: "2026-05-20 15:53:24",
-    restaurant: "Neeraj Verma",
-    user: "Yash",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "cancelled",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "285"
-  },
-  {
-    id: 79,
-    orderId: "#548",
-    status: "Active",
-    date: "2026-05-20 15:39:57",
-    restaurant: "Neeraj Verma",
-    user: "Neeraj Verma",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "cancelled",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "262"
-  },
-  {
-    id: 78,
-    orderId: "#547",
-    status: "Active",
-    date: "2026-05-20 15:35:33",
-    restaurant: "Neeraj Verma",
-    user: "Neeraj Verma",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "cancelled",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "262"
-  },
-  {
-    id: 77,
-    orderId: "#546",
-    status: "Active",
-    date: "2026-05-16 11:26:40",
-    restaurant: "Shan E Punjab",
-    user: "Neeraj Verma",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "pending",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "239"
-  },
-  {
-    id: 76,
-    orderId: "#545",
-    status: "Active",
-    date: "2026-05-12 13:05:40",
-    restaurant: "Happiness Fast Food Restaurant",
-    user: "MANGLAM",
-    payStatus: "paid",
-    payMethod: "COD",
-    restroStatus: "completed",
-    driverStatus: "delivered",
-    userStatus: "delivered",
-    amount: "254"
-  },
-  {
-    id: 75,
-    orderId: "#544",
-    status: "Active",
-    date: "2026-05-09 13:11:40",
-    restaurant: "MM Chaap DD Nagar",
-    user: "ramsharma",
-    payStatus: "pending",
-    payMethod: "COD",
-    restroStatus: "cancelled",
-    driverStatus: "cancelled",
-    userStatus: "cancelled",
-    amount: "310"
-  }
+  { id: 84, orderId: "#553", status: "Active", date: "2026-05-23 15:04:58", restaurant: "Neeraj Verma", user: "Neeraj Verma", payStatus: "paid", payMethod: "COD", restroStatus: "completed", driverStatus: "delivered", userStatus: "delivered", amount: "275" },
+  { id: 83, orderId: "#552", status: "Active", date: "2026-05-20 22:49:31", restaurant: "Pandit's Rolls and Momos", user: "mehul", payStatus: "pending", payMethod: "COD", restroStatus: "pending", driverStatus: "cancelled", userStatus: "cancelled", amount: "242" },
+  { id: 82, orderId: "#551", status: "Active", date: "2026-05-20 16:04:35", restaurant: "Neeraj Verma", user: "Yash", payStatus: "pending", payMethod: "COD", restroStatus: "pending", driverStatus: "cancelled", userStatus: "cancelled", amount: "337" },
+  { id: 81, orderId: "#550", status: "Active", date: "2026-05-20 16:02:18", restaurant: "Neeraj Verma", user: "Yash", payStatus: "pending", payMethod: "COD", restroStatus: "pending", driverStatus: "cancelled", userStatus: "cancelled", amount: "260" },
+  { id: 80, orderId: "#549", status: "Active", date: "2026-05-20 15:53:24", restaurant: "Neeraj Verma", user: "Yash", payStatus: "pending", payMethod: "COD", restroStatus: "cancelled", driverStatus: "cancelled", userStatus: "cancelled", amount: "285" },
+  { id: 79, orderId: "#548", status: "Active", date: "2026-05-20 15:39:57", restaurant: "Neeraj Verma", user: "Neeraj Verma", payStatus: "pending", payMethod: "COD", restroStatus: "cancelled", driverStatus: "cancelled", userStatus: "cancelled", amount: "262" },
+  { id: 78, orderId: "#547", status: "Active", date: "2026-05-20 15:35:33", restaurant: "Neeraj Verma", user: "Neeraj Verma", payStatus: "pending", payMethod: "COD", restroStatus: "cancelled", driverStatus: "cancelled", userStatus: "cancelled", amount: "262" },
+  { id: 77, orderId: "#546", status: "Active", date: "2026-05-16 11:26:40", restaurant: "Shan E Punjab", user: "Neeraj Verma", payStatus: "pending", payMethod: "COD", restroStatus: "pending", driverStatus: "cancelled", userStatus: "cancelled", amount: "239" },
+  { id: 76, orderId: "#545", status: "Active", date: "2026-05-12 13:05:40", restaurant: "Happiness Fast Food Restaurant", user: "MANGLAM", payStatus: "paid", payMethod: "COD", restroStatus: "completed", driverStatus: "delivered", userStatus: "delivered", amount: "254" },
+  { id: 75, orderId: "#544", status: "Active", date: "2026-05-09 13:11:40", restaurant: "MM Chaap DD Nagar", user: "ramsharma", payStatus: "pending", payMethod: "COD", restroStatus: "cancelled", driverStatus: "cancelled", userStatus: "cancelled", amount: "310" }
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -233,17 +103,28 @@ const Checkbox = ({ checked, onChange, isDark }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
+// MAIN COMPONENT - Fixed with Better Visibility
 // ─────────────────────────────────────────────────────────────────────────────
 const OrderTable = ({ isDark = true }) => {
-  const [orders] = useState(demoOrders); // Removed setOrders - warning fixed
+  const [orders] = useState(demoOrders);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [paymentFilter, setPaymentFilter] = useState("All");
   const [periodFilter, setPeriodFilter] = useState("All");
   const [selected, setSelected] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
+  const isTablet = windowWidth > 768 && windowWidth <= 1024;
 
   // Filter orders
   const filteredOrders = orders.filter(order => {
@@ -255,15 +136,13 @@ const OrderTable = ({ isDark = true }) => {
     const matchesStatus = statusFilter === "All" || order.status === statusFilter;
     const matchesPayment = paymentFilter === "All" || order.payMethod === paymentFilter;
     
-    // Period filter
     let matchesPeriod = true;
     if (periodFilter !== "All") {
       const orderDate = new Date(order.date);
       const today = new Date();
-      const todayStr = today.toDateString();
       
       if (periodFilter === "Today") {
-        matchesPeriod = orderDate.toDateString() === todayStr;
+        matchesPeriod = orderDate.toDateString() === today.toDateString();
       } else if (periodFilter === "This Week") {
         const weekAgo = new Date();
         weekAgo.setDate(today.getDate() - 7);
@@ -298,18 +177,62 @@ const OrderTable = ({ isDark = true }) => {
     setSelected(newSelected);
   };
 
-  // Styles based on theme
+  const getContainerPadding = () => {
+    if (isMobile) return "12px";
+    if (isTablet) return "16px 20px";
+    return "20px 24px";
+  };
+
+  const getSearchWidth = () => {
+    if (isMobile) return "100%";
+    if (isTablet) return "280px";
+    return "350px";
+  };
+
+  const getTableMinWidth = () => {
+    // Thoda chota kiya hai taaki mobile pe better dikhe
+    if (isMobile) return "900px";
+    return "1200px";
+  };
+
   const styles = {
     container: {
       minHeight: "100vh",
       background: isDark ? "#0d1117" : "#f8fafc",
       fontFamily: "'Segoe UI', 'DM Sans', sans-serif",
-      padding: "20px 24px",
+      padding: getContainerPadding(),
+    },
+    contentWrapper: {
+      maxWidth: "1600px",
+      margin: "0 auto",
+      width: "100%",
+    },
+    header: {
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      justifyContent: "space-between",
+      alignItems: isMobile ? "stretch" : "center",
+      marginBottom: "20px",
+      gap: isMobile ? "16px" : "20px",
+    },
+    titleSection: {
+      flex: isMobile ? "auto" : 1,
+    },
+    title: {
+      fontSize: isMobile ? "20px" : "22px",
+      fontWeight: 700,
+      color: isDark ? "#f1f5f9" : "#0f172a",
+      margin: 0,
+    },
+    subtitle: {
+      fontSize: "12px",
+      color: isDark ? "#64748b" : "#64748b",
+      marginTop: "4px",
     },
     searchWrapper: {
-      marginBottom: "24px",
       position: "relative",
-      maxWidth: "400px",
+      width: getSearchWidth(),
+      flexShrink: 0,
     },
     searchIcon: {
       position: "absolute",
@@ -320,44 +243,50 @@ const OrderTable = ({ isDark = true }) => {
     },
     searchInput: {
       width: "100%",
-      padding: "12px 16px 12px 42px",
+      padding: "11px 16px 11px 42px",
       background: isDark ? "#141824" : "#ffffff",
       border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "10px",
+      borderRadius: "12px",
       fontSize: "13px",
       color: isDark ? "#f1f5f9" : "#1e293b",
       outline: "none",
       transition: "all 0.2s",
+      boxSizing: "border-box",
     },
     filtersRow: {
       display: "flex",
+      flexDirection: "row",
       flexWrap: "wrap",
-      gap: "24px",
-      marginBottom: "24px",
-      paddingBottom: "16px",
+      gap: "16px",
+      marginBottom: "20px",
+      paddingBottom: "12px",
       borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
     },
     filterGroup: {
       display: "flex",
       alignItems: "center",
-      gap: "10px",
+      gap: "8px",
       flexWrap: "wrap",
+      backgroundColor: isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.02)",
+      padding: "4px 12px",
+      borderRadius: "12px",
     },
     filterLabel: {
-      fontSize: "12px",
-      fontWeight: 600,
+      fontSize: "11px",
+      fontWeight: 700,
       color: isDark ? "#64748b" : "#475569",
       letterSpacing: "0.5px",
+      textTransform: "uppercase",
     },
     filterButtons: {
       display: "flex",
-      gap: "6px",
+      gap: "4px",
       flexWrap: "wrap",
     },
     filterBtn: (isActive) => ({
-      padding: "5px 12px",
-      borderRadius: "20px",
-      fontSize: "12px",
+      padding: "4px 10px",
+      borderRadius: "16px",
+      fontSize: "11px",
       fontWeight: 500,
       background: isActive 
         ? "#3b82f6" 
@@ -391,21 +320,26 @@ const OrderTable = ({ isDark = true }) => {
       padding: "8px 16px",
       marginBottom: "16px",
     },
-    tableWrapper: {
+    tableCard: {
       background: isDark ? "#141824" : "#ffffff",
       border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "12px",
-      overflow: "auto",
+      borderRadius: "16px",
+      overflow: "hidden",
+    },
+    tableWrapper: {
+      overflowX: "auto",
+      overflowY: "hidden",
+      WebkitOverflowScrolling: "touch",
     },
     table: {
       width: "100%",
       borderCollapse: "collapse",
-      minWidth: "1200px",
+      minWidth: getTableMinWidth(),
     },
     th: {
-      padding: "14px 12px",
+      padding: "12px 10px",
       textAlign: "left",
-      fontSize: "12px",
+      fontSize: "11px",
       fontWeight: 700,
       color: "#3b82f6",
       borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
@@ -413,22 +347,32 @@ const OrderTable = ({ isDark = true }) => {
       whiteSpace: "nowrap",
     },
     td: {
-      padding: "12px 12px",
-      fontSize: "13px",
+      padding: "10px 10px",
+      fontSize: "12px",
       color: isDark ? "#e2e8f0" : "#1e293b",
       borderBottom: isDark ? "1px solid #1a2035" : "1px solid #f1f5f9",
     },
     pagination: {
       display: "flex",
-      alignItems: "center",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "center" : "center",
       justifyContent: "space-between",
-      padding: "16px 20px",
+      gap: isMobile ? "12px" : "0",
+      padding: "14px 16px",
       borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
       background: isDark ? "#0f1520" : "#f8fafc",
     },
+    paginationInfo: {
+      fontSize: "11px",
+      color: isDark ? "#64748b" : "#94a3b8",
+    },
+    paginationButtons: {
+      display: "flex",
+      gap: "4px",
+    },
     pageBtn: (disabled, isActive) => ({
-      width: "32px",
-      height: "32px",
+      width: "28px",
+      height: "28px",
       borderRadius: "6px",
       border: isActive 
         ? "1px solid #3b82f6" 
@@ -449,6 +393,7 @@ const OrderTable = ({ isDark = true }) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      fontSize: "12px",
     }),
     actionBtn: {
       background: "none",
@@ -458,161 +403,210 @@ const OrderTable = ({ isDark = true }) => {
       color: isDark ? "#64748b" : "#94a3b8",
       transition: "color 0.15s",
     },
+    scrollHint: {
+      display: isMobile ? "flex" : "none",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: "10px",
+      padding: "6px 12px",
+      fontSize: "10px",
+      color: isDark ? "#60a5fa" : "#3b82f6",
+      backgroundColor: isDark ? "rgba(59,130,246,0.1)" : "rgba(59,130,246,0.06)",
+      borderRadius: "20px",
+      width: "fit-content",
+      marginLeft: "auto",
+      marginRight: "auto",
+      gap: "6px",
+    },
   };
 
   return (
     <div style={styles.container}>
-      {/* Search Bar */}
-      <div style={styles.searchWrapper}>
-        <span style={styles.searchIcon}><SearchIcon /></span>
-        <input
-          type="text"
-          style={styles.searchInput}
-          placeholder="Search orders — by customer, restaurant, or order ID..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* Filters Row */}
-      <div style={styles.filtersRow}>
-        {/* Status Filter */}
-        <div style={styles.filterGroup}>
-          <span style={styles.filterLabel}>Status:</span>
-          <div style={styles.filterButtons}>
-            {["All", "Delivered", "Cancelled", "Placed", "Preparing", "Ready", "On the Way"].map(s => (
-              <button key={s} style={styles.filterBtn(statusFilter === s)} onClick={() => { setStatusFilter(s); setCurrentPage(1); }}>
-                {s}
-              </button>
-            ))}
+      <div style={styles.contentWrapper}>
+        <style>{`
+          .custom-scroll::-webkit-scrollbar {
+            height: 5px;
+          }
+          .custom-scroll::-webkit-scrollbar-track {
+            background: ${isDark ? "#1a2035" : "#e2e8f0"};
+            border-radius: 10px;
+          }
+          .custom-scroll::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+          }
+          button:hover {
+            opacity: 0.85;
+          }
+        `}</style>
+        
+        {/* Header with Title and Search */}
+        <div style={styles.header}>
+          <div style={styles.titleSection}>
+            <h1 style={styles.title}>Orders</h1>
+            <p style={styles.subtitle}>Manage and track all customer orders</p>
+          </div>
+          <div style={styles.searchWrapper}>
+            <span style={styles.searchIcon}><SearchIcon /></span>
+            <input
+              type="text"
+              style={styles.searchInput}
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Payment Filter */}
-        <div style={styles.filterGroup}>
-          <span style={styles.filterLabel}>Payment:</span>
-          <div style={styles.filterButtons}>
-            {["All", "COD", "Online"].map(p => (
-              <button key={p} style={styles.filterBtn(paymentFilter === p)} onClick={() => { setPaymentFilter(p); setCurrentPage(1); }}>
-                {p}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Period Filter */}
-        <div style={styles.filterGroup}>
-          <span style={styles.filterLabel}>Period:</span>
-          <div style={styles.filterButtons}>
-            {["All", "Today", "This Week", "This Month"].map(per => (
-              <button key={per} style={styles.filterBtn(periodFilter === per)} onClick={() => { setPeriodFilter(per); setCurrentPage(1); }}>
-                {per}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Selection Bar */}
-      {selected.size > 0 && (
-        <div style={styles.selectionBar}>
-          <span style={{ fontSize: "13px", color: "#93c5fd", fontWeight: 600 }}>
-            {selected.size} order{selected.size > 1 ? "s" : ""} selected
-          </span>
-          <div style={{ flex: 1 }} />
-          <button onClick={() => setSelected(new Set())} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid #3b4460", background: "#1e2740", color: "#94a3b8", fontSize: "12px", cursor: "pointer" }}>
-            Clear
-          </button>
-        </div>
-      )}
-
-      {/* Orders Table */}
-      <div style={styles.tableWrapper}>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}><Checkbox checked={selected.size === paginatedOrders.length && paginatedOrders.length > 0} onChange={toggleAll} isDark={isDark} /></th>
-              <th style={styles.th}>SN</th>
-              <th style={styles.th}>ID</th>
-              <th style={styles.th}>Status</th>
-              <th style={styles.th}>Date</th>
-              <th style={styles.th}>Restaurant</th>
-              <th style={styles.th}>User</th>
-              <th style={styles.th}>Pay Status</th>
-              <th style={styles.th}>Pay Method</th>
-              <th style={styles.th}>Restro</th>
-              <th style={styles.th}>Driver</th>
-              <th style={styles.th}>User Status</th>
-              <th style={styles.th}>Amount</th>
-              <th style={styles.th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedOrders.map((order, idx) => {
-              const sn = (currentPage - 1) * itemsPerPage + idx + 1;
-              return (
-                <tr key={order.id} style={{ background: selected.has(order.id) && isDark ? "rgba(59,130,246,0.07)" : selected.has(order.id) ? "rgba(59,130,246,0.03)" : "transparent" }}>
-                  <td style={styles.td}><Checkbox checked={selected.has(order.id)} onChange={() => toggleOne(order.id)} isDark={isDark} /></td>
-                  <td style={styles.td}>{sn}</td>
-                  <td style={styles.td}>{order.orderId}</td>
-                  <td style={styles.td}><StatusBadge status={order.status} isDark={isDark} /></td>
-                  <td style={styles.td}>{order.date}</td>
-                  <td style={styles.td}>{order.restaurant}</td>
-                  <td style={styles.td}>{order.user}</td>
-                  <td style={styles.td}><PayStatusBadge status={order.payStatus} isDark={isDark} /></td>
-                  <td style={styles.td}>{order.payMethod}</td>
-                  <td style={styles.td}>{order.restroStatus}</td>
-                  <td style={styles.td}>{order.driverStatus}</td>
-                  <td style={styles.td}>{order.userStatus}</td>
-                  <td style={styles.td}>₹{order.amount}</td>
-                  <td style={styles.td}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <button style={styles.actionBtn}><EyeIcon /></button>
-                      <button style={styles.actionBtn}><EditIcon /></button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-            {paginatedOrders.length === 0 && (
-              <tr>
-                <td colSpan={14} style={{ padding: "60px", textAlign: "center", color: isDark ? "#64748b" : "#94a3b8" }}>
-                  No orders found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      {filteredOrders.length > 0 && (
-        <div style={styles.pagination}>
-          <span style={{ fontSize: "12px", color: isDark ? "#64748b" : "#94a3b8" }}>
-            Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredOrders.length)} to {Math.min(currentPage * itemsPerPage, filteredOrders.length)} of {filteredOrders.length} orders
-          </span>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <button style={styles.pageBtn(currentPage === 1, false)} onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>
-              <ChevronLeftIcon />
-            </button>
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) pageNum = i + 1;
-              else if (currentPage <= 3) pageNum = i + 1;
-              else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;
-              else pageNum = currentPage - 2 + i;
-              return pageNum <= totalPages && (
-                <button key={pageNum} style={styles.pageBtn(false, currentPage === pageNum)} onClick={() => setCurrentPage(pageNum)}>
-                  {pageNum}
+        {/* Filters Row - Better organized */}
+        <div style={styles.filtersRow}>
+          {/* Status Filter */}
+          <div style={styles.filterGroup}>
+            <span style={styles.filterLabel}>Status:</span>
+            <div style={styles.filterButtons}>
+              {["All", "Delivered", "Cancelled", "Placed", "Preparing", "Ready", "On the Way"].map(s => (
+                <button key={s} style={styles.filterBtn(statusFilter === s)} onClick={() => { setStatusFilter(s); setCurrentPage(1); }}>
+                  {s}
                 </button>
-              );
-            })}
-            <button style={styles.pageBtn(currentPage === totalPages, false)} onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
-              <ChevronRightIcon />
-            </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Payment Filter */}
+          <div style={styles.filterGroup}>
+            <span style={styles.filterLabel}>Payment:</span>
+            <div style={styles.filterButtons}>
+              {["All", "COD", "Online"].map(p => (
+                <button key={p} style={styles.filterBtn(paymentFilter === p)} onClick={() => { setPaymentFilter(p); setCurrentPage(1); }}>
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Period Filter */}
+          <div style={styles.filterGroup}>
+            <span style={styles.filterLabel}>Period:</span>
+            <div style={styles.filterButtons}>
+              {["All", "Today", "This Week", "This Month"].map(per => (
+                <button key={per} style={styles.filterBtn(periodFilter === per)} onClick={() => { setPeriodFilter(per); setCurrentPage(1); }}>
+                  {per}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      )}
+
+        {/* Selection Bar */}
+        {selected.size > 0 && (
+          <div style={styles.selectionBar}>
+            <span style={{ fontSize: "12px", color: "#93c5fd", fontWeight: 600 }}>
+              {selected.size} order{selected.size > 1 ? "s" : ""} selected
+            </span>
+            <div style={{ flex: 1 }} />
+            <button onClick={() => setSelected(new Set())} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid #3b4460", background: "#1e2740", color: "#94a3b8", fontSize: "11px", cursor: "pointer" }}>
+              Clear
+            </button>
+          </div>
+        )}
+
+        {/* Scroll hint - More visible */}
+        {isMobile && filteredOrders.length > 0 && (
+          <div style={styles.scrollHint}>
+            <span>👉</span> Swipe horizontally to see all columns <span>👈</span>
+          </div>
+        )}
+
+        {/* Orders Table */}
+        <div style={styles.tableCard}>
+          <div style={styles.tableWrapper} className="custom-scroll">
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}><Checkbox checked={selected.size === paginatedOrders.length && paginatedOrders.length > 0} onChange={toggleAll} isDark={isDark} /></th>
+                  <th style={styles.th}>SN</th>
+                  <th style={styles.th}>ID</th>
+                  <th style={styles.th}>Status</th>
+                  <th style={styles.th}>Date</th>
+                  <th style={styles.th}>Restaurant</th>
+                  <th style={styles.th}>User</th>
+                  <th style={styles.th}>Pay</th>
+                  <th style={styles.th}>Method</th>
+                  <th style={styles.th}>Restro</th>
+                  <th style={styles.th}>Driver</th>
+                  <th style={styles.th}>User St.</th>
+                  <th style={styles.th}>Amount</th>
+                  <th style={styles.th}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedOrders.map((order, idx) => {
+                  const sn = (currentPage - 1) * itemsPerPage + idx + 1;
+                  return (
+                    <tr key={order.id} style={{ background: selected.has(order.id) && isDark ? "rgba(59,130,246,0.07)" : selected.has(order.id) ? "rgba(59,130,246,0.03)" : "transparent" }}>
+                      <td style={styles.td}><Checkbox checked={selected.has(order.id)} onChange={() => toggleOne(order.id)} isDark={isDark} /></td>
+                      <td style={styles.td}>{sn}</td>
+                      <td style={styles.td}>{order.orderId}</td>
+                      <td style={styles.td}><StatusBadge status={order.status} isDark={isDark} /></td>
+                      <td style={styles.td}>{order.date}</td>
+                      <td style={styles.td}>{order.restaurant.length > 15 ? order.restaurant.substring(0, 12) + "..." : order.restaurant}</td>
+                      <td style={styles.td}>{order.user}</td>
+                      <td style={styles.td}><PayStatusBadge status={order.payStatus} isDark={isDark} /></td>
+                      <td style={styles.td}>{order.payMethod}</td>
+                      <td style={styles.td}>{order.restroStatus}</td>
+                      <td style={styles.td}>{order.driverStatus}</td>
+                      <td style={styles.td}>{order.userStatus}</td>
+                      <td style={styles.td}>₹{order.amount}</td>
+                      <td style={styles.td}>
+                        <div style={{ display: "flex", gap: "6px" }}>
+                          <button style={styles.actionBtn}><EyeIcon /></button>
+                          <button style={styles.actionBtn}><EditIcon /></button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {paginatedOrders.length === 0 && (
+                  <tr>
+                    <td colSpan={14} style={{ padding: "50px", textAlign: "center", color: isDark ? "#64748b" : "#94a3b8" }}>
+                      No orders found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {filteredOrders.length > 0 && (
+            <div style={styles.pagination}>
+              <div style={styles.paginationInfo}>
+                {Math.min((currentPage - 1) * itemsPerPage + 1, filteredOrders.length)} - {Math.min(currentPage * itemsPerPage, filteredOrders.length)} of {filteredOrders.length}
+              </div>
+              <div style={styles.paginationButtons}>
+                <button style={styles.pageBtn(currentPage === 1, false)} onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>
+                  <ChevronLeftIcon />
+                </button>
+                {Array.from({ length: Math.min(isMobile ? 3 : 5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= (isMobile ? 3 : 5)) pageNum = i + 1;
+                  else if (currentPage <= (isMobile ? 2 : 3)) pageNum = i + 1;
+                  else if (currentPage >= totalPages - (isMobile ? 1 : 2)) pageNum = totalPages - (isMobile ? 2 : 4) + i;
+                  else pageNum = currentPage - (isMobile ? 1 : 2) + i;
+                  return pageNum <= totalPages && (
+                    <button key={pageNum} style={styles.pageBtn(false, currentPage === pageNum)} onClick={() => setCurrentPage(pageNum)}>
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                <button style={styles.pageBtn(currentPage === totalPages, false)} onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
+                  <ChevronRightIcon />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

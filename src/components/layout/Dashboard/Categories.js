@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO DATA
@@ -116,7 +116,7 @@ const ImagePlaceholder = ({ imageId, isDark, imageUrl }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ADD CATEGORY DIALOG COMPONENT
+// ADD CATEGORY DIALOG COMPONENT (Responsive)
 // ─────────────────────────────────────────────────────────────────────────────
 const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
   const [formData, setFormData] = useState({
@@ -130,18 +130,20 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [idError, setIdError] = useState("");
   const fileInputRef = useRef(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    
-    // Clear ID error when user types
-    if (name === "id") {
-      setIdError("");
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === "id") setIdError("");
   };
 
   const handleImageChange = (e) => {
@@ -149,17 +151,13 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
+      reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Validate ID
     const newId = parseInt(formData.id);
     if (!formData.id || isNaN(newId)) {
       setIdError("Please enter a valid ID");
@@ -169,10 +167,7 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
       setIdError("ID already exists. Please use a unique ID");
       return;
     }
-    
-    if (!formData.name.trim()) {
-      return;
-    }
+    if (!formData.name.trim()) return;
     
     onSave({
       id: newId,
@@ -199,12 +194,14 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
       justifyContent: "center",
       zIndex: 1000,
       backdropFilter: "blur(4px)",
+      padding: isMobile ? "16px" : "0",
     },
     dialog: {
-      width: "90%",
-      maxWidth: "520px",
+      width: "100%",
+      maxWidth: isMobile ? "100%" : "520px",
+      margin: isMobile ? "0" : "auto",
       background: isDark ? "#141824" : "#ffffff",
-      borderRadius: "16px",
+      borderRadius: isMobile ? "12px" : "16px",
       boxShadow: "0 20px 35px -10px rgba(0,0,0,0.3)",
       overflow: "hidden",
       animation: "fadeIn 0.2s ease-out",
@@ -213,155 +210,34 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      padding: "18px 24px",
+      padding: isMobile ? "14px 20px" : "18px 24px",
       borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
     },
     title: {
-      fontSize: "18px",
+      fontSize: isMobile ? "16px" : "18px",
       fontWeight: 600,
       color: isDark ? "#f1f5f9" : "#0f172a",
       margin: 0,
     },
-    closeBtn: {
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-      color: isDark ? "#94a3b8" : "#64748b",
-      padding: "4px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      borderRadius: "8px",
-    },
     body: {
-      padding: "24px",
+      padding: isMobile ? "20px" : "24px",
       maxHeight: "60vh",
       overflowY: "auto",
     },
-    formGroup: {
-      marginBottom: "20px",
-    },
-    label: {
-      display: "block",
-      marginBottom: "8px",
-      fontSize: "13px",
-      fontWeight: 500,
-      color: isDark ? "#cbd5e1" : "#334155",
-    },
-    required: {
-      color: "#ef4444",
-      marginLeft: "4px",
-    },
-    input: {
-      width: "100%",
-      padding: "10px 12px",
-      background: isDark ? "#0d1117" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "10px",
-      fontSize: "14px",
-      color: isDark ? "#f1f5f9" : "#1e293b",
-      outline: "none",
-      transition: "all 0.2s",
-      boxSizing: "border-box",
-    },
-    textarea: {
-      width: "100%",
-      padding: "10px 12px",
-      background: isDark ? "#0d1117" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "10px",
-      fontSize: "14px",
-      color: isDark ? "#f1f5f9" : "#1e293b",
-      outline: "none",
-      transition: "all 0.2s",
-      fontFamily: "inherit",
-      resize: "vertical",
-      minHeight: "80px",
-      boxSizing: "border-box",
-    },
-    select: {
-      width: "100%",
-      padding: "10px 12px",
-      background: isDark ? "#0d1117" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "10px",
-      fontSize: "14px",
-      color: isDark ? "#f1f5f9" : "#1e293b",
-      outline: "none",
-      cursor: "pointer",
-    },
-    errorInput: {
-      border: "1px solid #ef4444",
-    },
-    errorText: {
-      fontSize: "11px",
-      color: "#ef4444",
-      marginTop: "4px",
-    },
-    imageUploadArea: {
-      border: isDark ? "1px dashed #3b82f6" : "1px dashed #3b82f6",
-      borderRadius: "12px",
-      padding: "16px",
-      textAlign: "center",
-      cursor: "pointer",
-      transition: "all 0.2s",
-      background: isDark ? "rgba(59,130,246,0.05)" : "rgba(59,130,246,0.02)",
-      marginTop: "8px",
-    },
-    imagePreview: {
-      width: "100%",
-      maxHeight: "150px",
-      objectFit: "cover",
-      borderRadius: "8px",
-      marginTop: "12px",
-    },
-    uploadIcon: {
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "8px",
-    },
-    uploadText: {
-      fontSize: "13px",
-      color: isDark ? "#94a3b8" : "#64748b",
-    },
-    uploadHint: {
-      fontSize: "11px",
-      color: isDark ? "#4a5568" : "#94a3b8",
-      marginTop: "6px",
-    },
     rowTwoColumns: {
       display: "grid",
-      gridTemplateColumns: "1fr 1fr",
+      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
       gap: "16px",
     },
     footer: {
       display: "flex",
       justifyContent: "flex-end",
       gap: "12px",
-      padding: "16px 24px",
+      padding: isMobile ? "14px 20px" : "16px 24px",
       borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
       background: isDark ? "#0f1520" : "#fafcff",
     },
-    cancelBtn: {
-      padding: "8px 18px",
-      background: "transparent",
-      border: isDark ? "1px solid #2a3a5a" : "1px solid #cbd5e1",
-      borderRadius: "8px",
-      fontSize: "13px",
-      fontWeight: 500,
-      color: isDark ? "#94a3b8" : "#475569",
-      cursor: "pointer",
-    },
-    saveBtn: {
-      padding: "8px 20px",
-      background: "#4a6cf7",
-      border: "none",
-      borderRadius: "8px",
-      fontSize: "13px",
-      fontWeight: 600,
-      color: "#fff",
-      cursor: "pointer",
-    },
+    ...getFormStyles(isDark, isMobile)
   };
 
   return (
@@ -375,111 +251,44 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
         </div>
         <form onSubmit={handleSubmit}>
           <div style={dialogStyles.body}>
-            {/* ID and Name in two columns */}
             <div style={dialogStyles.rowTwoColumns}>
               <div style={dialogStyles.formGroup}>
-                <label style={dialogStyles.label}>
-                  ID <span style={dialogStyles.required}>*</span>
-                </label>
-                <input
-                  type="number"
-                  name="id"
-                  style={{ ...dialogStyles.input, ...(idError ? dialogStyles.errorInput : {}) }}
-                  placeholder="Enter category ID"
-                  value={formData.id}
-                  onChange={handleChange}
-                  required
-                />
+                <label style={dialogStyles.label}>ID <span style={dialogStyles.required}>*</span></label>
+                <input type="number" name="id" style={{ ...dialogStyles.input, ...(idError ? dialogStyles.errorInput : {}) }} placeholder="Enter category ID" value={formData.id} onChange={handleChange} required />
                 {idError && <div style={dialogStyles.errorText}>{idError}</div>}
               </div>
               <div style={dialogStyles.formGroup}>
-                <label style={dialogStyles.label}>
-                  Name <span style={dialogStyles.required}>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  style={dialogStyles.input}
-                  placeholder="Enter category name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  autoFocus
-                />
+                <label style={dialogStyles.label}>Name <span style={dialogStyles.required}>*</span></label>
+                <input type="text" name="name" style={dialogStyles.input} placeholder="Enter category name" value={formData.name} onChange={handleChange} required autoFocus />
               </div>
             </div>
-
-            {/* Main Category */}
             <div style={dialogStyles.formGroup}>
               <label style={dialogStyles.label}>Main Category</label>
-              <input
-                type="text"
-                name="mainCategory"
-                style={dialogStyles.input}
-                placeholder="Enter main category (e.g., Breads, Ice Cream, Breakfast)"
-                value={formData.mainCategory}
-                onChange={handleChange}
-                list="mainCategoryOptions"
-              />
+              <input type="text" name="mainCategory" style={dialogStyles.input} placeholder="Enter main category" value={formData.mainCategory} onChange={handleChange} list="mainCategoryOptions" />
               <datalist id="mainCategoryOptions">
-                <option>Breads</option>
-                <option>Ice Cream</option>
-                <option>Breakfast</option>
-                <option>Main Course</option>
-                <option>Burgers</option>
-                <option>Side Dishes</option>
+                <option>Breads</option><option>Ice Cream</option><option>Breakfast</option>
+                <option>Main Course</option><option>Burgers</option><option>Side Dishes</option>
                 <option>Sweets & Desserts</option>
               </datalist>
             </div>
-
-            {/* Description */}
             <div style={dialogStyles.formGroup}>
               <label style={dialogStyles.label}>Description</label>
-              <textarea
-                name="description"
-                style={dialogStyles.textarea}
-                placeholder="Enter category description"
-                value={formData.description}
-                onChange={handleChange}
-              />
+              <textarea name="description" style={dialogStyles.textarea} placeholder="Enter category description" value={formData.description} onChange={handleChange} />
             </div>
-
-            {/* Image Upload */}
             <div style={dialogStyles.formGroup}>
               <label style={dialogStyles.label}>Image</label>
-              <div 
-                style={dialogStyles.imageUploadArea}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: "none" }}
-                />
-                <div style={dialogStyles.uploadIcon}>
-                  <UploadIcon />
-                </div>
-                <div style={dialogStyles.uploadText}>
-                  {imagePreview ? "Change Image" : "Click to upload image"}
-                </div>
-                <div style={dialogStyles.uploadHint}>
-                  Supports JPG, PNG, GIF (Max 5MB)
-                </div>
-                {imagePreview && (
-                  <img src={imagePreview} alt="Preview" style={dialogStyles.imagePreview} />
-                )}
+              <div style={dialogStyles.imageUploadArea} onClick={() => fileInputRef.current?.click()}>
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} style={{ display: "none" }} />
+                <div style={dialogStyles.uploadIcon}><UploadIcon /></div>
+                <div style={dialogStyles.uploadText}>{imagePreview ? "Change Image" : "Click to upload image"}</div>
+                <div style={dialogStyles.uploadHint}>Supports JPG, PNG, GIF (Max 5MB)</div>
+                {imagePreview && <img src={imagePreview} alt="Preview" style={dialogStyles.imagePreview} />}
               </div>
             </div>
           </div>
           <div style={dialogStyles.footer}>
-            <button type="button" style={dialogStyles.cancelBtn} onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit" style={dialogStyles.saveBtn}>
-              Save Category
-            </button>
+            <button type="button" style={dialogStyles.cancelBtn} onClick={onClose}>Cancel</button>
+            <button type="submit" style={dialogStyles.saveBtn}>Save Category</button>
           </div>
         </form>
       </div>
@@ -487,82 +296,146 @@ const AddCategoryDialog = ({ isDark, onClose, onSave, existingIds }) => {
   );
 };
 
+const getFormStyles = (isDark, isMobile) => ({
+  formGroup: { marginBottom: "20px" },
+  label: { display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: 500, color: isDark ? "#cbd5e1" : "#334155" },
+  required: { color: "#ef4444", marginLeft: "4px" },
+  input: {
+    width: "100%", padding: "10px 12px", background: isDark ? "#0d1117" : "#f8fafc",
+    border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "10px",
+    fontSize: "14px", color: isDark ? "#f1f5f9" : "#1e293b", outline: "none",
+    transition: "all 0.2s", boxSizing: "border-box",
+  },
+  textarea: {
+    width: "100%", padding: "10px 12px", background: isDark ? "#0d1117" : "#f8fafc",
+    border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "10px",
+    fontSize: "14px", color: isDark ? "#f1f5f9" : "#1e293b", outline: "none",
+    fontFamily: "inherit", resize: "vertical", minHeight: "80px", boxSizing: "border-box",
+  },
+  errorInput: { border: "1px solid #ef4444" },
+  errorText: { fontSize: "11px", color: "#ef4444", marginTop: "4px" },
+  closeBtn: { background: "none", border: "none", cursor: "pointer", color: isDark ? "#94a3b8" : "#64748b", padding: "4px", display: "flex", borderRadius: "8px" },
+  cancelBtn: { padding: isMobile ? "8px 16px" : "8px 18px", background: "transparent", border: isDark ? "1px solid #2a3a5a" : "1px solid #cbd5e1", borderRadius: "8px", fontSize: "13px", fontWeight: 500, color: isDark ? "#94a3b8" : "#475569", cursor: "pointer" },
+  saveBtn: { padding: isMobile ? "8px 16px" : "8px 20px", background: "#4a6cf7", border: "none", borderRadius: "8px", fontSize: "13px", fontWeight: 600, color: "#fff", cursor: "pointer" },
+  imageUploadArea: { border: isDark ? "1px dashed #3b82f6" : "1px dashed #3b82f6", borderRadius: "12px", padding: "16px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", background: isDark ? "rgba(59,130,246,0.05)" : "rgba(59,130,246,0.02)", marginTop: "8px" },
+  imagePreview: { width: "100%", maxHeight: "150px", objectFit: "cover", borderRadius: "8px", marginTop: "12px" },
+  uploadIcon: { display: "flex", justifyContent: "center", marginBottom: "8px" },
+  uploadText: { fontSize: "13px", color: isDark ? "#94a3b8" : "#64748b" },
+  uploadHint: { fontSize: "11px", color: isDark ? "#4a5568" : "#94a3b8", marginTop: "6px" },
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT - With Dialog
+// MAIN COMPONENT - Fully Responsive with Fixed Search & Add Button Layout
 // ─────────────────────────────────────────────────────────────────────────────
 const CategoriesTable = ({ isDark = true }) => {
   const [categories, setCategories] = useState(demoCategories);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const itemsPerPage = 10;
 
-  // Get existing IDs for validation
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
+  const isTablet = windowWidth > 768 && windowWidth <= 1024;
+
   const existingIds = categories.map(cat => cat.id);
 
-  // Filter categories
   const filteredCategories = categories.filter(cat =>
     cat.name.toLowerCase().includes(search.toLowerCase()) ||
     cat.mainCategory.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Pagination
   const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
   const paginatedCategories = filteredCategories.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // Toggle status
   const toggleStatus = (id) => {
     setCategories(prev => prev.map(cat =>
-      cat.id === id 
-        ? { ...cat, status: cat.status === "Active" ? "Inactive" : "Active" }
-        : cat
+      cat.id === id ? { ...cat, status: cat.status === "Active" ? "Inactive" : "Active" } : cat
     ));
   };
 
-  // Add new category
   const addCategory = (newCategoryData) => {
     const newImageId = Math.max(...categories.map(c => c.imageId), 0) + 1;
     const newCategory = {
-      id: newCategoryData.id,
-      imageId: newImageId,
-      name: newCategoryData.name,
-      mainCategory: newCategoryData.mainCategory,
-      subCategories: 0,
-      description: newCategoryData.description,
-      status: newCategoryData.status,
+      id: newCategoryData.id, imageId: newImageId, name: newCategoryData.name,
+      mainCategory: newCategoryData.mainCategory, subCategories: 0,
+      description: newCategoryData.description, status: newCategoryData.status,
       imageUrl: newCategoryData.imageUrl,
     };
     setCategories(prev => [newCategory, ...prev]);
   };
 
-  // Styles based on theme
+  const getContainerPadding = () => {
+    if (isMobile) return "12px 16px";
+    if (isTablet) return "16px 20px";
+    return "20px 24px";
+  };
+
+  const getHeaderFlexDirection = () => {
+    if (isMobile) return "column";
+    return "row";
+  };
+
+  const getSearchWidth = () => {
+    if (isMobile) return "100%";
+    if (isTablet) return "240px";
+    return "280px";
+  };
+
+  const getTableMinWidth = () => {
+    if (isMobile) return "700px";
+    return "900px";
+  };
+
   const styles = {
     container: {
       background: "transparent",
       fontFamily: "'Segoe UI', 'DM Sans', sans-serif",
-      padding: "20px 24px",
+      padding: getContainerPadding(),
     },
     header: {
       display: "flex",
+      flexDirection: getHeaderFlexDirection(),
       justifyContent: "space-between",
-      alignItems: "center",
+      alignItems: isMobile ? "stretch" : "center",
       marginBottom: "24px",
-      flexWrap: "wrap",
-      gap: "16px",
+      gap: isMobile ? "16px" : "20px",
+    },
+    titleSection: {
+      flex: isMobile ? "auto" : 1,
     },
     title: {
-      fontSize: "20px",
+      fontSize: isMobile ? "18px" : "20px",
       fontWeight: 700,
       color: isDark ? "#f1f5f9" : "#1e293b",
       margin: 0,
     },
+    subtitle: {
+      fontSize: "12px",
+      color: isDark ? "#64748b" : "#94a3b8",
+      marginTop: "4px",
+    },
+    controlsSection: {
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: "center",
+      gap: "12px",
+      width: isMobile ? "100%" : "auto",
+    },
     searchWrapper: {
       position: "relative",
-      flex: 1,
-      maxWidth: "350px",
+      width: getSearchWidth(),
+      flexShrink: 0,
     },
     searchIcon: {
       position: "absolute",
@@ -580,35 +453,42 @@ const CategoriesTable = ({ isDark = true }) => {
       fontSize: "13px",
       color: isDark ? "#f1f5f9" : "#1e293b",
       outline: "none",
+      transition: "all 0.2s",
+      boxSizing: "border-box",
     },
     addBtn: {
       display: "flex",
       alignItems: "center",
+      justifyContent: "center",
       gap: "6px",
-      padding: "8px 20px",
+      padding: isMobile ? "10px 20px" : "8px 20px",
       background: "#4a6cf7",
       color: "#fff",
       border: "none",
-      borderRadius: "8px",
+      borderRadius: "10px",
       fontSize: "13px",
       fontWeight: 600,
       cursor: "pointer",
+      whiteSpace: "nowrap",
+      transition: "all 0.2s",
+      flexShrink: 0,
     },
     tableWrapper: {
       background: isDark ? "#141824" : "#ffffff",
       border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
       borderRadius: "12px",
-      overflow: "auto",
+      overflowX: "auto",
+      overflowY: "hidden",
     },
     table: {
       width: "100%",
       borderCollapse: "collapse",
-      minWidth: "900px",
+      minWidth: getTableMinWidth(),
     },
     th: {
-      padding: "14px 16px",
+      padding: isMobile ? "10px 12px" : "14px 16px",
       textAlign: "left",
-      fontSize: "12px",
+      fontSize: isMobile ? "11px" : "12px",
       fontWeight: 700,
       color: "#3b82f6",
       borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
@@ -616,68 +496,73 @@ const CategoriesTable = ({ isDark = true }) => {
       whiteSpace: "nowrap",
     },
     td: {
-      padding: "14px 16px",
-      fontSize: "13px",
+      padding: isMobile ? "10px 12px" : "14px 16px",
+      fontSize: isMobile ? "12px" : "13px",
       color: isDark ? "#e2e8f0" : "#1e293b",
       borderBottom: isDark ? "1px solid #1a2035" : "1px solid #f1f5f9",
     },
     descriptionCell: {
-      maxWidth: "200px",
+      maxWidth: isMobile ? "120px" : "200px",
       overflow: "hidden",
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
     },
     actions: {
       display: "flex",
-      gap: "8px",
+      gap: isMobile ? "6px" : "8px",
+      flexWrap: "wrap",
     },
     actionBtn: {
       background: "none",
       border: "none",
       cursor: "pointer",
-      padding: "4px",
+      padding: "6px",
       color: isDark ? "#64748b" : "#94a3b8",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      borderRadius: "6px",
+      transition: "all 0.2s",
     },
     pagination: {
       display: "flex",
-      alignItems: "center",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "center" : "center",
       justifyContent: "space-between",
-      padding: "14px 20px",
+      gap: isMobile ? "12px" : "0",
+      padding: isMobile ? "12px 16px" : "14px 20px",
       borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
       background: isDark ? "#0f1520" : "#f8fafc",
     },
+    paginationInfo: {
+      fontSize: isMobile ? "11px" : "12px",
+      color: isDark ? "#64748b" : "#94a3b8",
+      textAlign: isMobile ? "center" : "left",
+    },
+    paginationButtons: {
+      display: "flex",
+      gap: "6px",
+      flexWrap: "wrap",
+      justifyContent: "center",
+    },
     pageBtn: (disabled, isActive) => ({
-      width: "32px",
-      height: "32px",
+      width: isMobile ? "30px" : "32px",
+      height: isMobile ? "30px" : "32px",
       borderRadius: "6px",
-      border: isActive 
-        ? "1px solid #3b82f6" 
-        : isDark 
-          ? "1px solid #1e2740" 
-          : "1px solid #e2e8f0",
-      background: isActive 
-        ? "#1e3a8a" 
-        : isDark 
-          ? "#141824" 
-          : "#ffffff",
-      color: isActive 
-        ? "#93c5fd" 
-        : disabled 
-          ? isDark ? "#2d3a55" : "#cbd5e1"
-          : isDark ? "#94a3b8" : "#64748b",
+      border: isActive ? "1px solid #3b82f6" : isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isActive ? "#1e3a8a" : isDark ? "#141824" : "#ffffff",
+      color: isActive ? "#93c5fd" : disabled ? (isDark ? "#2d3a55" : "#cbd5e1") : (isDark ? "#94a3b8" : "#64748b"),
       cursor: disabled ? "not-allowed" : "pointer",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      fontSize: isMobile ? "12px" : "14px",
     }),
     emptyState: {
-      padding: "60px",
+      padding: isMobile ? "40px 20px" : "60px",
       textAlign: "center",
       color: isDark ? "#64748b" : "#94a3b8",
-      fontSize: "14px",
+      fontSize: isMobile ? "13px" : "14px",
     },
   };
 
@@ -688,12 +573,23 @@ const CategoriesTable = ({ isDark = true }) => {
           from { opacity: 0; transform: scale(0.96); }
           to { opacity: 1; transform: scale(1); }
         }
+        button:hover {
+          opacity: 0.85;
+          transform: translateY(-1px);
+        }
+        input:focus, textarea:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
+        }
       `}</style>
       
-      {/* Header with Title, Search and Add Button */}
+      {/* Header with Title, Search and Add Button - Fixed Layout */}
       <div style={styles.header}>
-        <h3 style={styles.title}>Categories</h3>
-        <div style={{ display: "flex", gap: "16px", flex: 1, justifyContent: "flex-end" }}>
+        <div style={styles.titleSection}>
+          <h3 style={styles.title}>Categories</h3>
+          <p style={styles.subtitle}>Manage your food categories</p>
+        </div>
+        <div style={styles.controlsSection}>
           <div style={styles.searchWrapper}>
             <span style={styles.searchIcon}><SearchIcon /></span>
             <input
@@ -708,12 +604,12 @@ const CategoriesTable = ({ isDark = true }) => {
             />
           </div>
           <button style={styles.addBtn} onClick={() => setIsDialogOpen(true)}>
-            <PlusIcon /> Add
+            <PlusIcon /> Add Category
           </button>
         </div>
       </div>
 
-      {/* Categories Table */}
+      {/* Categories Table with Horizontal Scroll on Mobile */}
       <div style={styles.tableWrapper}>
         <table style={styles.table}>
           <thead>
@@ -722,8 +618,8 @@ const CategoriesTable = ({ isDark = true }) => {
               <th style={styles.th}>Image</th>
               <th style={styles.th}>Name</th>
               <th style={styles.th}>Main Category</th>
-              <th style={styles.th}>Description</th>
-              <th style={styles.th}>Sub Categories</th>
+              {!isMobile && <th style={styles.th}>Description</th>}
+              <th style={styles.th}>Sub Cats</th>
               <th style={styles.th}>Status</th>
               <th style={styles.th}>Actions</th>
             </tr>
@@ -737,11 +633,13 @@ const CategoriesTable = ({ isDark = true }) => {
                 </td>
                 <td style={styles.td}><strong>{cat.name}</strong></td>
                 <td style={styles.td}>{cat.mainCategory}</td>
-                <td style={styles.td}>
-                  <span style={styles.descriptionCell} title={cat.description}>
-                    {cat.description || "—"}
-                  </span>
-                </td>
+                {!isMobile && (
+                  <td style={styles.td}>
+                    <span style={styles.descriptionCell} title={cat.description}>
+                      {cat.description || "—"}
+                    </span>
+                  </td>
+                )}
                 <td style={styles.td}>{cat.subCategories}</td>
                 <td style={styles.td}><StatusBadge status={cat.status} isDark={isDark} /></td>
                 <td style={styles.td}>
@@ -758,7 +656,7 @@ const CategoriesTable = ({ isDark = true }) => {
             ))}
             {paginatedCategories.length === 0 && (
               <tr>
-                <td colSpan={8} style={styles.emptyState}>
+                <td colSpan={isMobile ? 7 : 8} style={styles.emptyState}>
                   No categories found
                 </td>
               </tr>
@@ -770,40 +668,22 @@ const CategoriesTable = ({ isDark = true }) => {
       {/* Pagination */}
       {filteredCategories.length > itemsPerPage && (
         <div style={styles.pagination}>
-          <span style={{ fontSize: "12px", color: isDark ? "#64748b" : "#94a3b8" }}>
+          <div style={styles.paginationInfo}>
             Showing {Math.min((currentPage - 1) * itemsPerPage + 1, filteredCategories.length)} to {Math.min(currentPage * itemsPerPage, filteredCategories.length)} of {filteredCategories.length} categories
-          </span>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <button 
-              style={styles.pageBtn(currentPage === 1, false)} 
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
-              disabled={currentPage === 1}
-            >
-              ‹
-            </button>
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          </div>
+          <div style={styles.paginationButtons}>
+            <button style={styles.pageBtn(currentPage === 1, false)} onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>‹</button>
+            {Array.from({ length: Math.min(isMobile ? 3 : 5, totalPages) }, (_, i) => {
               let pageNum;
-              if (totalPages <= 5) pageNum = i + 1;
-              else if (currentPage <= 3) pageNum = i + 1;
-              else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;
-              else pageNum = currentPage - 2 + i;
+              if (totalPages <= (isMobile ? 3 : 5)) pageNum = i + 1;
+              else if (currentPage <= (isMobile ? 2 : 3)) pageNum = i + 1;
+              else if (currentPage >= totalPages - (isMobile ? 1 : 2)) pageNum = totalPages - (isMobile ? 2 : 4) + i;
+              else pageNum = currentPage - (isMobile ? 1 : 2) + i;
               return pageNum <= totalPages && (
-                <button 
-                  key={pageNum} 
-                  style={styles.pageBtn(false, currentPage === pageNum)} 
-                  onClick={() => setCurrentPage(pageNum)}
-                >
-                  {pageNum}
-                </button>
+                <button key={pageNum} style={styles.pageBtn(false, currentPage === pageNum)} onClick={() => setCurrentPage(pageNum)}>{pageNum}</button>
               );
             })}
-            <button 
-              style={styles.pageBtn(currentPage === totalPages, false)} 
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
-              disabled={currentPage === totalPages}
-            >
-              ›
-            </button>
+            <button style={styles.pageBtn(currentPage === totalPages, false)} onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>›</button>
           </div>
         </div>
       )}
