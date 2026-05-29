@@ -24,6 +24,9 @@ import DevFeedback from "../components/layout/Dashboard/DevFeedback";
 import AddNewRestaurant from "../components/layout/Dashboard/Restaurant/AddRestaurants.js";
 import ExportRestaurantsModal from "../components/layout/Dashboard/Restaurant/ExportRestaurantsModal.js";
 import PressRelease from "../components/layout/Dashboard/PressRelease.js";
+import PaymentSettings from "../components/layout/Dashboard/Restaurant/Payments.js";
+import CouponsPage from "../components/layout/Dashboard/CouponsPage.js";
+import SupportSystem from "../components/layout/Dashboard/Support.js";
 
 const Dashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
@@ -171,6 +174,9 @@ const Dashboard = () => {
           <Route path="/addrestaurant" element={<AddNewRestaurant isDark={isDark} />} />
           <Route path="/ExportRestaurantsModal" element={<ExportRestaurantsModal isDark={isDark} />} />
           <Route path="/PressRelease" element={<PressRelease isDark={isDark} />} />
+          <Route path="/Payment" element={<PaymentSettings isDark={isDark} />} />
+          <Route path="/Coupons" element={<CouponsPage isDark={isDark} />} />
+          <Route path="/Support" element={<SupportSystem isDark={isDark} />} />
         </Routes>
       </main>
 
