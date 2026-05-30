@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "../components/layout/Dashboard/Sidebar";
+import { useNavigate } from "react-router-dom";
+
+
+
 import DashboardHome from "../components/layout/Dashboard/DashboardHome";
 import DriverTable from "../components/layout/Dashboard/Driver";
 import RestaurantTable from "../components/layout/Dashboard/Restaurant/Restaurant";
@@ -35,6 +39,7 @@ import Reports from "../components/layout/Dashboard/Reports.js";
  import RatingReview from "../components/layout/Dashboard/RatingReview.js";
  import AppSettings from "../components/layout/Dashboard/AppSettings.js";
  import Locations from "../components/layout/Dashboard/Locations.js";
+ import AddNewDriver from "../components/layout/Dashboard/Rider/AddNewRider.js";
 
 
 
@@ -162,7 +167,7 @@ const Dashboard = () => {
         <Routes>
           <Route path="/" element={<DashboardHome isDark={isDark} />} />
           <Route path="/analytics" element={<div style={styles.placeholderPage}>Analytics Page</div>} />
-          <Route path="/users" element={<div style={styles.placeholderPage}>Users Page</div>} />
+          <Route path="/users" element={<UsersTable   isDark={isDark} />}/>
           <Route path="/settings" element={<div style={styles.placeholderPage}>Settings Page</div>} />
           <Route path="/reports" element={<div style={styles.placeholderPage}>Reports Page</div>} />
           <Route path="/messages" element={<div style={styles.placeholderPage}>Messages Page</div>} />
@@ -199,6 +204,7 @@ const Dashboard = () => {
           <Route path="/Menu" element={<MenuExample isDark={isDark} />} />
           <Route path="/AppSettings" element={<AppSettings isDark={isDark} />} />
           <Route path="/Locations" element={<Locations isDark={isDark} />} />
+          <Route path="/AddNewDriver" element={<AddNewDriver isDark={isDark} />} />
         </Routes>
       </main>
 

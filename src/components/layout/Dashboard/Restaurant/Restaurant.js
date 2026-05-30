@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ExportRestaurantsModal from "./ExportRestaurantsModal";
+import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // API CONFIG
@@ -259,12 +260,7 @@ const apiAddRestaurant = async (restaurantData) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICONS
-// // ─────────────────────────────────────────────────────────────────────────────
-// const EyeIcon = () => (
-//   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-//     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-//   </svg>
-// );
+// ─────────────────────────────────────────────────────────────────────────────
 const EditIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -299,16 +295,11 @@ const MenuIcon = () => (
     <rect x="3" y="18" width="18" height="2" rx="1"/>
   </svg>
 );
-// const PlusIcon = () => (
-//   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-//     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-//   </svg>
-// );
-// const CloseIcon = () => (
-//   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-//     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-//   </svg>
-// );
+const PlusIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  </svg>
+);
 const StarIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -346,7 +337,7 @@ const EmailIcon = () => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RESTAURANT MENU MODAL (IMPROVED)
+// RESTAURANT MENU MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 const RestaurantMenuModal = ({ restaurant, onClose, isDark }) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -876,7 +867,7 @@ const RestaurantDetailPage = ({ restaurant, onBack, onEdit, onDelete, onViewSche
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DELETE CONFIRMATION MODAL (IMPROVED)
+// DELETE CONFIRMATION MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 const DeleteConfirmModal = ({ isOpen, onConfirm, onCancel, restaurantName, isDark }) => {
   const [confirmText, setConfirmText] = useState("");
@@ -970,132 +961,11 @@ const DeleteConfirmModal = ({ isOpen, onConfirm, onCancel, restaurantName, isDar
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EDIT RESTAURANT MODAL (IMPROVED)
+// EDIT RESTAURANT MODAL (REMOVED - Using navigation instead)
 // ─────────────────────────────────────────────────────────────────────────────
-const EditRestaurantModal = ({ isOpen, restaurant, onClose, onSave, isDark }) => {
-  const [formData, setFormData] = useState({});
-
-  useEffect(() => {
-    if (restaurant) {
-      setFormData({
-        name: restaurant.name || "",
-        contact: restaurant.contact || "",
-        password: restaurant.password || "",
-        status: restaurant.status || "Active",
-        ready: restaurant.ready || "Yes",
-        onOff: restaurant.onOff || "ON",
-        shiftStart: restaurant.shiftStart || "09:00 AM",
-        shiftEnd: restaurant.shiftEnd || "09:00 PM",
-      });
-    }
-  }, [restaurant]);
-
-  if (!isOpen || !restaurant) return null;
-
-  const styles = {
-    overlay: {
-      position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      animation: "fadeIn 0.2s ease",
-    },
-    modal: {
-      background: isDark ? "#141824" : "#ffffff",
-      borderRadius: "20px", width: "500px", maxWidth: "90%",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
-      animation: "scaleIn 0.2s ease",
-    },
-    header: {
-      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-    },
-    body: { padding: "24px", maxHeight: "60vh", overflowY: "auto" },
-    footer: { padding: "16px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "12px", justifyContent: "flex-end" },
-    formGroup: { marginBottom: "16px" },
-    label: { display: "block", fontSize: "12px", fontWeight: 600, color: "#64748b", marginBottom: "6px" },
-    input: {
-      width: "100%", padding: "10px 12px",
-      background: isDark ? "#0f1520" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "8px", fontSize: "13px", color: isDark ? "#f1f5f9" : "#1e293b",
-    },
-    select: {
-      width: "100%", padding: "10px 12px",
-      background: isDark ? "#0f1520" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "8px", fontSize: "13px", color: isDark ? "#f1f5f9" : "#1e293b",
-      cursor: "pointer",
-    },
-    row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" },
-    cancelBtn: {
-      flex: 1, padding: "10px", borderRadius: "8px",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      background: isDark ? "#1a2035" : "#f1f5f9",
-      color: isDark ? "#94a3b8" : "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: 500,
-    },
-    saveBtn: {
-      flex: 1, padding: "10px", borderRadius: "8px", border: "none",
-      background: "#4a6cf7", color: "white", cursor: "pointer", fontSize: "13px", fontWeight: 500,
-    },
-  };
-
-  return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={e => e.stopPropagation()}>
-        <div style={styles.header}>
-          <h3 style={{ margin: 0, fontSize: "18px", color: isDark ? "#f1f5f9" : "#1e293b" }}>
-            ✏️ Edit Restaurant - {restaurant.name}
-          </h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#64748b" }}>✕</button>
-        </div>
-        <div style={styles.body}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Restaurant Name *</label>
-            <input style={styles.input} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Contact Number *</label>
-            <input style={styles.input} value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Password</label>
-            <input type="password" style={styles.input} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-          </div>
-          <div style={styles.row}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Status</label>
-              <select style={styles.select} value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
-                <option>Active</option><option>Inactive</option>
-              </select>
-            </div>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Ready</label>
-              <select style={styles.select} value={formData.ready} onChange={(e) => setFormData({ ...formData, ready: e.target.value })}>
-                <option>Yes</option><option>No</option>
-              </select>
-            </div>
-          </div>
-          <div style={styles.row}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>ON/OFF</label>
-              <select style={styles.select} value={formData.onOff} onChange={(e) => setFormData({ ...formData, onOff: e.target.value })}>
-                <option>ON</option><option>OFF</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div style={styles.footer}>
-          <button style={styles.cancelBtn} onClick={onClose}>Cancel</button>
-          <button style={styles.saveBtn} onClick={() => onSave(formData)}>💾 Save Changes</button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SCHEDULE MODAL (IMPROVED)
+// SCHEDULE MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 const ScheduleModal = ({ isOpen, restaurant, scheduleItems, onUpdate, onDelete, onAdd, onClose, onSave, isDark }) => {
   const [newSchedule, setNewSchedule] = useState({ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false });
@@ -1216,114 +1086,11 @@ const ScheduleModal = ({ isOpen, restaurant, scheduleItems, onUpdate, onDelete, 
   );
 };
 
-// Add Restaurant Modal
-const AddRestaurantModal = ({ isOpen, onClose, onAdd, isDark }) => {
-  const [formData, setFormData] = useState({ name: "", contact: "", password: "", status: "Active", ready: "Yes", onOff: "ON", shiftStart: "09:00 AM", shiftEnd: "09:00 PM" });
-  if (!isOpen) return null;
-  const handleSubmit = () => { if (!formData.name || !formData.contact) { alert("Please fill required fields"); return; } onAdd(formData); onClose(); setFormData({ name: "", contact: "", password: "", status: "Active", ready: "Yes", onOff: "ON", shiftStart: "09:00 AM", shiftEnd: "09:00 PM" }); };
-  
-  const styles = {
-    overlay: {
-      position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      animation: "fadeIn 0.2s ease",
-    },
-    modal: {
-      background: isDark ? "#141824" : "#ffffff",
-      borderRadius: "20px", width: "500px", maxWidth: "90%",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
-    },
-    header: {
-      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-    },
-    body: { padding: "24px" },
-    footer: { padding: "16px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "12px", justifyContent: "flex-end" },
-    formGroup: { marginBottom: "16px" },
-    label: { display: "block", fontSize: "12px", fontWeight: 600, color: "#64748b", marginBottom: "6px" },
-    input: {
-      width: "100%", padding: "10px 12px",
-      background: isDark ? "#0f1520" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "8px", fontSize: "13px",
-    },
-    select: {
-      width: "100%", padding: "10px 12px",
-      background: isDark ? "#0f1520" : "#f8fafc",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      borderRadius: "8px", fontSize: "13px", cursor: "pointer",
-    },
-    row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" },
-    cancelBtn: {
-      flex: 1, padding: "10px", borderRadius: "8px",
-      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-      background: isDark ? "#1a2035" : "#f1f5f9",
-      color: isDark ? "#94a3b8" : "#64748b", cursor: "pointer",
-    },
-    addBtn: {
-      flex: 1, padding: "10px", borderRadius: "8px", border: "none",
-      background: "#4a6cf7", color: "white", cursor: "pointer",
-    },
-  };
-
-  return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={e => e.stopPropagation()}>
-        <div style={styles.header}>
-          <h3 style={{ margin: 0, fontSize: "18px", color: isDark ? "#f1f5f9" : "#1e293b" }}>➕ Add New Restaurant</h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#64748b" }}>✕</button>
-        </div>
-        <div style={styles.body}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Restaurant Name *</label>
-            <input style={styles.input} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Contact Number *</label>
-            <input style={styles.input} value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
-          </div>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Password</label>
-            <input type="password" style={styles.input} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-          </div>
-          <div style={styles.row}>
-            <div>
-              <label style={styles.label}>Status</label>
-              <select style={styles.select} value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
-                <option>Active</option><option>Inactive</option>
-              </select>
-            </div>
-            <div>
-              <label style={styles.label}>Ready</label>
-              <select style={styles.select} value={formData.ready} onChange={(e) => setFormData({ ...formData, ready: e.target.value })}>
-                <option>Yes</option><option>No</option>
-              </select>
-            </div>
-          </div>
-          <div style={styles.row}>
-            <div>
-              <label style={styles.label}>ON/OFF</label>
-              <select style={styles.select} value={formData.onOff} onChange={(e) => setFormData({ ...formData, onOff: e.target.value })}>
-                <option>ON</option><option>OFF</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div style={styles.footer}>
-          <button style={styles.cancelBtn} onClick={onClose}>Cancel</button>
-          <button style={styles.addBtn} onClick={handleSubmit}>Add Restaurant</button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 const RestaurantTable = ({ isDark = true }) => {
+  const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -1335,22 +1102,28 @@ const RestaurantTable = ({ isDark = true }) => {
   const [selected, setSelected] = useState(new Set());
   const [page, setPage] = useState(1);
   const [perPage] = useState(10);
-  const [editRestaurant, setEditRestaurant] = useState(null);
-  const [editFormData, setEditFormData] = useState({});
   const [toast, setToast] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
   const [showDetailPage, setShowDetailPage] = useState(null);
   const [showMenuModal, setShowMenuModal] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [scheduleItems, setScheduleItems] = useState([]);
   const [scheduleRestaurant, setScheduleRestaurant] = useState(null);
   const [newScheduleItem, setNewScheduleItem] = useState({ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false });
 
   const showToast = (message, type = "success") => { setToast({ message, type }); setTimeout(() => setToast(null), 3500); };
-  const handleAddRestaurantClick = () => setShowAddModal(true);
+  
+  // Navigate to Add Restaurant page for new restaurant
+  const handleAddRestaurantClick = () => {
+    navigate("/Dashboard/addrestaurant", { state: { mode: "add" } });
+  };
+  
+  // Navigate to Add Restaurant page for editing existing restaurant
+  const handleEditRestaurantClick = (restaurant) => {
+    navigate("/Dashboard/addrestaurant", { state: { mode: "edit", restaurantData: restaurant } });
+  };
+  
   const handleAddRestaurant = async (restaurantData) => { try { await apiAddRestaurant(restaurantData); showToast("Restaurant added successfully"); fetchRestaurants(); } catch (err) { showToast(`Failed to add: ${err.message}`, "error"); } };
   const handleExportClick = () => setShowExportModal(true);
   const handleExport = (exportConfig) => { const selectedFields = exportConfig.selectedFields; const headers = selectedFields.map(f => ({ id: "ID", restroId: "Restro ID", name: "Name", contact: "Contact", status: "Status", ready: "Ready", onOff: "ON/OFF", shiftStart: "Shift Start", shiftEnd: "Shift End", rating: "Rating", totalPayments: "Total Payments" }[f] || f)); const csvData = mappedRestaurants.map(r => selectedFields.map(f => r[f] || '').join(',')); const csvContent = [headers.join(','), ...csvData].join('\n'); const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `restaurants_export_${new Date().toISOString().split('T')[0]}.csv`; a.click(); URL.revokeObjectURL(url); showToast("Exported successfully"); setShowExportModal(false); };
@@ -1370,38 +1143,6 @@ const RestaurantTable = ({ isDark = true }) => {
   const clearSelection = () => setSelected(new Set());
   
   const handleDeleteSelected = async () => { try { await apiDeleteRestaurants(Array.from(selected)); showToast(`${selected.size} restaurant(s) deleted`); clearSelection(); setShowDeleteModal(null); fetchRestaurants(); } catch (err) { showToast(`Delete failed: ${err.message}`, "error"); } };
-  
-  const openEdit = (restaurant) => {
-    setEditRestaurant(restaurant);
-    setEditFormData({
-      name: restaurant.name,
-      contact: restaurant.contact,
-      password: restaurant.password,
-      status: restaurant.status,
-      ready: restaurant.ready,
-      onOff: restaurant.onOff,
-      shiftStart: restaurant.shiftStart,
-      shiftEnd: restaurant.shiftEnd,
-    });
-    setShowEditModal(true);
-  };
-  
-  const handleEditSave = async () => {
-    try {
-      await apiUpdateRestaurant(editRestaurant.id, editFormData);
-      showToast("Restaurant updated successfully");
-      setShowEditModal(false);
-      setEditRestaurant(null);
-      fetchRestaurants();
-      if (showDetailPage && showDetailPage.id === editRestaurant.id) {
-        setShowDetailPage({ ...showDetailPage, ...editFormData });
-      }
-    } catch (err) {
-      showToast(`Update failed: ${err.message}`, "error");
-    }
-  };
-  
-  // const handleSingleDelete = (restaurant) => { setShowDeleteModal(restaurant); };
   
   const handleDeleteFromDetail = async (restaurant) => { setShowDeleteModal(restaurant); };
   
@@ -1450,7 +1191,7 @@ const RestaurantTable = ({ isDark = true }) => {
   const styles = {
     container: { minHeight: "100vh", background: isDark ? "#0d1117" : "#f8fafc", fontFamily: "'DM Sans', sans-serif", padding: "20px 24px" },
     headerActions: { display: "flex", gap: "12px", marginBottom: "20px" },
-    addBtn: { background: "#4a6cf7", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px" },
+    addBtn: { background: "#4a6cf7", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px", display: "flex", alignItems: "center", gap: "6px" },
     exportBtn: { background: "#28a745", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px" },
     filtersBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "15px" },
     searchWrapper: { position: "relative", flex: 1, maxWidth: "350px" },
@@ -1475,7 +1216,7 @@ const RestaurantTable = ({ isDark = true }) => {
       <RestaurantDetailPage
         restaurant={showDetailPage}
         onBack={() => setShowDetailPage(null)}
-        onEdit={(restaurant) => openEdit(restaurant)}
+        onEdit={(restaurant) => handleEditRestaurantClick(restaurant)}
         onDelete={(restaurant) => handleDeleteFromDetail(restaurant)}
         onViewSchedule={(restaurant) => openScheduleModal(restaurant)}
         onViewMenu={(restaurant) => setShowMenuModal(restaurant)}
@@ -1493,7 +1234,9 @@ const RestaurantTable = ({ isDark = true }) => {
       `}</style>
 
       <div style={styles.headerActions}>
-        <button style={styles.addBtn} onClick={handleAddRestaurantClick}>+ Add Restaurant</button>
+        <button style={styles.addBtn} onClick={handleAddRestaurantClick}>
+          <PlusIcon /> Add Restaurant
+        </button>
         <button style={styles.exportBtn} onClick={handleExportClick}>📊 Export CSV</button>
       </div>
 
@@ -1595,8 +1338,6 @@ const RestaurantTable = ({ isDark = true }) => {
       </div>
 
       {/* Modals */}
-      <AddRestaurantModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} onAdd={handleAddRestaurant} isDark={isDark} />
-      
       <DeleteConfirmModal
         isOpen={!!showDeleteModal}
         restaurantName={showDeleteModal?.name || ""}
@@ -1619,14 +1360,6 @@ const RestaurantTable = ({ isDark = true }) => {
           }
         }}
         onCancel={() => setShowDeleteModal(null)}
-        isDark={isDark}
-      />
-      
-      <EditRestaurantModal
-        isOpen={showEditModal}
-        restaurant={editRestaurant}
-        onClose={() => { setShowEditModal(false); setEditRestaurant(null); }}
-        onSave={handleEditSave}
         isDark={isDark}
       />
       

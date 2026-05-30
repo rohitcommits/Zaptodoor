@@ -16,15 +16,10 @@ const BackIcon = () => (
   </svg>
 );
 
-const ChevronDownIcon = () => (
+const CheckCircleIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="6 9 12 15 18 9" />
-  </svg>
-);
-
-const ChevronUpIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="18 15 12 9 6 15" />
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
   </svg>
 );
 
@@ -32,19 +27,10 @@ const ChevronUpIcon = () => (
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 const AddNewRestaurant = ({ isDark = true, onBack }) => {
-  // Section collapse state
-  const [sections, setSections] = useState({
-    personalInfo: true,
-    ownerDetails: true,
-    documents: true,
-    bankDetails: true,
-    businessSettings: true,
-    statusSchedule: true,
-    verification: true,
-    menu: true,
-    meta: true,
-  });
-
+  // Current active section
+  const [activeSection, setActiveSection] = useState("personalInfo");
+  
+  // Form data state
   const [formData, setFormData] = useState({
     // Personal Info
     contactPersonName: "",
@@ -145,17 +131,78 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
     menuPage9: null,
   });
 
-  const toggleSection = (section) => {
-    setSections(prev => ({ ...prev, [section]: !prev[section] }));
-  };
+  // Track filled sections for progress
+  const [filledSections, setFilledSections] = useState({
+    personalInfo: false,
+    ownerDetails: false,
+    bankDetails: false,
+    businessSettings: false,
+    statusSchedule: false,
+    verification: false,
+    menu: false,
+    meta: false,
+  });
+
+  const sections = [
+    { id: "personalInfo", label: "Personal Info", icon: "👤" },
+    { id: "ownerDetails", label: "Owner Details", icon: "👥" },
+    { id: "bankDetails", label: "Bank Details", icon: "🏦" },
+    { id: "businessSettings", label: "Business Settings", icon: "⚙️" },
+    { id: "statusSchedule", label: "Status & Schedule", icon: "📅" },
+    { id: "verification", label: "Verification", icon: "✅" },
+    { id: "documents", label: "Documents", icon: "📄" },
+    { id: "menu", label: "Menu", icon: "🍽️" },
+    { id: "meta", label: "Meta", icon: "ℹ️" },
+  ];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Check if current section is filled
+    checkSectionFilled(activeSection, { ...formData, [name]: value });
   };
 
   const handleFileUpload = (docName, file) => {
     setDocuments({ ...documents, [docName]: file });
   };
+
+  const checkSectionFilled = (section, data) => {
+    let isFilled = false;
+    switch (section) {
+      case "personalInfo":
+        isFilled = !!data.contactPersonName || !!data.restaurantName || !!data.contact || !!data.email;
+        break;
+      case "ownerDetails":
+        isFilled = !!data.ownerName || !!data.ownerMobile;
+        break;
+      case "bankDetails":
+        isFilled = !!data.bankName || !!data.accountNumber || !!data.ifsc;
+        break;
+      case "businessSettings":
+        isFilled = !!data.commission || !!data.minimumOrder;
+        break;
+      case "statusSchedule":
+        isFilled = !!data.status;
+        break;
+      case "verification":
+        isFilled = !!data.personalInfoVerified || !!data.documentsVerified || !!data.bankVerified;
+        break;
+      case "menu":
+        isFilled = !!data.menuUploaded;
+        break;
+      case "meta":
+        isFilled = !!data.remarks;
+        break;
+      default:
+        isFilled = false;
+    }
+    setFilledSections(prev => ({ ...prev, [section]: isFilled }));
+  };
+
+  // Calculate progress percentage
+  const completedCount = Object.values(filledSections).filter(v => v === true).length;
+  const progressPercentage = (completedCount / sections.length) * 100;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -171,12 +218,11 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
 
   const styles = {
     container: {
-      background: "transparent",
+      background: isDark ? "#0d1117" : "#f8fafc",
       fontFamily: "'Segoe UI', 'DM Sans', sans-serif",
-      height: "100vh",
+      minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
-      overflow: "hidden",
     },
     header: {
       display: "flex",
@@ -206,42 +252,105 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
       fontWeight: 700,
       color: isDark ? "#f1f5f9" : "#1e293b",
       margin: 0,
+      flex: 1,
     },
+    // Progress Bar Styles
+    progressContainer: {
+      padding: "12px 24px",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+    },
+    progressHeader: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "8px",
+    },
+    progressLabel: {
+      fontSize: "12px",
+      fontWeight: 600,
+      color: isDark ? "#64748b" : "#475569",
+    },
+    progressPercent: {
+      fontSize: "12px",
+      fontWeight: 700,
+      color: "#4a6cf7",
+    },
+    progressBarBg: {
+      background: isDark ? "#1e2740" : "#e2e8f0",
+      borderRadius: "10px",
+      height: "6px",
+      overflow: "hidden",
+    },
+    progressBarFill: {
+      background: "linear-gradient(90deg, #4a6cf7, #8b5cf6)",
+      width: `${progressPercentage}%`,
+      height: "100%",
+      borderRadius: "10px",
+      transition: "width 0.3s ease",
+    },
+    // Section Buttons
+    sectionButtons: {
+      display: "flex",
+      gap: "8px",
+      padding: "16px 24px",
+      overflowX: "auto",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      scrollbarWidth: "thin",
+    },
+    sectionBtn: (isActive, isCompleted) => ({
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      padding: "10px 16px",
+      borderRadius: "10px",
+      fontSize: "13px",
+      fontWeight: 600,
+      cursor: "pointer",
+      transition: "all 0.2s",
+      background: isActive 
+        ? "#4a6cf7" 
+        : isDark 
+          ? "#141824" 
+          : "#ffffff",
+      border: isActive 
+        ? "1px solid #4a6cf7" 
+        : isDark 
+          ? "1px solid #1e2740" 
+          : "1px solid #e2e8f0",
+      color: isActive 
+        ? "#ffffff" 
+        : isDark 
+          ? "#94a3b8" 
+          : "#64748b",
+      whiteSpace: "nowrap",
+    }),
+    completedDot: {
+      width: "8px",
+      height: "8px",
+      borderRadius: "50%",
+      background: "#10b981",
+    },
+    // Form Container
     formContainer: {
       flex: 1,
       overflowY: "auto",
-      padding: "20px 24px",
-      paddingBottom: "80px",
+      padding: "24px",
     },
-    section: {
+    formCard: {
       background: isDark ? "#141824" : "#ffffff",
       border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
       borderRadius: "16px",
-      marginBottom: "16px",
-      overflow: "hidden",
+      padding: "24px",
     },
-    sectionHeader: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "16px 24px",
-      cursor: "pointer",
-      background: isDark ? "#0f1520" : "#f8fafc",
-      transition: "all 0.2s",
-    },
-    sectionTitle: {
-      fontSize: "16px",
+    formTitle: {
+      fontSize: "18px",
       fontWeight: 700,
       color: isDark ? "#f1f5f9" : "#1e293b",
-      margin: 0,
-    },
-    sectionIcon: {
-      color: isDark ? "#64748b" : "#94a3b8",
-      transition: "transform 0.2s",
-    },
-    sectionContent: {
-      padding: "20px 24px",
-      borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      marginBottom: "20px",
+      paddingBottom: "12px",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
     },
     formGrid: {
       display: "grid",
@@ -272,6 +381,7 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
       fontSize: "13px",
       color: isDark ? "#e2e8f0" : "#1e293b",
       outline: "none",
+      transition: "all 0.2s",
     },
     select: {
       padding: "10px 14px",
@@ -319,10 +429,8 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
       cursor: "pointer",
     },
     fixedButtons: {
-      position: "fixed",
+      position: "sticky",
       bottom: 0,
-      right: 0,
-      left: "auto",
       padding: "16px 24px",
       background: isDark ? "#0d1117" : "#f8fafc",
       borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
@@ -369,6 +477,33 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
       color: isDark ? "#e2e8f0" : "#1e293b",
       flex: 1,
     },
+    navButtons: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginTop: "24px",
+      paddingTop: "20px",
+      borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+    },
+    navBtn: {
+      padding: "8px 20px",
+      borderRadius: "8px",
+      fontSize: "13px",
+      fontWeight: 600,
+      cursor: "pointer",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      color: isDark ? "#94a3b8" : "#64748b",
+    },
+    navBtnPrimary: {
+      padding: "8px 20px",
+      borderRadius: "8px",
+      fontSize: "13px",
+      fontWeight: 600,
+      cursor: "pointer",
+      background: "#4a6cf7",
+      border: "none",
+      color: "#fff",
+    },
   };
 
   const FileUploadField = ({ label, docKey }) => (
@@ -385,45 +520,20 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
     </label>
   );
 
-  const Section = ({ id, title, children }) => (
-    <div style={styles.section}>
-      <div style={styles.sectionHeader} onClick={() => toggleSection(id)}>
-        <h3 style={styles.sectionTitle}>{title}</h3>
-        <div style={styles.sectionIcon}>
-          {sections[id] ? <ChevronUpIcon /> : <ChevronDownIcon />}
-        </div>
-      </div>
-      {sections[id] && (
-        <div style={styles.sectionContent}>
-          {children}
-        </div>
-      )}
-    </div>
-  );
-
-  return (
-    <div style={styles.container}>
-      {/* Header */}
-      <div style={styles.header}>
-        <button style={styles.backBtn} onClick={handleCancel}>
-          <BackIcon /> Back
-        </button>
-        <h2 style={styles.headerTitle}>Add New Restaurant</h2>
-      </div>
-
-      {/* Scrollable Form */}
-      <div style={styles.formContainer}>
-        <form onSubmit={handleSubmit}>
-          {/* Personal Info Section */}
-          <Section id="personalInfo" title="Personal Info">
+  // Render different section forms
+  const renderForm = () => {
+    switch (activeSection) {
+      case "personalInfo":
+        return (
+          <>
             <div style={styles.formGrid}>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Contact Person Name</label>
-                <input style={styles.input} name="contactPersonName" value={formData.contactPersonName} onChange={handleChange} />
+                <input style={styles.input} name="contactPersonName" value={formData.contactPersonName} onChange={handleChange} placeholder="Enter contact person name" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Restaurant Name</label>
-                <input style={styles.input} name="restaurantName" value={formData.restaurantName} onChange={handleChange} />
+                <input style={styles.input} name="restaurantName" value={formData.restaurantName} onChange={handleChange} placeholder="Enter restaurant name" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Org Type</label>
@@ -454,59 +564,269 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Contact</label>
-                <input style={styles.input} name="contact" value={formData.contact} onChange={handleChange} />
+                <input style={styles.input} name="contact" value={formData.contact} onChange={handleChange} placeholder="+91 98765 43210" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Email</label>
-                <input style={styles.input} name="email" type="email" value={formData.email} onChange={handleChange} />
+                <input style={styles.input} name="email" type="email" value={formData.email} onChange={handleChange} placeholder="restaurant@example.com" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Password</label>
-                <input style={styles.input} name="password" type="password" value={formData.password} onChange={handleChange} />
+                <input style={styles.input} name="password" type="password" value={formData.password} onChange={handleChange} placeholder="••••••••" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>City</label>
-                <input style={styles.input} name="city" value={formData.city} onChange={handleChange} />
+                <input style={styles.input} name="city" value={formData.city} onChange={handleChange} placeholder="Enter city" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>State</label>
-                <input style={styles.input} name="state" value={formData.state} onChange={handleChange} />
+                <input style={styles.input} name="state" value={formData.state} onChange={handleChange} placeholder="Enter state" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>PIN Code</label>
-                <input style={styles.input} name="pinCode" value={formData.pinCode} onChange={handleChange} />
+                <input style={styles.input} name="pinCode" value={formData.pinCode} onChange={handleChange} placeholder="6-digit PIN" />
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Address</label>
-                <textarea style={styles.textarea} name="address" value={formData.address} onChange={handleChange} />
+                <textarea style={styles.textarea} name="address" value={formData.address} onChange={handleChange} placeholder="Full address" />
               </div>
             </div>
-          </Section>
+          </>
+        );
 
-          {/* Owner Details Section */}
-          <Section id="ownerDetails" title="Owner Details">
+      case "ownerDetails":
+        return (
+          <div style={styles.formGrid}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Owner Name</label>
+              <input style={styles.input} name="ownerName" value={formData.ownerName} onChange={handleChange} placeholder="Full name" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Owner Mobile</label>
+              <input style={styles.input} name="ownerMobile" value={formData.ownerMobile} onChange={handleChange} placeholder="+91 XXXXX XXXXX" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Other Person Name</label>
+              <input style={styles.input} name="otherPersonName" value={formData.otherPersonName} onChange={handleChange} placeholder="Optional" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Other Person Mobile</label>
+              <input style={styles.input} name="otherPersonMobile" value={formData.otherPersonMobile} onChange={handleChange} placeholder="Optional" />
+            </div>
+          </div>
+        );
+
+      case "bankDetails":
+        return (
+          <>
             <div style={styles.formGrid}>
               <div style={styles.inputGroup}>
-                <label style={styles.label}>Owner Name</label>
-                <input style={styles.input} name="ownerName" value={formData.ownerName} onChange={handleChange} />
+                <label style={styles.label}>Bank Name</label>
+                <input style={styles.input} name="bankName" value={formData.bankName} onChange={handleChange} placeholder="Bank name" />
               </div>
               <div style={styles.inputGroup}>
-                <label style={styles.label}>Owner Mobile</label>
-                <input style={styles.input} name="ownerMobile" value={formData.ownerMobile} onChange={handleChange} />
+                <label style={styles.label}>Branch</label>
+                <input style={styles.input} name="branch" value={formData.branch} onChange={handleChange} placeholder="Branch name" />
               </div>
               <div style={styles.inputGroup}>
-                <label style={styles.label}>Other Person Name</label>
-                <input style={styles.input} name="otherPersonName" value={formData.otherPersonName} onChange={handleChange} />
+                <label style={styles.label}>Bank Type</label>
+                <select style={styles.select} name="bankType" value={formData.bankType} onChange={handleChange}>
+                  <option value="">Select</option>
+                  <option value="Savings">Savings</option>
+                  <option value="Current">Current</option>
+                </select>
               </div>
               <div style={styles.inputGroup}>
-                <label style={styles.label}>Other Person Mobile</label>
-                <input style={styles.input} name="otherPersonMobile" value={formData.otherPersonMobile} onChange={handleChange} />
+                <label style={styles.label}>Account Holder</label>
+                <input style={styles.input} name="accountHolder" value={formData.accountHolder} onChange={handleChange} placeholder="Account holder name" />
+              </div>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Account Number</label>
+                <input style={styles.input} name="accountNumber" value={formData.accountNumber} onChange={handleChange} placeholder="Account number" />
+              </div>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>IFSC</label>
+                <input style={styles.input} name="ifsc" value={formData.ifsc} onChange={handleChange} placeholder="IFSC code" />
+              </div>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Bank Mobile</label>
+                <input style={styles.input} name="bankMobile" value={formData.bankMobile} onChange={handleChange} placeholder="Registered mobile" />
+              </div>
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>UPI</label>
+                <input style={styles.input} name="upi" value={formData.upi} onChange={handleChange} placeholder="UPI ID" />
               </div>
             </div>
-          </Section>
+            <div style={{ marginTop: "16px" }}>
+              <FileUploadField label="Bank Passbook / Cheque" docKey="bankPassbook" />
+            </div>
+          </>
+        );
 
-          {/* Documents Section */}
-          <Section id="documents" title="Documents">
+      case "businessSettings":
+        return (
+          <div style={styles.formGrid}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Commission (%)</label>
+              <input style={styles.input} name="commission" value={formData.commission} onChange={handleChange} placeholder="e.g., 10" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Special Commission (%)</label>
+              <input style={styles.input} name="specialCommission" value={formData.specialCommission} onChange={handleChange} placeholder="e.g., 5" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Minimum Order</label>
+              <input style={styles.input} name="minimumOrder" value={formData.minimumOrder} onChange={handleChange} placeholder="₹" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Platform Charge</label>
+              <input style={styles.input} name="platformCharge" value={formData.platformCharge} onChange={handleChange} placeholder="₹" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Handling Charge (%)</label>
+              <input style={styles.input} name="handlingCharge" value={formData.handlingCharge} onChange={handleChange} placeholder="%" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>GST (%)</label>
+              <input style={styles.input} name="gst" value={formData.gst} onChange={handleChange} placeholder="%" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Order Receiving Charges (%)</label>
+              <input style={styles.input} name="orderReceivingCharges" value={formData.orderReceivingCharges} onChange={handleChange} placeholder="%" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Subscription</label>
+              <select style={styles.select} name="subscription" value={formData.subscription} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Basic">Basic</option>
+                <option value="Premium">Premium</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Paid Status</label>
+              <select style={styles.select} name="paidStatus" value={formData.paidStatus} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Paid">Paid</option>
+                <option value="Unpaid">Unpaid</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Wallet</label>
+              <input style={styles.input} name="wallet" value={formData.wallet} onChange={handleChange} placeholder="₹" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Referral Code</label>
+              <input style={styles.input} name="referralCode" value={formData.referralCode} onChange={handleChange} placeholder="Referral code" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Referred By</label>
+              <input style={styles.input} name="referredBy" value={formData.referredBy} onChange={handleChange} placeholder="Referrer" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>MOU</label>
+              <select style={styles.select} name="mou" value={formData.mou} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Signed">Signed</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+          </div>
+        );
+
+      case "statusSchedule":
+        return (
+          <div style={styles.formGrid}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Status</label>
+              <select style={styles.select} name="status" value={formData.status} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Schedule Mode</label>
+              <select style={styles.select} name="scheduleMode" value={formData.scheduleMode} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Auto">Auto</option>
+                <option value="Manual">Manual</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Shift Start</label>
+              <input style={styles.input} name="shiftStart" type="time" value={formData.shiftStart} onChange={handleChange} />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Shift End</label>
+              <input style={styles.input} name="shiftEnd" type="time" value={formData.shiftEnd} onChange={handleChange} />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Open Status</label>
+              <select style={styles.select} name="openStatus" value={formData.openStatus} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Schedule Approved</label>
+              <select style={styles.select} name="scheduleApproved" value={formData.scheduleApproved} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+          </div>
+        );
+
+      case "verification":
+        return (
+          <div style={styles.formGrid}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Personal Info Verified</label>
+              <select style={styles.select} name="personalInfoVerified" value={formData.personalInfoVerified} onChange={handleChange}>
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Remarks (Personal)</label>
+              <input style={styles.input} name="personalInfoRemarks" value={formData.personalInfoRemarks} onChange={handleChange} placeholder="Remarks" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Documents Verified</label>
+              <select style={styles.select} name="documentsVerified" value={formData.documentsVerified} onChange={handleChange}>
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Remarks (Documents)</label>
+              <input style={styles.input} name="documentsRemarks" value={formData.documentsRemarks} onChange={handleChange} placeholder="Remarks" />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Bank Verified</label>
+              <select style={styles.select} name="bankVerified" value={formData.bankVerified} onChange={handleChange}>
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Remarks (Bank)</label>
+              <input style={styles.input} name="bankRemarks" value={formData.bankRemarks} onChange={handleChange} placeholder="Remarks" />
+            </div>
+          </div>
+        );
+
+      case "documents":
+        return (
+          <div>
             <div style={styles.documentGrid}>
               <FileUploadField label="Banner Image" docKey="bannerImage" />
               <FileUploadField label="Round Logo" docKey="roundLogo" />
@@ -519,216 +839,12 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
               <FileUploadField label="Food License Image" docKey="foodLicenseImage" />
               <FileUploadField label="Food License No." docKey="foodLicenseNo" />
             </div>
-          </Section>
+          </div>
+        );
 
-          {/* Bank Details Section */}
-          <Section id="bankDetails" title="Bank Details">
-            <div style={styles.formGrid}>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Bank Name</label>
-                <input style={styles.input} name="bankName" value={formData.bankName} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Branch</label>
-                <input style={styles.input} name="branch" value={formData.branch} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Bank Type</label>
-                <select style={styles.select} name="bankType" value={formData.bankType} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Savings">Savings</option>
-                  <option value="Current">Current</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Account Holder</label>
-                <input style={styles.input} name="accountHolder" value={formData.accountHolder} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Account Number</label>
-                <input style={styles.input} name="accountNumber" value={formData.accountNumber} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>IFSC</label>
-                <input style={styles.input} name="ifsc" value={formData.ifsc} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Bank Mobile</label>
-                <input style={styles.input} name="bankMobile" value={formData.bankMobile} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>UPI</label>
-                <input style={styles.input} name="upi" value={formData.upi} onChange={handleChange} />
-              </div>
-            </div>
-            <div style={{ marginTop: "16px" }}>
-              <FileUploadField label="Bank Passbook / Cheque" docKey="bankPassbook" />
-            </div>
-          </Section>
-
-          {/* Business Settings Section */}
-          <Section id="businessSettings" title="Business Settings">
-            <div style={styles.formGrid}>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Commission (%)</label>
-                <input style={styles.input} name="commission" value={formData.commission} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Special Commission (%)</label>
-                <input style={styles.input} name="specialCommission" value={formData.specialCommission} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Minimum Order</label>
-                <input style={styles.input} name="minimumOrder" value={formData.minimumOrder} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Platform Charge</label>
-                <input style={styles.input} name="platformCharge" value={formData.platformCharge} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Handling Charge (%)</label>
-                <input style={styles.input} name="handlingCharge" value={formData.handlingCharge} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>GST (%)</label>
-                <input style={styles.input} name="gst" value={formData.gst} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Order Receiving Charges (%)</label>
-                <input style={styles.input} name="orderReceivingCharges" value={formData.orderReceivingCharges} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Subscription</label>
-                <select style={styles.select} name="subscription" value={formData.subscription} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Basic">Basic</option>
-                  <option value="Premium">Premium</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Paid Status</label>
-                <select style={styles.select} name="paidStatus" value={formData.paidStatus} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Paid">Paid</option>
-                  <option value="Unpaid">Unpaid</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Wallet</label>
-                <input style={styles.input} name="wallet" value={formData.wallet} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Referral Code</label>
-                <input style={styles.input} name="referralCode" value={formData.referralCode} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Referred By</label>
-                <input style={styles.input} name="referredBy" value={formData.referredBy} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>MOU</label>
-                <select style={styles.select} name="mou" value={formData.mou} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Signed">Signed</option>
-                  <option value="Pending">Pending</option>
-                </select>
-              </div>
-            </div>
-          </Section>
-
-          {/* Status & Schedule Section */}
-          <Section id="statusSchedule" title="Status & Schedule">
-            <div style={styles.formGrid}>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Status</label>
-                <select style={styles.select} name="status" value={formData.status} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Schedule Mode</label>
-                <select style={styles.select} name="scheduleMode" value={formData.scheduleMode} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Auto">Auto</option>
-                  <option value="Manual">Manual</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Shift Start</label>
-                <input style={styles.input} name="shiftStart" type="time" value={formData.shiftStart} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Shift End</label>
-                <input style={styles.input} name="shiftEnd" type="time" value={formData.shiftEnd} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Open Status</label>
-                <select style={styles.select} name="openStatus" value={formData.openStatus} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Open">Open</option>
-                  <option value="Closed">Closed</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Schedule Approved</label>
-                <select style={styles.select} name="scheduleApproved" value={formData.scheduleApproved} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-            </div>
-          </Section>
-
-          {/* Verification Section - NEW */}
-          <Section id="verification" title="Verification">
-            <div style={styles.formGrid}>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Personal Info Verified</label>
-                <select style={styles.select} name="personalInfoVerified" value={formData.personalInfoVerified} onChange={handleChange}>
-                  <option value="">Select...</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                  <option value="Pending">Pending</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Remarks (Personal)</label>
-                <input style={styles.input} name="personalInfoRemarks" value={formData.personalInfoRemarks} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Documents Verified</label>
-                <select style={styles.select} name="documentsVerified" value={formData.documentsVerified} onChange={handleChange}>
-                  <option value="">Select...</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                  <option value="Pending">Pending</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Remarks (Documents)</label>
-                <input style={styles.input} name="documentsRemarks" value={formData.documentsRemarks} onChange={handleChange} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Bank Verified</label>
-                <select style={styles.select} name="bankVerified" value={formData.bankVerified} onChange={handleChange}>
-                  <option value="">Select...</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                  <option value="Pending">Pending</option>
-                </select>
-              </div>
-              <div style={styles.inputGroup}>
-                <label style={styles.label}>Remarks (Bank)</label>
-                <input style={styles.input} name="bankRemarks" value={formData.bankRemarks} onChange={handleChange} />
-              </div>
-            </div>
-          </Section>
-
-          {/* Menu Section - NEW */}
-          <Section id="menu" title="Menu">
+      case "menu":
+        return (
+          <>
             <div style={styles.formGrid3}>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Menu Uploaded</label>
@@ -782,16 +898,18 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Menu Direction Value</label>
-                <input style={styles.input} name="menuDirectionValue" value={formData.menuDirectionValue} onChange={handleChange} />
+                <input style={styles.input} name="menuDirectionValue" value={formData.menuDirectionValue} onChange={handleChange} placeholder="Value" />
               </div>
             </div>
-          </Section>
+          </>
+        );
 
-          {/* Meta Section - NEW */}
-          <Section id="meta" title="Meta">
+      case "meta":
+        return (
+          <>
             <div style={styles.inputGroup}>
               <label style={styles.label}>Remarks</label>
-              <textarea style={styles.textarea} name="remarks" value={formData.remarks} onChange={handleChange} />
+              <textarea style={styles.textarea} name="remarks" value={formData.remarks} onChange={handleChange} placeholder="Additional remarks" />
             </div>
             
             <div style={{ marginTop: "20px" }}>
@@ -814,8 +932,108 @@ const AddNewRestaurant = ({ isDark = true, onBack }) => {
                 </div>
               </div>
             </div>
-          </Section>
-        </form>
+          </>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const goToNext = () => {
+    const currentIndex = sections.findIndex(s => s.id === activeSection);
+    if (currentIndex < sections.length - 1) {
+      setActiveSection(sections[currentIndex + 1].id);
+    }
+  };
+
+  const goToPrev = () => {
+    const currentIndex = sections.findIndex(s => s.id === activeSection);
+    if (currentIndex > 0) {
+      setActiveSection(sections[currentIndex - 1].id);
+    }
+  };
+
+  const currentIndex = sections.findIndex(s => s.id === activeSection);
+  const isLastSection = currentIndex === sections.length - 1;
+  const isFirstSection = currentIndex === 0;
+
+  return (
+    <div style={styles.container}>
+      {/* Header */}
+      <div style={styles.header}>
+        <button style={styles.backBtn} onClick={handleCancel}>
+          <BackIcon /> Back
+        </button>
+        <h2 style={styles.headerTitle}>Add New Restaurant</h2>
+      </div>
+
+      {/* Progress Meter */}
+      <div style={styles.progressContainer}>
+        <div style={styles.progressHeader}>
+          <span style={styles.progressLabel}>Form Completion</span>
+          <span style={styles.progressPercent}>{Math.round(progressPercentage)}%</span>
+        </div>
+        <div style={styles.progressBarBg}>
+          <div style={styles.progressBarFill} />
+        </div>
+      </div>
+
+      {/* Section Buttons */}
+      <div style={styles.sectionButtons}>
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            style={styles.sectionBtn(activeSection === section.id, filledSections[section.id])}
+            onClick={() => setActiveSection(section.id)}
+          >
+            <span>{section.icon}</span>
+            <span>{section.label}</span>
+            {filledSections[section.id] && <CheckCircleIcon />}
+          </button>
+        ))}
+      </div>
+
+      {/* Form Container */}
+      <div style={styles.formContainer}>
+        <div style={styles.formCard}>
+          <div style={styles.formTitle}>
+            {sections.find(s => s.id === activeSection)?.label}
+          </div>
+          
+          <form onSubmit={handleSubmit}>
+            {renderForm()}
+            
+            {/* Navigation Buttons */}
+            <div style={styles.navButtons}>
+              <button 
+                type="button" 
+                style={styles.navBtn}
+                onClick={goToPrev}
+                disabled={isFirstSection}
+              >
+                ← Previous
+              </button>
+              {!isLastSection ? (
+                <button 
+                  type="button" 
+                  style={styles.navBtnPrimary}
+                  onClick={goToNext}
+                >
+                  Next →
+                </button>
+              ) : (
+                <button 
+                  type="submit" 
+                  style={styles.navBtnPrimary}
+                  onClick={handleSubmit}
+                >
+                  Create Restaurant
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
 
       {/* Fixed Buttons */}
