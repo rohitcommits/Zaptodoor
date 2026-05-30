@@ -27,6 +27,20 @@ import PressRelease from "../components/layout/Dashboard/PressRelease.js";
 import PaymentSettings from "../components/layout/Dashboard/Restaurant/Payments.js";
 import CouponsPage from "../components/layout/Dashboard/CouponsPage.js";
 import SupportSystem from "../components/layout/Dashboard/Support.js";
+import  Admin from "../components/layout/Dashboard/Admin.js"
+import Website from "../components/layout/Dashboard/Website.js";
+import NotificationSystem from "../components/layout/Dashboard/Notification .js";
+import Reports from "../components/layout/Dashboard/Reports.js";
+ import MenuExample from "../components/layout/Dashboard/Menu.js";
+ import RatingReview from "../components/layout/Dashboard/RatingReview.js";
+ import AppSettings from "../components/layout/Dashboard/AppSettings.js";
+ import Locations from "../components/layout/Dashboard/Locations.js";
+
+
+
+
+
+
 
 const Dashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
@@ -177,6 +191,14 @@ const Dashboard = () => {
           <Route path="/Payment" element={<PaymentSettings isDark={isDark} />} />
           <Route path="/Coupons" element={<CouponsPage isDark={isDark} />} />
           <Route path="/Support" element={<SupportSystem isDark={isDark} />} />
+          <Route path="/Admin" element={<Admin isDark={isDark} />} />
+          <Route path="/Website" element={<Website isDark={isDark} />} />
+          <Route path="/Notification" element={<NotificationSystem isDark={isDark} />} />
+          <Route path="/Reports" element={<Reports isDark={isDark} />} />
+          <Route path="/RatingReview" element={<RatingReview isDark={isDark} />} />
+          <Route path="/Menu" element={<MenuExample isDark={isDark} />} />
+          <Route path="/AppSettings" element={<AppSettings isDark={isDark} />} />
+          <Route path="/Locations" element={<Locations isDark={isDark} />} />
         </Routes>
       </main>
 

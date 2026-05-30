@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-// import { useNavigate } from "react-router-dom";
 import ExportRestaurantsModal from "./ExportRestaurantsModal";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // API CONFIG
 // ─────────────────────────────────────────────────────────────────────────────
-// const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://your-api.com/api";
-
-// const getAuthHeaders = () => ({
-//   "Content-Type": "application/json",
-//   Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-// });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EXTENSIVE DUMMY DATA (20+ RESTAURANTS)
@@ -34,6 +27,10 @@ const DUMMY_RESTAURANTS = [
     totalPayments: 245000,
     pendingPayments: 45000,
     completedPayments: 200000,
+    address: "123 Main Street, Downtown",
+    email: "contact@pizzaparadise.com",
+    description: "Best pizza in town with authentic Italian taste",
+    cuisine: "Italian, Fast Food",
     menu: [
       { id: 1, name: "Margherita Pizza", category: "Pizza", price: 299, description: "Classic cheese and tomato pizza", isAvailable: true },
       { id: 2, name: "Pepperoni Pizza", category: "Pizza", price: 399, description: "Spicy pepperoni with cheese", isAvailable: true },
@@ -68,6 +65,10 @@ const DUMMY_RESTAURANTS = [
     totalPayments: 189000,
     pendingPayments: 23000,
     completedPayments: 166000,
+    address: "456 Park Avenue",
+    email: "contact@burgerfactory.com",
+    description: "Juicy burgers made fresh daily",
+    cuisine: "American, Fast Food",
     menu: [
       { id: 1, name: "Classic Burger", category: "Burgers", price: 149, description: "Beef patty with lettuce and tomato", isAvailable: true },
       { id: 2, name: "Cheese Burger", category: "Burgers", price: 179, description: "Classic burger with extra cheese", isAvailable: true },
@@ -102,6 +103,10 @@ const DUMMY_RESTAURANTS = [
     totalPayments: 567000,
     pendingPayments: 89000,
     completedPayments: 478000,
+    address: "789 Ocean Drive",
+    email: "contact@sushicentral.com",
+    description: "Authentic Japanese sushi experience",
+    cuisine: "Japanese, Sushi",
     menu: [
       { id: 1, name: "California Roll", category: "Sushi", price: 299, description: "Crab, avocado, cucumber", isAvailable: true },
       { id: 2, name: "Dragon Roll", category: "Sushi", price: 399, description: "Eel, avocado, cucumber", isAvailable: true },
@@ -136,6 +141,10 @@ const DUMMY_RESTAURANTS = [
     totalPayments: 98000,
     pendingPayments: 12000,
     completedPayments: 86000,
+    address: "321 Mexican Street",
+    email: "contact@tacobell.com",
+    description: "Authentic Mexican flavors",
+    cuisine: "Mexican, Fast Food",
     menu: [
       { id: 1, name: "Crunchy Taco", category: "Tacos", price: 89, description: "Crispy shell with seasoned beef", isAvailable: true },
       { id: 2, name: "Soft Taco", category: "Tacos", price: 89, description: "Soft flour tortilla", isAvailable: true },
@@ -170,6 +179,10 @@ const DUMMY_RESTAURANTS = [
     totalPayments: 876000,
     pendingPayments: 156000,
     completedPayments: 720000,
+    address: "567 Curry Lane",
+    email: "contact@indianspice.com",
+    description: "Authentic Indian cuisine with rich flavors",
+    cuisine: "Indian, North Indian",
     menu: [
       { id: 1, name: "Butter Chicken", category: "Main Course", price: 349, description: "Creamy tomato based curry", isAvailable: true },
       { id: 2, name: "Naan", category: "Breads", price: 39, description: "Tandoor baked flatbread", isAvailable: true },
@@ -246,12 +259,12 @@ const apiAddRestaurant = async (restaurantData) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICONS
-// ─────────────────────────────────────────────────────────────────────────────
-const EyeIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-  </svg>
-);
+// // ─────────────────────────────────────────────────────────────────────────────
+// const EyeIcon = () => (
+//   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+//     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+//   </svg>
+// );
 const EditIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -286,16 +299,16 @@ const MenuIcon = () => (
     <rect x="3" y="18" width="18" height="2" rx="1"/>
   </svg>
 );
-const PlusIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-  </svg>
-);
-const CloseIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-);
+// const PlusIcon = () => (
+//   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+//   </svg>
+// );
+// const CloseIcon = () => (
+//   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+//     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+//   </svg>
+// );
 const StarIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -308,13 +321,149 @@ const PaymentIcon = () => (
     <line x1="16" y1="14" x2="18" y2="14"/>
   </svg>
 );
-const MoreVerticalIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
-    <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/>
-    <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/>
+const LocationIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+    <circle cx="12" cy="10" r="3"/>
   </svg>
 );
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+const PhoneIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+);
+const EmailIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <rect x="2" y="4" width="20" height="16" rx="2"/>
+    <path d="m22 7-10 7L2 7"/>
+  </svg>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RESTAURANT MENU MODAL (IMPROVED)
+// ─────────────────────────────────────────────────────────────────────────────
+const RestaurantMenuModal = ({ restaurant, onClose, isDark }) => {
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const categories = ["all", ...new Set(restaurant.menu?.map(item => item.category) || [])];
+  const filteredItems = selectedCategory === "all" ? restaurant.menu || [] : (restaurant.menu || []).filter(item => item.category === selectedCategory);
+
+  if (!restaurant) return null;
+
+  const styles = {
+    overlay: {
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      overflowY: "auto", padding: "20px",
+      animation: "fadeIn 0.2s ease",
+    },
+    modal: {
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "24px", width: "900px", maxWidth: "100%",
+      maxHeight: "85vh", display: "flex", flexDirection: "column",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+      animation: "slideUp 0.3s ease",
+    },
+    header: {
+      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      background: isDark ? "#0f1520" : "#f8fafc", borderRadius: "24px 24px 0 0"
+    },
+    categories: {
+      padding: "16px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      display: "flex", gap: "10px", flexWrap: "wrap"
+    },
+    categoryBtn: (isActive) => ({
+      padding: "6px 16px", borderRadius: "20px", border: "1px solid",
+      borderColor: isActive ? "#3b82f6" : (isDark ? "#1e2740" : "#e2e8f0"),
+      background: isActive ? (isDark ? "#1e3a8a" : "#3b82f6") : "none",
+      color: isActive ? "#fff" : (isDark ? "#94a3b8" : "#64748b"),
+      cursor: "pointer", fontSize: "12px", transition: "all 0.2s"
+    }),
+    menuList: { padding: "20px", overflowY: "auto", maxHeight: "calc(85vh - 180px)" },
+    menuGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" },
+    menuCard: {
+      background: isDark ? "#0f1520" : "#f8fafc",
+      borderRadius: "12px", padding: "16px",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      transition: "transform 0.2s, box-shadow 0.2s",
+      cursor: "pointer",
+    },
+    menuName: { margin: 0, fontSize: "15px", fontWeight: 600, color: isDark ? "#f1f5f9" : "#1e293b" },
+    menuPrice: { fontSize: "16px", fontWeight: 700, color: "#3b82f6" },
+    menuDesc: { fontSize: "12px", color: isDark ? "#94a3b8" : "#64748b", margin: "8px 0" },
+    footer: {
+      padding: "12px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#0f1520" : "#f8fafc", borderRadius: "0 0 24px 24px",
+      fontSize: "12px", color: "#64748b", textAlign: "center"
+    }
+  };
+
+  return (
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div style={styles.header}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: "20px", color: isDark ? "#f1f5f9" : "#1e293b" }}>
+              🍽️ Menu - {restaurant.name}
+            </h2>
+            <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748b" }}>
+              {restaurant.menu?.length || 0} items • {categories.length - 1} categories
+            </p>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer", color: "#64748b", padding: "8px", borderRadius: "8px" }}>✕</button>
+        </div>
+        <div style={styles.categories}>
+          {categories.map(cat => (
+            <button 
+              key={cat} 
+              style={styles.categoryBtn(selectedCategory === cat)} 
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat === "all" ? "📋 All Items" : cat}
+            </button>
+          ))}
+        </div>
+        <div style={styles.menuList}>
+          <div style={styles.menuGrid}>
+            {filteredItems.map(item => (
+              <div key={item.id} style={styles.menuCard}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "8px" }}>
+                  <h4 style={styles.menuName}>{item.name}</h4>
+                  <span style={styles.menuPrice}>₹{item.price}</span>
+                </div>
+                <p style={styles.menuDesc}>{item.description}</p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
+                  <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "10px", background: "rgba(59,130,246,0.15)", color: "#3b82f6" }}>
+                    {item.category}
+                  </span>
+                  <span style={{ fontSize: "10px", color: item.isAvailable ? "#10b981" : "#ef4444" }}>
+                    {item.isAvailable ? "✅ Available" : "❌ Out of Stock"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {filteredItems.length === 0 && (
+            <div style={{ textAlign: "center", padding: "60px", color: "#64748b" }}>
+              No items in this category
+            </div>
+          )}
+        </div>
+        <div style={styles.footer}>
+          ⏰ {restaurant.shiftStart} - {restaurant.shiftEnd} | 📞 {restaurant.contact} | 📍 {restaurant.address}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUB-COMPONENTS
@@ -410,257 +559,658 @@ const Toast = ({ message, type, onClose }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RESTAURANT MENU MODAL
+// RESTAURANT DETAIL PAGE (FULL PAGE)
 // ─────────────────────────────────────────────────────────────────────────────
-const RestaurantMenuModal = ({ restaurant, onClose, isDark }) => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [cart, setCart] = useState([]);
-  const [showCart, setShowCart] = useState(false);
+const RestaurantDetailPage = ({ restaurant, onBack, onEdit, onDelete, onViewSchedule, onViewMenu, isDark }) => {
+  const [activeTab, setActiveTab] = useState("overview");
 
-  const categories = ["all", ...new Set(restaurant.menu?.map(item => item.category) || [])];
-  
-  const filteredItems = selectedCategory === "all" 
-    ? restaurant.menu || [] 
-    : (restaurant.menu || []).filter(item => item.category === selectedCategory);
-
-  const addToCart = (item) => {
-    setCart(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
+  const styles = {
+    container: {
+      minHeight: "100vh",
+      background: isDark ? "#0d1117" : "#f8fafc",
+      fontFamily: "'DM Sans', sans-serif",
+      padding: "20px 24px",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "24px",
+      flexWrap: "wrap",
+      gap: "16px",
+    },
+    backButton: {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      background: isDark ? "#141824" : "#ffffff",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      padding: "8px 16px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      color: isDark ? "#e2e8f0" : "#1e293b",
+      fontSize: "13px",
+    },
+    title: {
+      fontSize: "24px",
+      fontWeight: 700,
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      margin: 0,
+    },
+    actionButtons: {
+      display: "flex",
+      gap: "12px",
+      flexWrap: "wrap",
+    },
+    actionBtn: (color) => ({
+      padding: "8px 16px",
+      borderRadius: "8px",
+      border: "none",
+      background: color,
+      color: "#fff",
+      cursor: "pointer",
+      fontSize: "13px",
+      fontWeight: 500,
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+    }),
+    tabs: {
+      display: "flex",
+      gap: "4px",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      marginBottom: "24px",
+      flexWrap: "wrap",
+    },
+    tab: (isActive) => ({
+      padding: "10px 20px",
+      background: isActive ? (isDark ? "#1e3a8a" : "#3b82f6") : "none",
+      border: "none",
+      borderRadius: "8px 8px 0 0",
+      cursor: "pointer",
+      color: isActive ? "#fff" : (isDark ? "#94a3b8" : "#64748b"),
+      fontWeight: isActive ? 600 : 400,
+      fontSize: "13px",
+    }),
+    card: {
+      background: isDark ? "#141824" : "#ffffff",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "12px",
+      padding: "24px",
+      marginBottom: "20px",
+    },
+    infoGrid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: "20px",
+    },
+    infoItem: {
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      padding: "12px",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      borderRadius: "10px",
+    },
+    statsGrid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+      gap: "16px",
+      marginBottom: "20px",
+    },
+    statCard: {
+      background: isDark ? "#0f1520" : "#f8fafc",
+      padding: "16px",
+      borderRadius: "12px",
+      textAlign: "center",
+    },
+    menuItem: {
+      background: isDark ? "#0f1520" : "#f8fafc",
+      padding: "12px",
+      borderRadius: "8px",
+      marginBottom: "8px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    scheduleItem: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "12px 0",
+      borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+    },
+    emptyState: {
+      textAlign: "center",
+      padding: "40px",
+      color: "#64748b",
+      fontSize: "13px",
+    },
   };
 
-  const removeFromCart = (itemId) => {
-    setCart(prev => prev.filter(i => i.id !== itemId));
-  };
-
-  const updateQuantity = (itemId, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeFromCart(itemId);
-      return;
+  const renderMenuItems = () => {
+    if (!restaurant.menu || restaurant.menu.length === 0) {
+      return <div style={styles.emptyState}>No menu items available</div>;
     }
-    setCart(prev => prev.map(i => i.id === itemId ? { ...i, quantity: newQuantity } : i));
+    return restaurant.menu.map((item) => (
+      <div key={item.id} style={styles.menuItem}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 600, marginBottom: "4px" }}>{item.name}</div>
+          <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "4px" }}>{item.description}</div>
+          <div style={{ fontSize: "10px", display: "inline-block", padding: "2px 8px", borderRadius: "10px", background: "rgba(59,130,246,0.15)", color: "#3b82f6" }}>{item.category}</div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: "16px", fontWeight: 700, color: "#3b82f6" }}>₹{item.price}</div>
+          <span style={{ fontSize: "10px", color: item.isAvailable ? "#10b981" : "#ef4444" }}>{item.isAvailable ? "Available" : "Out of Stock"}</span>
+        </div>
+      </div>
+    ));
   };
 
-  const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const renderSchedule = () => {
+    if (!restaurant.schedule || restaurant.schedule.length === 0) {
+      return <div style={styles.emptyState}>No schedule available</div>;
+    }
+    return restaurant.schedule.map((item, idx) => (
+      <div key={idx} style={styles.scheduleItem}>
+        <span style={{ fontWeight: 500 }}>{item.day}</span>
+        {item.isClosed ? (
+          <span style={{ color: "#ef4444", fontWeight: 500 }}>Closed</span>
+        ) : (
+          <span style={{ color: isDark ? "#94a3b8" : "#64748b" }}>{item.openTime} - {item.closeTime}</span>
+        )}
+      </div>
+    ));
+  };
+
+  const renderPayments = () => {
+    const totalPayments = restaurant.totalPayments || 0;
+    const completedPayments = restaurant.completedPayments || 0;
+    const pendingPayments = restaurant.pendingPayments || 0;
+    const platformFee = Math.round(totalPayments * 0.1);
+
+    return (
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={{ fontSize: "20px", fontWeight: 700, color: "#3b82f6" }}>₹{totalPayments.toLocaleString()}</div>
+          <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>Total Revenue</div>
+        </div>
+        <div style={styles.statCard}>
+          <div style={{ fontSize: "20px", fontWeight: 700, color: "#10b981" }}>₹{completedPayments.toLocaleString()}</div>
+          <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>Completed</div>
+        </div>
+        <div style={styles.statCard}>
+          <div style={{ fontSize: "20px", fontWeight: 700, color: "#f59e0b" }}>₹{pendingPayments.toLocaleString()}</div>
+          <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>Pending</div>
+        </div>
+        <div style={styles.statCard}>
+          <div style={{ fontSize: "20px", fontWeight: 700, color: "#8b5cf6" }}>₹{platformFee.toLocaleString()}</div>
+          <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>Platform Fee (10%)</div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div onClick={onClose} style={{
-      position: "fixed", inset: 0, zIndex: 400,
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <button style={styles.backButton} onClick={onBack}>
+          ← Back to Restaurants
+        </button>
+        <div>
+          <h1 style={styles.title}>{restaurant?.name || "Restaurant Details"}</h1>
+          <p style={{ fontSize: "13px", color: "#64748b", marginTop: "4px" }}>ID: {restaurant?.restroId || "N/A"}</p>
+        </div>
+        <div style={styles.actionButtons}>
+          <button style={styles.actionBtn("#4a6cf7")} onClick={() => onViewMenu(restaurant)}>
+            <MenuIcon /> View Menu
+          </button>
+          <button style={styles.actionBtn("#f59e0b")} onClick={() => onEdit(restaurant)}>
+            <EditIcon /> Edit
+          </button>
+          <button style={styles.actionBtn("#3b82f6")} onClick={() => onViewSchedule(restaurant)}>
+            <ClockIcon /> Set Timings
+          </button>
+          <button style={styles.actionBtn("#ef4444")} onClick={() => onDelete(restaurant)}>
+            <TrashIcon /> Delete
+          </button>
+        </div>
+      </div>
+
+      <div style={styles.tabs}>
+        <button style={styles.tab(activeTab === "overview")} onClick={() => setActiveTab("overview")}>Overview</button>
+        <button style={styles.tab(activeTab === "menu")} onClick={() => setActiveTab("menu")}>Menu</button>
+        <button style={styles.tab(activeTab === "schedule")} onClick={() => setActiveTab("schedule")}>Schedule</button>
+        <button style={styles.tab(activeTab === "payments")} onClick={() => setActiveTab("payments")}>Payments</button>
+        <button style={styles.tab(activeTab === "reviews")} onClick={() => setActiveTab("reviews")}>Reviews</button>
+      </div>
+
+      {/* Overview Tab */}
+      {activeTab === "overview" && (
+        <>
+          <div style={styles.statsGrid}>
+            <div style={styles.statCard}>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#3b82f6" }}>⭐ {restaurant?.rating || 0}</div>
+              <div style={{ fontSize: "11px", color: "#64748b" }}>Average Rating</div>
+              <div style={{ fontSize: "10px", marginTop: "4px" }}>{restaurant?.totalRatings || 0} ratings</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#10b981" }}>₹{(restaurant?.totalPayments || 0).toLocaleString()}</div>
+              <div style={{ fontSize: "11px", color: "#64748b" }}>Total Revenue</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#f59e0b" }}>₹{(restaurant?.pendingPayments || 0).toLocaleString()}</div>
+              <div style={{ fontSize: "11px", color: "#64748b" }}>Pending Payment</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "#8b5cf6" }}>{restaurant?.menu?.length || 0}</div>
+              <div style={{ fontSize: "11px", color: "#64748b" }}>Menu Items</div>
+            </div>
+          </div>
+
+          <div style={styles.card}>
+            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>Restaurant Information</h3>
+            <div style={styles.infoGrid}>
+              <div style={styles.infoItem}><LocationIcon /><div><div style={{ fontSize: "11px", color: "#64748b" }}>Address</div><div style={{ fontSize: "13px" }}>{restaurant?.address || "Not specified"}</div></div></div>
+              <div style={styles.infoItem}><PhoneIcon /><div><div style={{ fontSize: "11px", color: "#64748b" }}>Contact</div><div style={{ fontSize: "13px" }}>{restaurant?.contact || "Not specified"}</div></div></div>
+              <div style={styles.infoItem}><EmailIcon /><div><div style={{ fontSize: "11px", color: "#64748b" }}>Email</div><div style={{ fontSize: "13px" }}>{restaurant?.email || "Not specified"}</div></div></div>
+              <div style={styles.infoItem}><ClockIcon /><div><div style={{ fontSize: "11px", color: "#64748b" }}>Business Hours</div><div style={{ fontSize: "13px" }}>{restaurant?.shiftStart || "-"} - {restaurant?.shiftEnd || "-"}</div></div></div>
+            </div>
+          </div>
+
+          <div style={styles.card}>
+            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>About Restaurant</h3>
+            <p style={{ fontSize: "13px", lineHeight: "1.6", margin: 0 }}>{restaurant?.description || "No description available"}</p>
+            <div style={{ marginTop: "12px" }}>
+              <span style={{ fontSize: "11px", color: "#64748b" }}>Cuisine: </span>
+              <span style={{ fontSize: "12px", fontWeight: 500 }}>{restaurant?.cuisine || "Multi-cuisine"}</span>
+            </div>
+          </div>
+
+          <div style={styles.card}>
+            <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>Status Information</h3>
+            <div style={styles.infoGrid}>
+              <div><span style={{ fontSize: "11px", color: "#64748b" }}>Status</span><div><StatusBadge status={restaurant?.status || "Inactive"} /></div></div>
+              <div><span style={{ fontSize: "11px", color: "#64748b" }}>Ready for Orders</span><div><ReadyBadge ready={restaurant?.ready || "No"} /></div></div>
+              <div><span style={{ fontSize: "11px", color: "#64748b" }}>Store Status</span><div><OnOffBadge value={restaurant?.onOff || "OFF"} /></div></div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Menu Tab */}
+      {activeTab === "menu" && (
+        <div style={styles.card}>
+          <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>🍽️ Menu Items</h3>
+          {renderMenuItems()}
+        </div>
+      )}
+
+      {/* Schedule Tab */}
+      {activeTab === "schedule" && (
+        <div style={styles.card}>
+          <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>🕐 Business Schedule</h3>
+          {renderSchedule()}
+        </div>
+      )}
+
+      {/* Payments Tab */}
+      {activeTab === "payments" && (
+        <div style={styles.card}>
+          <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>💰 Payment Summary</h3>
+          {renderPayments()}
+        </div>
+      )}
+
+      {/* Reviews Tab */}
+      {activeTab === "reviews" && (
+        <div style={styles.card}>
+          <h3 style={{ margin: "0 0 16px 0", fontSize: "16px" }}>⭐ Customer Reviews</h3>
+          <div style={styles.emptyState}>
+            {restaurant?.totalReviews || 0} total reviews • Average rating {restaurant?.rating || 0} ★
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DELETE CONFIRMATION MODAL (IMPROVED)
+// ─────────────────────────────────────────────────────────────────────────────
+const DeleteConfirmModal = ({ isOpen, onConfirm, onCancel, restaurantName, isDark }) => {
+  const [confirmText, setConfirmText] = useState("");
+  
+  if (!isOpen) return null;
+
+  const styles = {
+    overlay: {
+      position: "fixed", inset: 0, zIndex: 1000,
       background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      overflowY: "auto", padding: "20px"
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: isDark ? "#0d1117" : "#ffffff",
-        borderRadius: "20px", width: "1000px", maxWidth: "100%",
-        maxHeight: "85vh", display: "flex", flexDirection: "column",
-        border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-        boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)"
-      }}>
-        {/* Header */}
-        <div style={{
-          padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          background: isDark ? "#141824" : "#f8fafc", borderRadius: "20px 20px 0 0"
-        }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: "20px", color: isDark ? "#f1f5f9" : "#1e293b" }}>
-              🍽️ Menu - {restaurant.name}
-            </h2>
-            <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748b" }}>
-              {restaurant.menu?.length || 0} items available
-            </p>
+      animation: "fadeIn 0.2s ease",
+    },
+    modal: {
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "20px", width: "450px", maxWidth: "90%",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+      animation: "scaleIn 0.2s ease",
+    },
+    header: {
+      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      textAlign: "center",
+    },
+    body: { padding: "24px", textAlign: "center" },
+    footer: { padding: "16px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "12px", justifyContent: "flex-end" },
+    icon: {
+      width: "56px", height: "56px", borderRadius: "50%",
+      background: "rgba(239,68,68,0.15)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      margin: "0 auto 16px",
+    },
+    input: {
+      width: "100%", padding: "10px 14px",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "8px", fontSize: "14px", textAlign: "center",
+      color: isDark ? "#f1f5f9" : "#1e293b",
+      marginTop: "16px",
+    },
+    cancelBtn: {
+      flex: 1, padding: "10px", borderRadius: "8px",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#1a2035" : "#f1f5f9",
+      color: isDark ? "#94a3b8" : "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: 500,
+    },
+    confirmBtn: {
+      flex: 1, padding: "10px", borderRadius: "8px", border: "none",
+      background: confirmText === "DELETE" ? "#ef4444" : "#3a4460",
+      color: confirmText === "DELETE" ? "white" : "#64748b",
+      cursor: confirmText === "DELETE" ? "pointer" : "not-allowed",
+      fontSize: "13px", fontWeight: 500,
+    },
+  };
+
+  return (
+    <div style={styles.overlay} onClick={onCancel}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div style={styles.header}>
+          <div style={styles.icon}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
           </div>
-          <div style={{ display: "flex", gap: "12px" }}>
-            <button onClick={() => setShowCart(!showCart)} style={{
-              background: showCart ? "#1e3a8a" : "none", border: "1px solid #3b82f6",
-              borderRadius: "8px", padding: "6px 12px", color: "#3b82f6", cursor: "pointer",
-              fontSize: "12px", display: "flex", alignItems: "center", gap: "6px"
-            }}>
-              🛒 Cart ({cart.reduce((s, i) => s + i.quantity, 0)})
-            </button>
-            <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer", color: "#64748b" }}>×</button>
-          </div>
+          <h3 style={{ margin: 0, fontSize: "20px", color: isDark ? "#f1f5f9" : "#1e293b" }}>Delete Restaurant</h3>
+          <p style={{ margin: "8px 0 0", fontSize: "13px", color: "#64748b" }}>
+            Are you sure you want to delete "{restaurantName}"?
+          </p>
         </div>
-
-        {/* Categories */}
-        <div style={{ padding: "16px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: "6px 16px", borderRadius: "20px", border: "1px solid",
-                borderColor: selectedCategory === cat ? "#3b82f6" : (isDark ? "#1e2740" : "#e2e8f0"),
-                background: selectedCategory === cat ? "#1e3a8a" : "none",
-                color: selectedCategory === cat ? "#93c5fd" : (isDark ? "#94a3b8" : "#64748b"),
-                cursor: "pointer", fontSize: "12px"
-              }}
-            >
-              {cat === "all" ? "All Items" : cat}
-            </button>
-          ))}
+        <div style={styles.body}>
+          <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "8px" }}>
+            This action cannot be undone. Type <strong style={{ color: "#ef4444" }}>DELETE</strong> to confirm.
+          </p>
+          <input
+            type="text"
+            value={confirmText}
+            onChange={(e) => setConfirmText(e.target.value.toUpperCase())}
+            placeholder="Type DELETE to confirm"
+            style={styles.input}
+            autoFocus
+          />
         </div>
-
-        {/* Main Content - Menu Items + Cart */}
-        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-          {/* Menu Items */}
-          <div style={{ flex: showCart ? 2 : 3, padding: "20px", overflowY: "auto", maxHeight: "calc(85vh - 150px)" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
-              {filteredItems.map(item => (
-                <div key={item.id} style={{
-                  background: isDark ? "#141824" : "#f8fafc",
-                  borderRadius: "12px", padding: "16px",
-                  border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-                  transition: "all 0.2s"
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "8px" }}>
-                    <h4 style={{ margin: 0, fontSize: "14px", fontWeight: 600, color: isDark ? "#f1f5f9" : "#1e293b" }}>
-                      {item.name}
-                    </h4>
-                    <span style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6" }}>₹{item.price}</span>
-                  </div>
-                  <p style={{ fontSize: "11px", color: isDark ? "#94a3b8" : "#64748b", margin: "0 0 12px 0" }}>
-                    {item.description}
-                  </p>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{
-                      fontSize: "10px", padding: "2px 8px", borderRadius: "10px",
-                      background: item.isAvailable ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
-                      color: item.isAvailable ? "#22c55e" : "#ef4444"
-                    }}>
-                      {item.isAvailable ? "Available" : "Out of Stock"}
-                    </span>
-                    <button
-                      onClick={() => addToCart(item)}
-                      disabled={!item.isAvailable}
-                      style={{
-                        padding: "6px 14px", borderRadius: "8px", border: "none",
-                        background: item.isAvailable ? "#4a6cf7" : "#3a4460",
-                        color: "white", cursor: item.isAvailable ? "pointer" : "not-allowed",
-                        fontSize: "11px", fontWeight: 500
-                      }}
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {filteredItems.length === 0 && (
-              <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
-                No items in this category
-              </div>
-            )}
-          </div>
-
-          {/* Cart Sidebar */}
-          {showCart && (
-            <div style={{
-              width: "320px", borderLeft: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-              background: isDark ? "#0f1520" : "#ffffff", display: "flex", flexDirection: "column",
-              overflowY: "auto", maxHeight: "calc(85vh - 150px)"
-            }}>
-              <div style={{ padding: "16px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-                <h4 style={{ margin: 0, fontSize: "14px" }}>Your Cart</h4>
-              </div>
-              <div style={{ flex: 1, padding: "16px", overflowY: "auto" }}>
-                {cart.length === 0 ? (
-                  <p style={{ textAlign: "center", color: "#64748b", fontSize: "12px", padding: "20px" }}>Cart is empty</p>
-                ) : (
-                  cart.map(item => (
-                    <div key={item.id} style={{ marginBottom: "16px", paddingBottom: "12px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                        <span style={{ fontSize: "13px", fontWeight: 500 }}>{item.name}</span>
-                        <span style={{ fontSize: "12px", color: "#3b82f6" }}>₹{item.price * item.quantity}</span>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                          <button onClick={() => updateQuantity(item.id, item.quantity - 1)} style={{ width: "24px", height: "24px", borderRadius: "4px", border: "1px solid #1e2740", background: "none", cursor: "pointer" }}>-</button>
-                          <span style={{ fontSize: "12px", minWidth: "20px", textAlign: "center" }}>{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, item.quantity + 1)} style={{ width: "24px", height: "24px", borderRadius: "4px", border: "1px solid #1e2740", background: "none", cursor: "pointer" }}>+</button>
-                        </div>
-                        <button onClick={() => removeFromCart(item.id)} style={{ color: "#ef4444", background: "none", border: "none", cursor: "pointer", fontSize: "11px" }}>Remove</button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-              {cart.length > 0 && (
-                <div style={{ padding: "16px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
-                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Total:</span>
-                    <span style={{ fontSize: "16px", fontWeight: 700, color: "#3b82f6" }}>₹{totalAmount}</span>
-                  </div>
-                  <button style={{
-                    width: "100%", padding: "10px", background: "#4a6cf7", color: "white",
-                    border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: 600
-                  }}>
-                    Place Order
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div style={{
-          padding: "12px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
-          background: isDark ? "#141824" : "#f8fafc", borderRadius: "0 0 20px 20px",
-          fontSize: "11px", color: "#64748b", textAlign: "center"
-        }}>
-          <span>⏰ {restaurant.shiftStart} - {restaurant.shiftEnd} | 📞 {restaurant.contact}</span>
+        <div style={styles.footer}>
+          <button style={styles.cancelBtn} onClick={onCancel}>Cancel</button>
+          <button style={styles.confirmBtn} onClick={onConfirm} disabled={confirmText !== "DELETE"}>Delete Permanently</button>
         </div>
       </div>
     </div>
   );
 };
 
-// Double Confirmation Modal Component
-const DoubleConfirmModal = ({ isOpen, onConfirm, onCancel, title, message, isDark }) => {
-  const [step, setStep] = useState(1);
-  const [confirmText, setConfirmText] = useState("");
+// ─────────────────────────────────────────────────────────────────────────────
+// EDIT RESTAURANT MODAL (IMPROVED)
+// ─────────────────────────────────────────────────────────────────────────────
+const EditRestaurantModal = ({ isOpen, restaurant, onClose, onSave, isDark }) => {
+  const [formData, setFormData] = useState({});
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (restaurant) {
+      setFormData({
+        name: restaurant.name || "",
+        contact: restaurant.contact || "",
+        password: restaurant.password || "",
+        status: restaurant.status || "Active",
+        ready: restaurant.ready || "Yes",
+        onOff: restaurant.onOff || "ON",
+        shiftStart: restaurant.shiftStart || "09:00 AM",
+        shiftEnd: restaurant.shiftEnd || "09:00 PM",
+      });
+    }
+  }, [restaurant]);
 
-  const handleFirstConfirm = () => setStep(2);
-  const handleFinalConfirm = () => { if (confirmText === "CONFIRM") { onConfirm(); setStep(1); setConfirmText(""); } };
-  const handleCancel = () => { setStep(1); setConfirmText(""); onCancel(); };
+  if (!isOpen || !restaurant) return null;
+
+  const styles = {
+    overlay: {
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      animation: "fadeIn 0.2s ease",
+    },
+    modal: {
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "20px", width: "500px", maxWidth: "90%",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+      animation: "scaleIn 0.2s ease",
+    },
+    header: {
+      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+    },
+    body: { padding: "24px", maxHeight: "60vh", overflowY: "auto" },
+    footer: { padding: "16px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "12px", justifyContent: "flex-end" },
+    formGroup: { marginBottom: "16px" },
+    label: { display: "block", fontSize: "12px", fontWeight: 600, color: "#64748b", marginBottom: "6px" },
+    input: {
+      width: "100%", padding: "10px 12px",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "8px", fontSize: "13px", color: isDark ? "#f1f5f9" : "#1e293b",
+    },
+    select: {
+      width: "100%", padding: "10px 12px",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "8px", fontSize: "13px", color: isDark ? "#f1f5f9" : "#1e293b",
+      cursor: "pointer",
+    },
+    row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" },
+    cancelBtn: {
+      flex: 1, padding: "10px", borderRadius: "8px",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#1a2035" : "#f1f5f9",
+      color: isDark ? "#94a3b8" : "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: 500,
+    },
+    saveBtn: {
+      flex: 1, padding: "10px", borderRadius: "8px", border: "none",
+      background: "#4a6cf7", color: "white", cursor: "pointer", fontSize: "13px", fontWeight: 500,
+    },
+  };
 
   return (
-    <div onClick={handleCancel} style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#141824" : "#ffffff", borderRadius: "16px", padding: "28px", width: "380px", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", textAlign: "center" }}>
-        {step === 1 ? (
-          <>
-            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "rgba(239,68,68,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div style={styles.header}>
+          <h3 style={{ margin: 0, fontSize: "18px", color: isDark ? "#f1f5f9" : "#1e293b" }}>
+            ✏️ Edit Restaurant - {restaurant.name}
+          </h3>
+          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#64748b" }}>✕</button>
+        </div>
+        <div style={styles.body}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Restaurant Name *</label>
+            <input style={styles.input} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Contact Number *</label>
+            <input style={styles.input} value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Password</label>
+            <input type="password" style={styles.input} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+          </div>
+          <div style={styles.row}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Status</label>
+              <select style={styles.select} value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+                <option>Active</option><option>Inactive</option>
+              </select>
             </div>
-            <h3 style={{ margin: "0 0 8px", fontSize: "18px" }}>{title}</h3>
-            <p style={{ margin: "0 0 24px", fontSize: "13px", color: "#94a3b8" }}>{message}</p>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={handleCancel} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>Cancel</button>
-              <button onClick={handleFirstConfirm} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "#ef4444", color: "white", cursor: "pointer" }}>Yes, Proceed</button>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Ready</label>
+              <select style={styles.select} value={formData.ready} onChange={(e) => setFormData({ ...formData, ready: e.target.value })}>
+                <option>Yes</option><option>No</option>
+              </select>
             </div>
-          </>
-        ) : (
-          <>
-            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "rgba(239,68,68,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </div>
+          <div style={styles.row}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>ON/OFF</label>
+              <select style={styles.select} value={formData.onOff} onChange={(e) => setFormData({ ...formData, onOff: e.target.value })}>
+                <option>ON</option><option>OFF</option>
+              </select>
             </div>
-            <h3 style={{ margin: "0 0 8px", fontSize: "18px" }}>Final Confirmation</h3>
-            <p style={{ margin: "0 0 16px", fontSize: "13px", color: "#94a3b8" }}>Type <strong style={{ color: "#ef4444" }}>CONFIRM</strong> to permanently delete this item.</p>
-            <input type="text" value={confirmText} onChange={(e) => setConfirmText(e.target.value.toUpperCase())} placeholder="Type CONFIRM" style={{ width: "100%", padding: "10px", marginBottom: "20px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px", textAlign: "center", fontSize: "14px" }} />
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={handleCancel} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>Cancel</button>
-              <button onClick={handleFinalConfirm} disabled={confirmText !== "CONFIRM"} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: confirmText === "CONFIRM" ? "#ef4444" : "#3a4460", color: confirmText === "CONFIRM" ? "white" : "#64748b", cursor: confirmText === "CONFIRM" ? "pointer" : "not-allowed" }}>Delete Permanently</button>
+          </div>
+        </div>
+        <div style={styles.footer}>
+          <button style={styles.cancelBtn} onClick={onClose}>Cancel</button>
+          <button style={styles.saveBtn} onClick={() => onSave(formData)}>💾 Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCHEDULE MODAL (IMPROVED)
+// ─────────────────────────────────────────────────────────────────────────────
+const ScheduleModal = ({ isOpen, restaurant, scheduleItems, onUpdate, onDelete, onAdd, onClose, onSave, isDark }) => {
+  const [newSchedule, setNewSchedule] = useState({ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false });
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+  if (!isOpen || !restaurant) return null;
+
+  const styles = {
+    overlay: {
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      animation: "fadeIn 0.2s ease",
+    },
+    modal: {
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "20px", width: "750px", maxWidth: "95%",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+      maxHeight: "85vh", display: "flex", flexDirection: "column",
+      animation: "scaleIn 0.2s ease",
+    },
+    header: {
+      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+    },
+    body: { padding: "20px", overflowY: "auto", flex: 1 },
+    footer: { padding: "16px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "12px", justifyContent: "flex-end" },
+    scheduleRow: {
+      display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px",
+      padding: "10px", background: isDark ? "#0f1520" : "#f8fafc", borderRadius: "10px",
+    },
+    scheduleItem: {
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      padding: "12px", marginBottom: "8px",
+      background: isDark ? "#0f1520" : "#f8fafc", borderRadius: "10px",
+    },
+    input: {
+      padding: "6px 10px", background: isDark ? "#141824" : "#ffffff",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "6px", fontSize: "12px", color: isDark ? "#f1f5f9" : "#1e293b",
+    },
+    select: {
+      padding: "6px 10px", background: isDark ? "#141824" : "#ffffff",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "6px", fontSize: "12px", cursor: "pointer",
+    },
+    cancelBtn: {
+      padding: "10px 20px", borderRadius: "8px",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#1a2035" : "#f1f5f9",
+      color: isDark ? "#94a3b8" : "#64748b", cursor: "pointer",
+    },
+    saveBtn: {
+      padding: "10px 20px", borderRadius: "8px", border: "none",
+      background: "#4a6cf7", color: "white", cursor: "pointer",
+    },
+    addBtn: {
+      padding: "6px 12px", borderRadius: "6px", border: "none",
+      background: "#22c55e", color: "white", cursor: "pointer", fontSize: "11px",
+    },
+    deleteBtn: {
+      padding: "4px 10px", borderRadius: "6px", border: "none",
+      background: "#ef4444", color: "white", cursor: "pointer", fontSize: "11px",
+    },
+  };
+
+  return (
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div style={styles.header}>
+          <h3 style={{ margin: 0, fontSize: "18px", color: isDark ? "#f1f5f9" : "#1e293b" }}>
+            🕐 Business Hours - {restaurant.name}
+          </h3>
+          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#64748b" }}>✕</button>
+        </div>
+        <div style={styles.body}>
+          {scheduleItems.map((item, idx) => (
+            <div key={idx} style={styles.scheduleItem}>
+              <span style={{ fontWeight: 500, width: "100px" }}>{item.day}</span>
+              {item.isClosed ? (
+                <span style={{ color: "#ef4444" }}>Closed</span>
+              ) : (
+                <span>{item.openTime} - {item.closeTime}</span>
+              )}
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button style={styles.deleteBtn} onClick={() => onDelete(idx)}>Delete</button>
+              </div>
             </div>
-          </>
-        )}
+          ))}
+
+          <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
+            <h4 style={{ margin: "0 0 12px 0", fontSize: "14px" }}>➕ Add New Schedule</h4>
+            <div style={styles.scheduleRow}>
+              <select style={styles.select} value={newSchedule.day} onChange={(e) => setNewSchedule({ ...newSchedule, day: e.target.value })}>
+                {days.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+              <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px" }}>
+                <input type="checkbox" checked={newSchedule.isClosed} onChange={(e) => setNewSchedule({ ...newSchedule, isClosed: e.target.checked })} /> Closed
+              </label>
+              {!newSchedule.isClosed && (
+                <>
+                  <input type="time" style={styles.input} value={newSchedule.openTime} onChange={(e) => setNewSchedule({ ...newSchedule, openTime: e.target.value })} />
+                  <span>to</span>
+                  <input type="time" style={styles.input} value={newSchedule.closeTime} onChange={(e) => setNewSchedule({ ...newSchedule, closeTime: e.target.value })} />
+                </>
+              )}
+              <button style={styles.addBtn} onClick={() => onAdd(newSchedule)}>+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div style={styles.footer}>
+          <button style={styles.cancelBtn} onClick={onClose}>Cancel</button>
+          <button style={styles.saveBtn} onClick={onSave}>💾 Save All Changes</button>
+        </div>
       </div>
     </div>
   );
@@ -671,107 +1221,101 @@ const AddRestaurantModal = ({ isOpen, onClose, onAdd, isDark }) => {
   const [formData, setFormData] = useState({ name: "", contact: "", password: "", status: "Active", ready: "Yes", onOff: "ON", shiftStart: "09:00 AM", shiftEnd: "09:00 PM" });
   if (!isOpen) return null;
   const handleSubmit = () => { if (!formData.name || !formData.contact) { alert("Please fill required fields"); return; } onAdd(formData); onClose(); setFormData({ name: "", contact: "", password: "", status: "Active", ready: "Yes", onOff: "ON", shiftStart: "09:00 AM", shiftEnd: "09:00 PM" }); };
+  
+  const styles = {
+    overlay: {
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      animation: "fadeIn 0.2s ease",
+    },
+    modal: {
+      background: isDark ? "#141824" : "#ffffff",
+      borderRadius: "20px", width: "500px", maxWidth: "90%",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+    },
+    header: {
+      padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+    },
+    body: { padding: "24px" },
+    footer: { padding: "16px 24px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", gap: "12px", justifyContent: "flex-end" },
+    formGroup: { marginBottom: "16px" },
+    label: { display: "block", fontSize: "12px", fontWeight: 600, color: "#64748b", marginBottom: "6px" },
+    input: {
+      width: "100%", padding: "10px 12px",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "8px", fontSize: "13px",
+    },
+    select: {
+      width: "100%", padding: "10px 12px",
+      background: isDark ? "#0f1520" : "#f8fafc",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      borderRadius: "8px", fontSize: "13px", cursor: "pointer",
+    },
+    row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" },
+    cancelBtn: {
+      flex: 1, padding: "10px", borderRadius: "8px",
+      border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0",
+      background: isDark ? "#1a2035" : "#f1f5f9",
+      color: isDark ? "#94a3b8" : "#64748b", cursor: "pointer",
+    },
+    addBtn: {
+      flex: 1, padding: "10px", borderRadius: "8px", border: "none",
+      background: "#4a6cf7", color: "white", cursor: "pointer",
+    },
+  };
+
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#141824" : "#ffffff", borderRadius: "16px", padding: "28px", width: "450px", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}><h3 style={{ margin: 0, fontSize: "18px" }}>➕ Add New Restaurant</h3><button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", fontSize: "20px" }}>×</button></div>
-        <div style={{ marginBottom: "16px" }}><label style={{ fontSize: "12px", color: "#94a3b8", display: "block", marginBottom: "5px" }}>Restaurant Name *</label><input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} style={{ width: "100%", padding: "10px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px" }} /></div>
-        <div style={{ marginBottom: "16px" }}><label style={{ fontSize: "12px", color: "#94a3b8", display: "block", marginBottom: "5px" }}>Contact Number *</label><input value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} style={{ width: "100%", padding: "10px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px" }} /></div>
-        <div style={{ marginBottom: "16px" }}><label style={{ fontSize: "12px", color: "#94a3b8", display: "block", marginBottom: "5px" }}>Password</label><input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} style={{ width: "100%", padding: "10px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px" }} /></div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}><div><label style={{ fontSize: "11px", color: "#64748b" }}>Status</label><select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })} style={{ width: "100%", padding: "8px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "6px" }}><option>Active</option><option>Inactive</option></select></div><div><label style={{ fontSize: "11px", color: "#64748b" }}>Ready</label><select value={formData.ready} onChange={(e) => setFormData({ ...formData, ready: e.target.value })} style={{ width: "100%", padding: "8px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "6px" }}><option>Yes</option><option>No</option></select></div></div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}><button onClick={onClose} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>Cancel</button><button onClick={handleSubmit} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "#4a6cf7", color: "white", cursor: "pointer" }}>Add Restaurant</button></div>
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div style={styles.header}>
+          <h3 style={{ margin: 0, fontSize: "18px", color: isDark ? "#f1f5f9" : "#1e293b" }}>➕ Add New Restaurant</h3>
+          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#64748b" }}>✕</button>
+        </div>
+        <div style={styles.body}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Restaurant Name *</label>
+            <input style={styles.input} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Contact Number *</label>
+            <input style={styles.input} value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Password</label>
+            <input type="password" style={styles.input} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+          </div>
+          <div style={styles.row}>
+            <div>
+              <label style={styles.label}>Status</label>
+              <select style={styles.select} value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })}>
+                <option>Active</option><option>Inactive</option>
+              </select>
+            </div>
+            <div>
+              <label style={styles.label}>Ready</label>
+              <select style={styles.select} value={formData.ready} onChange={(e) => setFormData({ ...formData, ready: e.target.value })}>
+                <option>Yes</option><option>No</option>
+              </select>
+            </div>
+          </div>
+          <div style={styles.row}>
+            <div>
+              <label style={styles.label}>ON/OFF</label>
+              <select style={styles.select} value={formData.onOff} onChange={(e) => setFormData({ ...formData, onOff: e.target.value })}>
+                <option>ON</option><option>OFF</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style={styles.footer}>
+          <button style={styles.cancelBtn} onClick={onClose}>Cancel</button>
+          <button style={styles.addBtn} onClick={handleSubmit}>Add Restaurant</button>
+        </div>
       </div>
-    </div>
-  );
-};
-
-// Action Menu Dropdown Component
-const ActionMenuDropdown = ({ restaurant, onEdit, onDelete, onViewSchedule, onViewMenu, onViewDetails, isDark }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => setIsOpen(!isOpen);
-  const handleAction = (action) => { setIsOpen(false); action(); };
-  return (
-    <div style={{ position: "relative" }}>
-      <button onClick={toggleMenu} className="action-btn" style={{ background: "none", border: "none", cursor: "pointer", color: isDark ? "#64748b" : "#94a3b8", padding: "6px 10px", borderRadius: "6px", display: "flex", alignItems: "center" }} title="More Actions"><MoreVerticalIcon /></button>
-      {isOpen && (<><div onClick={() => setIsOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 45 }} /><div style={{ position: "absolute", right: 0, top: "100%", marginTop: "8px", background: isDark ? "#141824" : "#ffffff", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "10px", padding: "8px 0", minWidth: "170px", zIndex: 50, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.2)" }}>
-        <button onClick={() => handleAction(() => onViewMenu())} style={{ width: "100%", padding: "10px 16px", textAlign: "left", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: isDark ? "#e2e8f0" : "#1e293b", display: "flex", alignItems: "center", gap: "10px" }}><MenuIcon /> View Menu</button>
-        <button onClick={() => handleAction(() => onEdit())} style={{ width: "100%", padding: "10px 16px", textAlign: "left", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: isDark ? "#e2e8f0" : "#1e293b", display: "flex", alignItems: "center", gap: "10px" }}><EditIcon /> Edit Restaurant</button>
-        <button onClick={() => handleAction(() => onViewDetails())} style={{ width: "100%", padding: "10px 16px", textAlign: "left", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: isDark ? "#e2e8f0" : "#1e293b", display: "flex", alignItems: "center", gap: "10px" }}><EyeIcon /> View Details</button>
-        <button onClick={() => handleAction(() => onViewSchedule())} style={{ width: "100%", padding: "10px 16px", textAlign: "left", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: isDark ? "#e2e8f0" : "#1e293b", display: "flex", alignItems: "center", gap: "10px" }}>🕐 Set Timings</button>
-        <div style={{ height: "1px", background: isDark ? "#1e2740" : "#e2e8f0", margin: "4px 0" }} />
-        <button onClick={() => handleAction(() => onDelete())} style={{ width: "100%", padding: "10px 16px", textAlign: "left", background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: "#ef4444", display: "flex", alignItems: "center", gap: "10px" }}><TrashIcon /> Delete Restaurant</button>
-      </div></>)}
-    </div>
-  );
-};
-
-// Full Payment System Modal
-const PaymentSystemModal = ({ restaurant, onClose, isDark }) => {
-  const [activeTab, setActiveTab] = useState("overview");
-  // const transactions = [{ id: "TXN001", date: "2024-03-15", amount: 12500, status: "completed", orderId: "ORD001" }, { id: "TXN002", date: "2024-03-14", amount: 8900, status: "completed", orderId: "ORD002" }, { id: "TXN003", date: "2024-03-13", amount: 4500, status: "pending", orderId: "ORD003" }, { id: "TXN004", date: "2024-03-12", amount: 23000, status: "completed", orderId: "ORD004" }, { id: "TXN005", date: "2024-03-11", amount: 6700, status: "completed", orderId: "ORD005" }];
-  return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 400, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", overflowY: "auto", padding: "20px" }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#0d1117" : "#ffffff", borderRadius: "20px", width: "900px", maxWidth: "100%", maxHeight: "90vh", overflowY: "auto", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)" }}>
-        <div style={{ padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center", background: isDark ? "#141824" : "#f8fafc", borderRadius: "20px 20px 0 0" }}>
-          <div><h2 style={{ margin: 0, fontSize: "20px" }}>💰 Payment System - {restaurant.name}</h2><p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748b" }}>Restaurant ID: {restaurant.restroId}</p></div>
-          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer", color: "#64748b" }}>×</button>
-        </div>
-        <div style={{ display: "flex", gap: "4px", padding: "16px 24px 0 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-          {["overview", "transactions", "settlements"].map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "10px 20px", background: activeTab === tab ? (isDark ? "#1e3a8a" : "#3b82f6") : "none", border: "none", borderRadius: "8px 8px 0 0", cursor: "pointer", color: activeTab === tab ? "#fff" : (isDark ? "#94a3b8" : "#64748b"), fontWeight: activeTab === tab ? 600 : 400, fontSize: "13px" }}>{tab.charAt(0).toUpperCase() + tab.slice(1)}</button>))}
-        </div>
-        <div style={{ padding: "24px" }}>
-          {activeTab === "overview" && (<div><div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}><div style={{ background: isDark ? "#141824" : "#f8fafc", padding: "16px", borderRadius: "12px" }}><span style={{ fontSize: "11px", color: "#64748b" }}>Total Revenue</span><div style={{ fontSize: "24px", fontWeight: 700, color: "#3b82f6" }}>₹{restaurant.totalPayments?.toLocaleString()}</div></div><div style={{ background: isDark ? "#141824" : "#f8fafc", padding: "16px", borderRadius: "12px" }}><span style={{ fontSize: "11px", color: "#64748b" }}>Completed</span><div style={{ fontSize: "24px", fontWeight: 700, color: "#10b981" }}>₹{restaurant.completedPayments?.toLocaleString()}</div></div><div style={{ background: isDark ? "#141824" : "#f8fafc", padding: "16px", borderRadius: "12px" }}><span style={{ fontSize: "11px", color: "#64748b" }}>Pending</span><div style={{ fontSize: "24px", fontWeight: 700, color: "#f59e0b" }}>₹{restaurant.pendingPayments?.toLocaleString()}</div></div><div style={{ background: isDark ? "#141824" : "#f8fafc", padding: "16px", borderRadius: "12px" }}><span style={{ fontSize: "11px", color: "#64748b" }}>Platform Fee</span><div style={{ fontSize: "24px", fontWeight: 700, color: "#8b5cf6" }}>₹{Math.round(restaurant.totalPayments * 0.1).toLocaleString()}</div></div></div></div>)}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Full Reviews & Ratings Modal
-const ReviewsRatingsModal = ({ restaurant, onClose, isDark }) => {
-  const [filterRating, setFilterRating] = useState("all");
-  const allReviews = [{ id: 1, user: "Rajesh Kumar", rating: 5, comment: "Excellent food!", date: "2024-03-15" }, { id: 2, user: "Priya Singh", rating: 4, comment: "Good food!", date: "2024-03-14" }, { id: 3, user: "Amit Patel", rating: 5, comment: "Best restaurant!", date: "2024-03-12" }];
-  const filteredReviews = filterRating === "all" ? allReviews : allReviews.filter(r => r.rating === parseInt(filterRating));
-  const averageRating = (allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length).toFixed(1);
-  return (<>
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 400, background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", overflowY: "auto", padding: "20px" }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#0d1117" : "#ffffff", borderRadius: "20px", width: "800px", maxWidth: "100%", maxHeight: "90vh", overflowY: "auto", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-        <div style={{ padding: "20px 24px", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center", background: isDark ? "#141824" : "#f8fafc" }}>
-          <div><h2 style={{ margin: 0, fontSize: "20px" }}>⭐ Reviews & Ratings - {restaurant.name}</h2><p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748b" }}>Based on {restaurant.totalRatings} ratings</p></div>
-          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer", color: "#64748b" }}>×</button>
-        </div>
-        <div style={{ padding: "24px", display: "flex", gap: "32px", flexWrap: "wrap", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}><div style={{ textAlign: "center" }}><div style={{ fontSize: "48px", fontWeight: 700, color: "#fbbf24" }}>{averageRating}</div><div style={{ display: "flex", gap: "4px", marginTop: "8px" }}>{[...Array(5)].map((_, i) => (<span key={i} style={{ fontSize: "18px", color: i < Math.floor(averageRating) ? "#fbbf24" : "#3a4460" }}>★</span>))}</div></div></div>
-        <div style={{ padding: "24px", maxHeight: "400px", overflowY: "auto" }}>{filteredReviews.map(review => (<div key={review.id} style={{ padding: "16px", marginBottom: "12px", background: isDark ? "#141824" : "#f8fafc", borderRadius: "12px" }}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}><span style={{ fontSize: "13px", fontWeight: 600 }}>{review.user}</span><span style={{ fontSize: "10px", color: "#64748b" }}>{review.date}</span></div><div style={{ display: "flex", gap: "4px", marginBottom: "8px" }}>{[...Array(5)].map((_, i) => (<span key={i} style={{ fontSize: "12px", color: i < review.rating ? "#fbbf24" : "#3a4460" }}>★</span>))}</div><p style={{ fontSize: "12px", margin: 0 }}>{review.comment}</p></div>))}</div>
-      </div>
-    </div>
-    <select
-  value={filterRating}
-  onChange={(e) => setFilterRating(e.target.value)}
->
-  <option value="all">All</option>
-  <option value="5">5 Star</option>
-  <option value="4">4 Star</option>
-  <option value="3">3 Star</option>
-</select>
-    </>
-  );
-};
-
-// Schedule Item Component
-const ScheduleItem = ({ item, index, onUpdate, onDelete, isDark }) => {
-  const [day, setDay] = useState(item.day);
-  const [openTime, setOpenTime] = useState(item.openTime);
-  const [closeTime, setCloseTime] = useState(item.closeTime);
-  const [isClosed, setIsClosed] = useState(item.isClosed || false);
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const handleUpdate = () => onUpdate(index, { day, openTime, closeTime, isClosed });
-  return (
-    <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px", padding: "8px 0", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0" }}>
-      <select value={day} onChange={(e) => setDay(e.target.value)} style={{ width: "110px", padding: "6px 8px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "6px", fontSize: "12px" }}>{days.map(d => <option key={d} value={d}>{d}</option>)}</select>
-      <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11px" }}><input type="checkbox" checked={isClosed} onChange={(e) => setIsClosed(e.target.checked)} /> Closed</label>
-      {!isClosed && (<><input type="time" value={openTime} onChange={(e) => setOpenTime(e.target.value)} style={{ padding: "6px 8px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "6px", fontSize: "12px", width: "100px" }} /><span>to</span><input type="time" value={closeTime} onChange={(e) => setCloseTime(e.target.value)} style={{ padding: "6px 8px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "6px", fontSize: "12px", width: "100px" }} /></>)}
-      <button onClick={handleUpdate} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer", fontSize: "11px" }}>Update</button>
-      <button onClick={() => onDelete(index)} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#ef4444", cursor: "pointer", fontSize: "11px" }}>Delete</button>
     </div>
   );
 };
@@ -780,7 +1324,6 @@ const ScheduleItem = ({ item, index, onUpdate, onDelete, isDark }) => {
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 const RestaurantTable = ({ isDark = true }) => {
-  // const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -793,16 +1336,17 @@ const RestaurantTable = ({ isDark = true }) => {
   const [page, setPage] = useState(1);
   const [perPage] = useState(10);
   const [editRestaurant, setEditRestaurant] = useState(null);
-  const [editForm, setEditForm] = useState({});
+  const [editFormData, setEditFormData] = useState({});
   const [toast, setToast] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(null);
-  const [showReviewsModal, setShowReviewsModal] = useState(null);
+  const [showDetailPage, setShowDetailPage] = useState(null);
   const [showMenuModal, setShowMenuModal] = useState(null);
-  const [scheduleMenuOpenFor, setScheduleMenuOpenFor] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [scheduleItems, setScheduleItems] = useState([]);
+  const [scheduleRestaurant, setScheduleRestaurant] = useState(null);
   const [newScheduleItem, setNewScheduleItem] = useState({ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false });
 
   const showToast = (message, type = "success") => { setToast({ message, type }); setTimeout(() => setToast(null), 3500); };
@@ -810,26 +1354,99 @@ const RestaurantTable = ({ isDark = true }) => {
   const handleAddRestaurant = async (restaurantData) => { try { await apiAddRestaurant(restaurantData); showToast("Restaurant added successfully"); fetchRestaurants(); } catch (err) { showToast(`Failed to add: ${err.message}`, "error"); } };
   const handleExportClick = () => setShowExportModal(true);
   const handleExport = (exportConfig) => { const selectedFields = exportConfig.selectedFields; const headers = selectedFields.map(f => ({ id: "ID", restroId: "Restro ID", name: "Name", contact: "Contact", status: "Status", ready: "Ready", onOff: "ON/OFF", shiftStart: "Shift Start", shiftEnd: "Shift End", rating: "Rating", totalPayments: "Total Payments" }[f] || f)); const csvData = mappedRestaurants.map(r => selectedFields.map(f => r[f] || '').join(',')); const csvContent = [headers.join(','), ...csvData].join('\n'); const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `restaurants_export_${new Date().toISOString().split('T')[0]}.csv`; a.click(); URL.revokeObjectURL(url); showToast("Exported successfully"); setShowExportModal(false); };
+  
   useEffect(() => { const t = setTimeout(() => { setDebouncedSearch(search); setPage(1); }, 500); return () => clearTimeout(t); }, [search]);
+  
   const fetchRestaurants = useCallback(async () => { setLoading(true); try { const res = await apiGetRestaurants({ page, perPage, search: debouncedSearch, status: statusFilter, ready: readyFilter, onOff: onOffFilter }); setRestaurants(res.data || []); setTotal(res.total || 0); } catch (err) { showToast(`Failed to load: ${err.message}`, "error"); } finally { setLoading(false); } }, [page, perPage, debouncedSearch, statusFilter, readyFilter, onOffFilter]);
+  
   useEffect(() => { fetchRestaurants(); }, [fetchRestaurants]);
-  const mappedRestaurants = restaurants.map((r, idx) => ({ id: r.id, sn: (page - 1) * perPage + idx + 1, restroId: r.restroId, status: r.status, ready: r.ready, onOff: r.onOff, shiftStart: r.shiftStart, shiftEnd: r.shiftEnd, name: r.name, contact: r.contact, password: r.password, pic: r.pic, schedule: r.schedule, rating: r.rating, totalRatings: r.totalRatings, totalPayments: r.totalPayments, pendingPayments: r.pendingPayments, completedPayments: r.completedPayments, menu: r.menu }));
+  
+  const mappedRestaurants = restaurants.map((r, idx) => ({ id: r.id, sn: (page - 1) * perPage + idx + 1, restroId: r.restroId, status: r.status, ready: r.ready, onOff: r.onOff, shiftStart: r.shiftStart, shiftEnd: r.shiftEnd, name: r.name, contact: r.contact, password: r.password, pic: r.pic, schedule: r.schedule, rating: r.rating, totalRatings: r.totalRatings, totalPayments: r.totalPayments, pendingPayments: r.pendingPayments, completedPayments: r.completedPayments, menu: r.menu, address: r.address, email: r.email, description: r.description, cuisine: r.cuisine }));
+  
   const pageIds = mappedRestaurants.map(r => r.id);
   const allPageSelected = pageIds.length > 0 && pageIds.every(id => selected.has(id));
   const toggleAll = () => setSelected(prev => { const next = new Set(prev); allPageSelected ? pageIds.forEach(id => next.delete(id)) : pageIds.forEach(id => next.add(id)); return next; });
   const toggleOne = (id) => setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
   const clearSelection = () => setSelected(new Set());
-  const handleDeleteSelected = async () => { try { await apiDeleteRestaurants(Array.from(selected)); showToast(`${selected.size} restaurant(s) deleted`); clearSelection(); setConfirmDelete(null); fetchRestaurants(); } catch (err) { showToast(`Delete failed: ${err.message}`, "error"); } };
-  const openEdit = (restaurant) => { setEditRestaurant(restaurant); setEditForm({ name: restaurant.name, contact: restaurant.contact, password: restaurant.password, status: restaurant.status, ready: restaurant.ready, onOff: restaurant.onOff, shiftStart: restaurant.shiftStart, shiftEnd: restaurant.shiftEnd }); };
-  const handleEditSave = async () => { try { await apiUpdateRestaurant(editRestaurant.id, editForm); showToast("Restaurant updated successfully"); setEditRestaurant(null); fetchRestaurants(); } catch (err) { showToast(`Update failed: ${err.message}`, "error"); } };
-  const handleSingleDelete = (restaurant) => { setConfirmDelete({ id: restaurant.id, name: restaurant.name }); };
-  const openScheduleMenu = (restaurant) => { setScheduleMenuOpenFor(restaurant); setScheduleItems(restaurant.schedule && restaurant.schedule.length > 0 ? restaurant.schedule : [{ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false }, { day: "Tuesday", openTime: "09:00", closeTime: "17:00", isClosed: false }, { day: "Wednesday", openTime: "09:00", closeTime: "17:00", isClosed: false }, { day: "Thursday", openTime: "09:00", closeTime: "17:00", isClosed: false }, { day: "Friday", openTime: "09:00", closeTime: "17:00", isClosed: false }, { day: "Saturday", openTime: "09:00", closeTime: "17:00", isClosed: false }, { day: "Sunday", openTime: "09:00", closeTime: "17:00", isClosed: false }]); };
-  const closeScheduleMenu = () => { setScheduleMenuOpenFor(null); setScheduleItems([]); };
-  const addScheduleItem = () => { if (scheduleItems.some(item => item.day === newScheduleItem.day)) { showToast("Schedule for this day already exists", "error"); return; } setScheduleItems([...scheduleItems, { ...newScheduleItem }]); setNewScheduleItem({ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false }); };
+  
+  const handleDeleteSelected = async () => { try { await apiDeleteRestaurants(Array.from(selected)); showToast(`${selected.size} restaurant(s) deleted`); clearSelection(); setShowDeleteModal(null); fetchRestaurants(); } catch (err) { showToast(`Delete failed: ${err.message}`, "error"); } };
+  
+  const openEdit = (restaurant) => {
+    setEditRestaurant(restaurant);
+    setEditFormData({
+      name: restaurant.name,
+      contact: restaurant.contact,
+      password: restaurant.password,
+      status: restaurant.status,
+      ready: restaurant.ready,
+      onOff: restaurant.onOff,
+      shiftStart: restaurant.shiftStart,
+      shiftEnd: restaurant.shiftEnd,
+    });
+    setShowEditModal(true);
+  };
+  
+  const handleEditSave = async () => {
+    try {
+      await apiUpdateRestaurant(editRestaurant.id, editFormData);
+      showToast("Restaurant updated successfully");
+      setShowEditModal(false);
+      setEditRestaurant(null);
+      fetchRestaurants();
+      if (showDetailPage && showDetailPage.id === editRestaurant.id) {
+        setShowDetailPage({ ...showDetailPage, ...editFormData });
+      }
+    } catch (err) {
+      showToast(`Update failed: ${err.message}`, "error");
+    }
+  };
+  
+  // const handleSingleDelete = (restaurant) => { setShowDeleteModal(restaurant); };
+  
+  const handleDeleteFromDetail = async (restaurant) => { setShowDeleteModal(restaurant); };
+  
+  const openScheduleModal = (restaurant) => {
+    setScheduleRestaurant(restaurant);
+    setScheduleItems(restaurant.schedule && restaurant.schedule.length > 0 ? restaurant.schedule : [
+      { day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false },
+      { day: "Tuesday", openTime: "09:00", closeTime: "17:00", isClosed: false },
+      { day: "Wednesday", openTime: "09:00", closeTime: "17:00", isClosed: false },
+      { day: "Thursday", openTime: "09:00", closeTime: "17:00", isClosed: false },
+      { day: "Friday", openTime: "09:00", closeTime: "17:00", isClosed: false },
+      { day: "Saturday", openTime: "09:00", closeTime: "17:00", isClosed: false },
+      { day: "Sunday", openTime: "09:00", closeTime: "17:00", isClosed: false }
+    ]);
+    setShowScheduleModal(true);
+  };
+  
+  const addScheduleItem = () => {
+    if (scheduleItems.some(item => item.day === newScheduleItem.day)) {
+      showToast("Schedule for this day already exists", "error");
+      return;
+    }
+    setScheduleItems([...scheduleItems, { ...newScheduleItem }]);
+    setNewScheduleItem({ day: "Monday", openTime: "09:00", closeTime: "17:00", isClosed: false });
+  };
+  
   const updateScheduleItem = (index, updatedItem) => { const updated = [...scheduleItems]; updated[index] = updatedItem; setScheduleItems(updated); };
   const deleteScheduleItem = (index) => setScheduleItems(scheduleItems.filter((_, i) => i !== index));
-  const saveSchedule = async () => { try { await apiUpdateRestaurant(scheduleMenuOpenFor.id, { schedule: scheduleItems }); showToast("Opening/Closing times updated successfully"); closeScheduleMenu(); fetchRestaurants(); } catch (err) { showToast(`Failed to save schedule: ${err.message}`, "error"); } };
+  
+  const saveSchedule = async () => {
+    try {
+      await apiUpdateRestaurant(scheduleRestaurant.id, { schedule: scheduleItems });
+      showToast("Opening/Closing times updated successfully");
+      setShowScheduleModal(false);
+      fetchRestaurants();
+      if (showDetailPage && showDetailPage.id === scheduleRestaurant.id) {
+        setShowDetailPage({ ...showDetailPage, schedule: scheduleItems });
+      }
+    } catch (err) {
+      showToast(`Failed to save schedule: ${err.message}`, "error");
+    }
+  };
+  
   const totalPages = Math.ceil(total / perPage);
+  
   const styles = {
     container: { minHeight: "100vh", background: isDark ? "#0d1117" : "#f8fafc", fontFamily: "'DM Sans', sans-serif", padding: "20px 24px" },
     headerActions: { display: "flex", gap: "12px", marginBottom: "20px" },
@@ -849,13 +1466,31 @@ const RestaurantTable = ({ isDark = true }) => {
     th: { padding: "13px 14px", textAlign: "left", fontSize: "12px", fontWeight: 700, color: "#3b82f6", borderBottom: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", background: isDark ? "#0f1520" : "#f8fafc" },
     td: { padding: "12px 14px", borderBottom: isDark ? "1px solid #1a2035" : "1px solid #f1f5f9", fontSize: "13px", color: isDark ? "#e2e8f0" : "#1e293b" },
     pagination: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", background: isDark ? "#0f1520" : "#f8fafc" },
-    actionButton: { background: "none", border: "none", cursor: "pointer", color: isDark ? "#64748b" : "#94a3b8", display: "flex", alignItems: "center", gap: "4px", padding: "6px 10px", borderRadius: "6px", transition: "all 0.2s" },
-    clickable: { cursor: "pointer", transition: "all 0.2s ease" },
+    viewMoreBtn: { background: "#3b82f6", color: "white", border: "none", padding: "6px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: 500 },
   };
+
+  // If showing detail page, render that instead of table
+  if (showDetailPage) {
+    return (
+      <RestaurantDetailPage
+        restaurant={showDetailPage}
+        onBack={() => setShowDetailPage(null)}
+        onEdit={(restaurant) => openEdit(restaurant)}
+        onDelete={(restaurant) => handleDeleteFromDetail(restaurant)}
+        onViewSchedule={(restaurant) => openScheduleModal(restaurant)}
+        onViewMenu={(restaurant) => setShowMenuModal(restaurant)}
+        isDark={isDark}
+      />
+    );
+  }
 
   return (
     <div style={styles.container}>
-      <style>{`@keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} } .action-btn:hover { background: rgba(59,130,246,0.1); color: #3b82f6 !important; } .clickable:hover { background: rgba(59,130,246,0.05); transform: scale(1.02); }`}</style>
+      <style>{`
+        @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes scaleIn { from{transform:scale(0.95);opacity:0} to{transform:scale(1);opacity:1} }
+      `}</style>
 
       <div style={styles.headerActions}>
         <button style={styles.addBtn} onClick={handleAddRestaurantClick}>+ Add Restaurant</button>
@@ -877,92 +1512,76 @@ const RestaurantTable = ({ isDark = true }) => {
           <span style={{ fontSize: "13px", color: "#93c5fd", fontWeight: 600 }}>✓ {selected.size} restaurant{selected.size > 1 ? "s" : ""} selected</span>
           <div style={{ flex: 1 }} />
           <button onClick={clearSelection} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid #3b4460", background: "#1e2740", color: "#94a3b8", fontSize: "12px", cursor: "pointer" }}>Clear</button>
-          <button onClick={() => setConfirmDelete({ ids: Array.from(selected), count: selected.size })} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#ef4444", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}><TrashIcon /> Delete</button>
+          <button onClick={() => setShowDeleteModal({ id: Array.from(selected), name: `${selected.size} restaurants` })} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#ef4444", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}><TrashIcon /> Delete</button>
         </div>
       )}
 
       <div style={styles.tableWrapper}>
         <div style={{ overflowX: "auto" }}>
           <table style={styles.table}>
-  <thead>
-    <tr>
-      <th style={{ ...styles.th, width: "40px" }}><Checkbox checked={allPageSelected} onChange={toggleAll} /></th>
-      <th style={styles.th}>#</th>
-      <th style={styles.th}>ID</th>
-      <th style={styles.th}>Logo</th>
-      <th style={styles.th}>Status</th>
-      <th style={styles.th}>Ready</th>
-      <th style={styles.th}>ON/OFF</th>
-      <th style={styles.th}>Open</th>
-      <th style={styles.th}>Close</th>
-      <th style={styles.th}>Restaurant</th>
-      <th style={styles.th}> Rating</th>
-      <th style={styles.th}> Payments</th>
-      <th style={styles.th}> Contact</th>
-      <th style={styles.th}>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {loading ? (
-      Array.from({ length: perPage }).map((_, i) => (
-        <tr key={i}>
-          {Array.from({ length: 14 }).map((_, j) => (
-            <td key={j} style={styles.td}>
-              <div style={{ height: "14px", background: "#1e2740", borderRadius: "4px", width: j === 0 ? "16px" : "70%" }} />
-            </td>
-          ))}
-        </tr>
-      ))
-    ) : mappedRestaurants.length === 0 ? (
-      <tr>
-        <td colSpan={14} style={{ padding: "60px", textAlign: "center", color: "#64748b" }}>
-          {debouncedSearch ? "No restaurants match your search" : "No restaurants found"}
-        </td>
-      </tr>
-    ) : (
-      mappedRestaurants.map((restro) => (
-        <tr key={restro.id} style={{ background: selected.has(restro.id) ? "rgba(59,130,246,0.07)" : "transparent" }}>
-          <td style={styles.td}><Checkbox checked={selected.has(restro.id)} onChange={() => toggleOne(restro.id)} /></td>
-          <td style={styles.td}>{restro.sn}</td>
-          <td style={styles.td}><span style={{ fontFamily: "monospace", fontSize: "11px", color: "#3b82f6" }}>{restro.restroId}</span></td>
-          <td style={styles.td}><AvatarPlaceholder name={restro.name} /></td>
-          <td style={styles.td}><StatusBadge status={restro.status} /></td>
-          <td style={styles.td}><ReadyBadge ready={restro.ready} /></td>
-          <td style={styles.td}><OnOffBadge value={restro.onOff} /></td>
-          <td style={styles.td}>{restro.shiftStart || "-"}</td>
-          <td style={styles.td}>{restro.shiftEnd || "-"}</td>
-          <td style={styles.td}><strong>{restro.name}</strong></td>
-          <td style={styles.td}>
-            <div className="clickable" style={styles.clickable} onDoubleClick={() => setShowReviewsModal(restro)}>
-              <button className="action-btn" style={styles.actionButton}>
-                <StarIcon /> {restro.rating} ({restro.totalRatings})
-              </button>
-            </div>
-          </td>
-          <td style={styles.td}>
-            <div className="clickable" style={styles.clickable} onDoubleClick={() => setShowPaymentModal(restro)}>
-              <button className="action-btn" style={styles.actionButton}>
-                <PaymentIcon /> ₹{restro.totalPayments?.toLocaleString()}
-              </button>
-            </div>
-          </td>
-          <td style={styles.td}>{restro.contact}</td>
-          <td style={styles.td}>
-            <ActionMenuDropdown
-              restaurant={restro}
-              onEdit={() => openEdit(restro)}
-              onDelete={() => handleSingleDelete(restro)}
-              onViewSchedule={() => openScheduleMenu(restro)}
-              onViewMenu={() => setShowMenuModal(restro)}
-              onViewDetails={() => alert(`Viewing details for ${restro.name}`)}
-              isDark={isDark}
-            />
-          </td>
-        </tr>
-      ))
-    )}
-  </tbody>
-</table>
+            <thead>
+              <tr>
+                <th style={{ ...styles.th, width: "40px" }}><Checkbox checked={allPageSelected} onChange={toggleAll} /></th>
+                <th style={styles.th}>#</th>
+                <th style={styles.th}>ID</th>
+                <th style={styles.th}>Logo</th>
+                <th style={styles.th}>Status</th>
+                <th style={styles.th}>Ready</th>
+                <th style={styles.th}>ON/OFF</th>
+                <th style={styles.th}>Open</th>
+                <th style={styles.th}>Close</th>
+                <th style={styles.th}>Restaurant</th>
+                <th style={styles.th}>Rating</th>
+                <th style={styles.th}>Payments</th>
+                <th style={styles.th}>Contact</th>
+                <th style={styles.th}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: perPage }).map((_, i) => (
+                  <tr key={i}>
+                    {Array.from({ length: 14 }).map((_, j) => (
+                      <td key={j} style={styles.td}>
+                        <div style={{ height: "14px", background: "#1e2740", borderRadius: "4px", width: j === 0 ? "16px" : "70%" }} />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : mappedRestaurants.length === 0 ? (
+                <tr><td colSpan={14} style={{ padding: "60px", textAlign: "center", color: "#64748b" }}>{debouncedSearch ? "No restaurants match your search" : "No restaurants found"}</td></tr>
+              ) : (
+                mappedRestaurants.map((restro) => (
+                  <tr key={restro.id} style={{ background: selected.has(restro.id) ? "rgba(59,130,246,0.07)" : "transparent" }}>
+                    <td style={styles.td}><Checkbox checked={selected.has(restro.id)} onChange={() => toggleOne(restro.id)} /></td>
+                    <td style={styles.td}>{restro.sn}</td>
+                    <td style={styles.td}><span style={{ fontFamily: "monospace", fontSize: "11px", color: "#3b82f6" }}>{restro.restroId}</span></td>
+                    <td style={styles.td}><AvatarPlaceholder name={restro.name} /></td>
+                    <td style={styles.td}><StatusBadge status={restro.status} /></td>
+                    <td style={styles.td}><ReadyBadge ready={restro.ready} /></td>
+                    <td style={styles.td}><OnOffBadge value={restro.onOff} /></td>
+                    <td style={styles.td}>{restro.shiftStart || "-"}</td>
+                    <td style={styles.td}>{restro.shiftEnd || "-"}</td>
+                    <td style={styles.td}><strong>{restro.name}</strong></td>
+                    <td style={styles.td}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <StarIcon /> {restro.rating} ({restro.totalRatings})
+                      </div>
+                    </td>
+                    <td style={styles.td}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <PaymentIcon /> ₹{restro.totalPayments?.toLocaleString()}
+                      </div>
+                    </td>
+                    <td style={styles.td}>{restro.contact}</td>
+                    <td style={styles.td}>
+                      <button style={styles.viewMoreBtn} onClick={() => setShowDetailPage(restro)}>View More</button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
         <div style={styles.pagination}>
@@ -977,14 +1596,53 @@ const RestaurantTable = ({ isDark = true }) => {
 
       {/* Modals */}
       <AddRestaurantModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} onAdd={handleAddRestaurant} isDark={isDark} />
-      <DoubleConfirmModal isOpen={!!confirmDelete} onConfirm={() => { if (confirmDelete?.ids) handleDeleteSelected(); else if (confirmDelete?.id) { const deleteRestaurant = async () => { await apiDeleteRestaurants([confirmDelete.id]); showToast("Restaurant deleted"); fetchRestaurants(); setConfirmDelete(null); }; deleteRestaurant(); } }} onCancel={() => setConfirmDelete(null)} title="Delete Restaurant" message={confirmDelete?.ids ? `Are you sure you want to delete ${confirmDelete.count} restaurants?` : `Are you sure you want to delete "${confirmDelete?.name}"?`} isDark={isDark} />
-      {showPaymentModal && <PaymentSystemModal restaurant={showPaymentModal} onClose={() => setShowPaymentModal(null)} isDark={isDark} />}
-      {showReviewsModal && <ReviewsRatingsModal restaurant={showReviewsModal} onClose={() => setShowReviewsModal(null)} isDark={isDark} />}
+      
+      <DeleteConfirmModal
+        isOpen={!!showDeleteModal}
+        restaurantName={showDeleteModal?.name || ""}
+        onConfirm={() => {
+          if (showDeleteModal?.id === Array.from(selected) && selected.size > 0) {
+            handleDeleteSelected();
+          } else if (showDeleteModal?.id) {
+            const deleteRestaurant = async () => {
+              await apiDeleteRestaurants([showDeleteModal.id]);
+              showToast("Restaurant deleted successfully");
+              setShowDeleteModal(null);
+              fetchRestaurants();
+              if (showDetailPage && showDetailPage.id === showDeleteModal.id) {
+                setShowDetailPage(null);
+              }
+            };
+            deleteRestaurant();
+          } else if (showDeleteModal?.id && Array.isArray(showDeleteModal.id)) {
+            handleDeleteSelected();
+          }
+        }}
+        onCancel={() => setShowDeleteModal(null)}
+        isDark={isDark}
+      />
+      
+      <EditRestaurantModal
+        isOpen={showEditModal}
+        restaurant={editRestaurant}
+        onClose={() => { setShowEditModal(false); setEditRestaurant(null); }}
+        onSave={handleEditSave}
+        isDark={isDark}
+      />
+      
+      <ScheduleModal
+        isOpen={showScheduleModal}
+        restaurant={scheduleRestaurant}
+        scheduleItems={scheduleItems}
+        onUpdate={updateScheduleItem}
+        onDelete={deleteScheduleItem}
+        onAdd={addScheduleItem}
+        onClose={() => { setShowScheduleModal(false); setScheduleRestaurant(null); }}
+        onSave={saveSchedule}
+        isDark={isDark}
+      />
+      
       {showMenuModal && <RestaurantMenuModal restaurant={showMenuModal} onClose={() => setShowMenuModal(null)} isDark={isDark} />}
-      {editRestaurant && (<div onClick={() => setEditRestaurant(null)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}><div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#141824" : "#ffffff", borderRadius: "16px", padding: "28px", width: "420px" }}><h3>✏️ Edit Restaurant</h3>{[{ label: "Restro Name", key: "name" }, { label: "Contact", key: "contact" }].map(f => (<div key={f.key} style={{ marginBottom: "14px" }}><label>{f.label}</label><input value={editForm[f.key] || ""} onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))} style={{ width: "100%", padding: "9px 12px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px" }} /></div>))}<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "20px" }}>{[{ label: "Status", key: "status", options: ["Active", "Inactive"] }, { label: "Ready", key: "ready", options: ["Yes", "No"] }, { label: "ON/OFF", key: "onOff", options: ["ON", "OFF"] }].map(f => (<div key={f.key}><label>{f.label}</label><select value={editForm[f.key] || ""} onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))} style={{ width: "100%", padding: "9px 12px", background: isDark ? "#0f1520" : "#f8fafc", border: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", borderRadius: "8px" }}>{f.options.map(o => <option key={o} value={o}>{o}</option>)}</select></div>))}</div><div style={{ display: "flex", gap: "10px" }}><button onClick={() => setEditRestaurant(null)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>Cancel</button><button onClick={handleEditSave} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "#1e3a8a", color: "#93c5fd", cursor: "pointer" }}>💾 Save</button></div></div></div>)}
-
-      {scheduleMenuOpenFor && (<div onClick={closeScheduleMenu} style={{ position: "fixed", inset: 0, zIndex: 250, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center" }}><div onClick={e => e.stopPropagation()} style={{ background: isDark ? "#141824" : "#ffffff", borderRadius: "16px", padding: "24px", width: "680px", maxHeight: "80vh", overflowY: "auto" }}><div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}><h3>🕐 Business Hours - {scheduleMenuOpenFor.name}</h3><button onClick={closeScheduleMenu}><CloseIcon /></button></div><div style={{ marginBottom: "24px", maxHeight: "400px", overflowY: "auto" }}>{scheduleItems.map((item, idx) => (<ScheduleItem key={idx} item={item} index={idx} onUpdate={updateScheduleItem} onDelete={deleteScheduleItem} isDark={isDark} />))}</div><div style={{ borderTop: isDark ? "1px solid #1e2740" : "1px solid #e2e8f0", paddingTop: "16px" }}><h4>➕ Add New Schedule</h4><div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}><select value={newScheduleItem.day} onChange={(e) => setNewScheduleItem({ ...newScheduleItem, day: e.target.value })}><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select><label><input type="checkbox" checked={newScheduleItem.isClosed} onChange={(e) => setNewScheduleItem({ ...newScheduleItem, isClosed: e.target.checked })} /> Closed</label>{!newScheduleItem.isClosed && (<><input type="time" value={newScheduleItem.openTime} onChange={(e) => setNewScheduleItem({ ...newScheduleItem, openTime: e.target.value })} /><span>to</span><input type="time" value={newScheduleItem.closeTime} onChange={(e) => setNewScheduleItem({ ...newScheduleItem, closeTime: e.target.value })} /></>)}<button onClick={addScheduleItem}><PlusIcon /> Add</button></div></div><div style={{ display: "flex", gap: "10px", marginTop: "24px", justifyContent: "flex-end" }}><button onClick={closeScheduleMenu}>Cancel</button><button onClick={saveSchedule}>💾 Save All Changes</button></div></div></div>)}
-
       {showExportModal && <ExportRestaurantsModal isDark={isDark} onClose={() => setShowExportModal(false)} onExport={handleExport} />}
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>

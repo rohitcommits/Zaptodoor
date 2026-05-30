@@ -130,6 +130,24 @@ const menuData = [
       },
     ],
   },
+ {
+  section: "Reports",
+  items: [
+    {
+      name: "Reports",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M21 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4" />
+          <polyline points="15 2 21 8 15 8" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+          <line x1="8" y1="14" x2="16" y2="14" />
+          <line x1="12" y1="18" x2="12" y2="18" />
+        </svg>
+      ),
+      path: "/Dashboard/Reports"
+    },
+  ]
+},
   {
     section: "SUPPORT",
     items: [
@@ -152,6 +170,15 @@ const menuData = [
           </svg>
         ),
         path: "/Dashboard/tickets"
+      },
+      {
+        name: "Notifications",
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+        ),
+        path: "/Dashboard/Notification"
       },
       {
         name: "Send Notifications",
@@ -208,6 +235,18 @@ const menuData = [
   {
     section: "WEBSITE",
     items: [
+      {
+        name: "Website",
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+            <circle cx="7" cy="9" r="1" />
+          </svg>
+        ),
+        path: "/Dashboard/Website"
+      },
       {
         name: "Web Banners",
         icon: (
