@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "../components/layout/Dashboard/Sidebar";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 
 
@@ -40,6 +40,7 @@ import Reports from "../components/layout/Dashboard/Reports.js";
  import AppSettings from "../components/layout/Dashboard/AppSettings.js";
  import Locations from "../components/layout/Dashboard/Locations.js";
  import AddNewDriver from "../components/layout/Dashboard/Rider/AddNewRider.js";
+ import Admine from "../components/layout/Dashboard/Menu/showmenubyrestrunt.js";
 
 
 
@@ -205,6 +206,7 @@ const Dashboard = () => {
           <Route path="/AppSettings" element={<AppSettings isDark={isDark} />} />
           <Route path="/Locations" element={<Locations isDark={isDark} />} />
           <Route path="/AddNewDriver" element={<AddNewDriver isDark={isDark} />} />
+          <Route path="/menus" element={<Admine isDark={isDark} />} />
         </Routes>
       </main>
 

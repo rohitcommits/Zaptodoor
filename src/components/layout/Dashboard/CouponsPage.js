@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THEME CONTEXT (if not already available)
-// ─────────────────────────────────────────────────────────────────────────────
-const ThemeContext = React.createContext({ theme: "light", toggleTheme: () => {} });
-export const useTheme = () => React.useContext(ThemeContext);
-
-// ─────────────────────────────────────────────────────────────────────────────
 // API CONFIG
 // ─────────────────────────────────────────────────────────────────────────────
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://your-api.com/api";
@@ -19,13 +13,6 @@ const getAuthHeaders = () => ({
 // ─────────────────────────────────────────────────────────────────────────────
 // API FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
-// const apiGetCoupons = async ({ page, perPage, search, status, type }) => {
-//   const params = new URLSearchParams({ page, limit: perPage, ...(search && { search }), ...(status && status !== "All" && { status }), ...(type && type !== "All" && { type }) });
-//   const res = await fetch(`${API_BASE}/coupons?${params}`, { headers: getAuthHeaders() });
-//   if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-//   return res.json();
-// };
-
 const apiCreateCoupon = async (payload) => {
   const res = await fetch(`${API_BASE}/coupons`, { method: "POST", headers: getAuthHeaders(), body: JSON.stringify(payload) });
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -57,20 +44,57 @@ const DUMMY_COUPONS = [
   { id: "CPN_007", code: "WEEKEND10", type: "Promo Code", discount: "10%", discountType: "percentage", maxDiscount: "₹200", minOrder: "₹799", validFrom: "2024-03-01", validTo: "2024-03-31", usageLimit: 1000, usedCount: 0, status: "Inactive", description: "Weekend special", applicableOn: "Weekend orders", createdAt: "2024-03-01" },
 ];
 
-const getThemeStyles = (theme) => ({
+// ─────────────────────────────────────────────────────────────────────────────
+// THEME STYLES (matching dashboard exactly)
+// ─────────────────────────────────────────────────────────────────────────────
+const getThemeStyles = (isDark) => ({
   dark: {
-    background: "#0d1117", surface: "#141824", surfaceLighter: "#1a2035", surfaceLightest: "#1e2740",
-    border: "#1e2740", borderLight: "#2a3145", text: "#f1f5f9", textSecondary: "#94a3b8",
-    textMuted: "#64748b", textDim: "#3a4460", primary: "#3b82f6", primaryDark: "#1e3a8a",
-    primaryLight: "#93c5fd", success: "#10b981", warning: "#f59e0b", error: "#ef4444",
-    gradient: "linear-gradient(135deg, #6c63ff, #4fd1c5)",
+    background: "#0d1117",
+    surface: "#141824",
+    surfaceLighter: "#1a2035",
+    surfaceLightest: "#1e2740",
+    border: "#1e2740",
+    borderLight: "#2a3145",
+    text: "#f1f5f9",
+    textPrimary: "#f1f5f9",
+    textSecondary: "#94a3b8",
+    textMuted: "#64748b",
+    textDim: "#3a4460",
+    textOnPrimary: "#ffffff",
+    primary: "#3b82f6",
+    primaryDark: "#2563eb",
+    primaryLight: "#93c5fd",
+    success: "#10b981",
+    warning: "#f59e0b",
+    error: "#ef4444",
+    info: "#3b82f6",
+    gradient: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+    glass: "rgba(30, 34, 58, 0.9)",
+    placeholder: "#4a4f6e",
   },
   light: {
-    background: "#f8fafc", surface: "#ffffff", surfaceLighter: "#f1f5f9", surfaceLightest: "#e2e8f0",
-    border: "#e2e8f0", borderLight: "#cbd5e1", text: "#0f172a", textSecondary: "#475569",
-    textMuted: "#64748b", textDim: "#94a3b8", primary: "#3b82f6", primaryDark: "#2563eb",
-    primaryLight: "#60a5fa", success: "#10b981", warning: "#f59e0b", error: "#ef4444",
-    gradient: "linear-gradient(135deg, #6366f1, #14b8a6)",
+    background: "#f8fafc",
+    surface: "#ffffff",
+    surfaceLighter: "#f1f5f9",
+    surfaceLightest: "#f8fafc",
+    border: "#e2e8f0",
+    borderLight: "#cbd5e1",
+    text: "#0f172a",
+    textPrimary: "#0f172a",
+    textSecondary: "#334155",
+    textMuted: "#64748b",
+    textDim: "#94a3b8",
+    textOnPrimary: "#ffffff",
+    primary: "#6366f1",
+    primaryDark: "#4f46e5",
+    primaryLight: "#818cf8",
+    success: "#10b981",
+    warning: "#f59e0b",
+    error: "#ef4444",
+    info: "#3b82f6",
+    gradient: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    glass: "rgba(255, 255, 255, 0.9)",
+    placeholder: "#9ca3af",
   },
 });
 
@@ -84,9 +108,7 @@ const TrashIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="n
 const SearchIcon = () => (<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>);
 const ChevronLeftIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>);
 const ChevronRightIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>);
-// const RefreshIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>);
 const SpinnerIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" style={{ animation: "spin 0.8s linear infinite", transformOrigin: "center" }}/></svg>);
-// const DiscountIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="9" cy="15" r="2"/><circle cx="15" cy="9" r="2"/><path d="M7 7l10 10"/><path d="M12 2a10 10 0 1 0 10 10"/></svg>);
 const CalendarIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>);
 const UsersIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>);
 const PercentageIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>);
@@ -100,9 +122,13 @@ const CheckCircleIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" f
 // SUB-COMPONENTS
 // ─────────────────────────────────────────────────────────────────────────────
 const StatusBadge = ({ status, ts }) => {
-  const config = { Active: { bg: "rgba(20,184,166,0.15)", color: ts.success }, Inactive: { bg: "rgba(148,163,184,0.12)", color: ts.textMuted }, Expired: { bg: "rgba(239,68,68,0.12)", color: ts.error } };
+  const config = { 
+    Active: { bg: "rgba(16,185,129,0.15)", color: ts.success, dot: ts.success }, 
+    Inactive: { bg: "rgba(107,114,128,0.12)", color: ts.textMuted, dot: ts.textMuted }, 
+    Expired: { bg: "rgba(239,68,68,0.12)", color: ts.error, dot: ts.error } 
+  };
   const c = config[status] || config.Inactive;
-  return (<span style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "4px 12px", borderRadius: "20px", background: c.bg, color: c.color, fontSize: "11px", fontWeight: 600 }}><div style={{ width: "6px", height: "6px", borderRadius: "50%", background: c.color }} />{status}</span>);
+  return (<div style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "3px 10px 3px 8px", borderRadius: "20px", background: c.bg, border: `1px solid ${c.bg}` }}><div style={{ width: "5px", height: "5px", borderRadius: "50%", background: c.dot }} /><span style={{ fontSize: "11px", fontWeight: 600, color: c.color }}>{status}</span></div>);
 };
 
 const DiscountBadge = ({ discount, type, ts }) => {
@@ -111,14 +137,13 @@ const DiscountBadge = ({ discount, type, ts }) => {
 
 const Checkbox = ({ checked, onChange, ts }) => (<div onClick={onChange} style={{ width: "16px", height: "16px", borderRadius: "4px", border: checked ? `2px solid ${ts.primary}` : `2px solid ${ts.textDim}`, background: checked ? ts.primary : "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>{checked && <CheckCircleIcon />}</div>);
 
-const Toast = ({ message, type, onClose, ts }) => (<div style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 999, background: ts.surface, border: `1px solid ${type === "error" ? ts.error : ts.success}`, borderRadius: "10px", padding: "12px 18px", display: "flex", alignItems: "center", gap: "10px", boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}><div style={{ width: "8px", height: "8px", borderRadius: "50%", background: type === "error" ? ts.error : ts.success }} /><span style={{ fontSize: "13px", color: type === "error" ? ts.error : ts.success }}>{message}</span><span onClick={onClose} style={{ cursor: "pointer", color: ts.textMuted, fontSize: "16px" }}>×</span></div>);
+const Toast = ({ message, type, onClose, ts }) => (<div style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 999, background: ts.surface, border: `1px solid ${type === "error" ? ts.error : ts.success}`, borderRadius: "10px", padding: "12px 18px", display: "flex", alignItems: "center", gap: "10px", boxShadow: "0 8px 32px rgba(0,0,0,0.3)", animation: "slideUp 0.25s ease" }}><div style={{ width: "8px", height: "8px", borderRadius: "50%", background: type === "error" ? ts.error : ts.success, flexShrink: 0 }} /><span style={{ fontSize: "13px", color: type === "error" ? ts.error : ts.success, flex: 1 }}>{message}</span><span onClick={onClose} style={{ cursor: "pointer", color: ts.textMuted, fontSize: "16px", lineHeight: 1 }}>×</span></div>);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
+// MAIN COMPONENT (Updated to accept isDark prop)
 // ─────────────────────────────────────────────────────────────────────────────
-const CouponsTable = () => {
-  const { theme } = useTheme();
-  const ts = getThemeStyles(theme)[theme];
+const CouponsTable = ({ isDark = true }) => {
+  const ts = getThemeStyles(isDark)[isDark ? 'dark' : 'light'];
 
   const [coupons, setCoupons] = useState(DUMMY_COUPONS);
   const [total, setTotal] = useState(DUMMY_COUPONS.length);
@@ -187,11 +212,11 @@ const CouponsTable = () => {
   const totalPages = Math.ceil(total / perPage);
 
   const styles = {
-    container: { minHeight: "100vh", background: ts.background, padding: "24px", fontFamily: "'DM Sans', sans-serif" },
+    container: { minHeight: "100vh", background: ts.background, padding: "24px", fontFamily: "'Inter', sans-serif" },
     header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "16px" },
     title: { display: "flex", alignItems: "center", gap: "12px" },
     titleIcon: { background: ts.gradient, padding: "10px", borderRadius: "12px", color: "white" },
-    titleText: { fontSize: "24px", fontWeight: 700, color: ts.text },
+    titleText: { fontSize: "24px", fontWeight: 700, color: ts.textPrimary },
     addBtn: { background: ts.gradient, border: "none", padding: "12px 24px", borderRadius: "10px", color: "white", fontWeight: 600, display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" },
     filtersBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "15px" },
     searchWrapper: { position: "relative", flex: 1, maxWidth: "350px" },
@@ -208,12 +233,12 @@ const CouponsTable = () => {
     modalOverlay: { position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" },
     modal: { background: ts.surface, border: `1px solid ${ts.border}`, borderRadius: "20px", width: "550px", maxHeight: "85vh", overflow: "auto" },
     modalHeader: { padding: "20px 24px", borderBottom: `1px solid ${ts.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" },
-    modalTitle: { fontSize: "18px", fontWeight: 700, color: ts.text, display: "flex", alignItems: "center", gap: "10px" },
+    modalTitle: { fontSize: "18px", fontWeight: 700, color: ts.textPrimary, display: "flex", alignItems: "center", gap: "10px" },
     modalBody: { padding: "24px" },
     formGroup: { marginBottom: "16px" },
     label: { display: "block", fontSize: "12px", fontWeight: 600, color: ts.textMuted, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px" },
-    input: { width: "100%", padding: "10px 14px", background: ts.surfaceLighter, border: `1px solid ${ts.border}`, borderRadius: "10px", fontSize: "13px", color: ts.text, outline: "none" },
-    select: { width: "100%", padding: "10px 14px", background: ts.surfaceLighter, border: `1px solid ${ts.border}`, borderRadius: "10px", fontSize: "13px", color: ts.text, cursor: "pointer" },
+    input: { width: "100%", padding: "10px 14px", background: ts.surfaceLighter, border: `1px solid ${ts.border}`, borderRadius: "10px", fontSize: "13px", color: ts.textPrimary, outline: "none" },
+    select: { width: "100%", padding: "10px 14px", background: ts.surfaceLighter, border: `1px solid ${ts.border}`, borderRadius: "10px", fontSize: "13px", color: ts.textPrimary, cursor: "pointer" },
     row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" },
     modalFooter: { padding: "16px 24px", borderTop: `1px solid ${ts.border}`, display: "flex", gap: "12px", justifyContent: "flex-end" },
     btnCancel: { padding: "10px 20px", background: ts.surfaceLighter, border: `1px solid ${ts.border}`, borderRadius: "10px", color: ts.textSecondary, cursor: "pointer", fontSize: "13px" },
@@ -221,12 +246,22 @@ const CouponsTable = () => {
     btnDanger: { padding: "8px 16px", background: `${ts.error}1A`, border: `1px solid ${ts.error}`, borderRadius: "8px", color: ts.error, cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", gap: "6px" },
     actionBtn: { background: "none", border: "none", cursor: "pointer", color: ts.textMuted, padding: "6px", borderRadius: "6px", display: "inline-flex", alignItems: "center", gap: "4px" },
     codeBadge: { background: ts.surfaceLighter, padding: "4px 10px", borderRadius: "8px", fontFamily: "monospace", fontSize: "12px", fontWeight: 600, color: ts.primary, display: "inline-flex", alignItems: "center", gap: "8px" },
-    statCard: { display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", background: ts.surfaceLighter, borderRadius: "12px" },
   };
 
   return (
     <div style={styles.container}>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: ${isDark ? "#1a2035" : "#e2e8f0"}; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: ${isDark ? "#4a4f6e" : "#94a3b8"}; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: ${isDark ? "#6b7280" : "#64748b"}; }
+        input::placeholder { color: ${ts.placeholder}; }
+        button { transition: all 0.2s ease; }
+        button:hover:not(:disabled) { transform: translateY(-1px); opacity: 0.9; }
+        button:active:not(:disabled) { transform: translateY(0); }
+      `}</style>
 
       {/* Header */}
       <div style={styles.header}>
@@ -270,7 +305,7 @@ const CouponsTable = () => {
             <tbody>
               {loading ? Array.from({ length: perPage }).map((_, i) => (<tr key={i}>{Array.from({ length: 9 }).map((_, j) => (<td key={j} style={styles.td}><div style={{ height: "14px", background: ts.surfaceLighter, borderRadius: "4px" }} /></td>))}</tr>)) : mappedCoupons.length === 0 ? (<tr><td colSpan={9} style={{ padding: "60px", textAlign: "center", color: ts.textMuted }}>No coupons found</td></tr>) : mappedCoupons.map((coupon) => (<tr key={coupon.id} style={{ background: selected.has(coupon.id) ? `${ts.primary}0D` : "transparent" }}>
                 <td style={styles.td}><Checkbox checked={selected.has(coupon.id)} onChange={() => toggleOne(coupon.id)} ts={ts} /></td>
-                <td style={styles.td}><div style={styles.codeBadge}>{coupon.code}<button onClick={() => copyToClipboard(coupon.code)} style={{ background: "none", border: "none", cursor: "pointer", color: ts.primary }}><CopyIcon /></button></div></td>
+                <td style={styles.td}><div style={styles.codeBadge}>{coupon.code}<button onClick={() => copyToClipboard(coupon.code)} style={{ background: "none", border: "none", cursor: "pointer", color: ts.primary, display: "flex", alignItems: "center" }}><CopyIcon /></button></div></td>
                 <td style={styles.td}><span style={{ display: "flex", alignItems: "center", gap: "6px" }}><TagIcon /> {coupon.type}</span></td>
                 <td style={styles.td}><DiscountBadge discount={coupon.discount} type={coupon.discountType} ts={ts} /></td>
                 <td style={styles.td}>₹{coupon.minOrder}</td>
@@ -278,7 +313,7 @@ const CouponsTable = () => {
                 <td style={styles.td}><div style={{ display: "flex", alignItems: "center", gap: "6px" }}><UsersIcon /> {coupon.usedCount} / {coupon.usageLimit}</div></td>
                 <td style={styles.td}><StatusBadge status={coupon.status} ts={ts} /></td>
                 <td style={styles.td}><div style={{ display: "flex", gap: "6px" }}><button style={styles.actionBtn} onClick={() => handleEditCoupon(coupon)}><EditIcon /></button></div></td>
-               </tr>))}
+              </tr>))}
             </tbody>
           </table>
         </div>
@@ -300,18 +335,16 @@ const CouponsTable = () => {
       </div><div style={styles.modalFooter}><button style={styles.btnCancel} onClick={() => { setShowAddModal(false); setShowEditModal(false); }}>Cancel</button><button style={styles.btnSave} onClick={showAddModal ? handleCreateCoupon : handleUpdateCoupon} disabled={actionLoading}>{actionLoading ? <><SpinnerIcon /> Saving...</> : (showAddModal ? "Create Coupon" : "Save Changes")}</button></div></div></div>)}
 
       {/* Delete Confirmation Modal */}
-      {confirmDelete && (<div style={styles.modalOverlay} onClick={() => setConfirmDelete(false)}><div style={{ ...styles.modal, width: "400px" }} onClick={e => e.stopPropagation()}><div style={styles.modalHeader}><div style={styles.modalTitle}><TrashIcon /> Delete Coupons</div><button onClick={() => setConfirmDelete(false)} style={{ background: "none", border: "none", cursor: "pointer", color: ts.textMuted }}><CloseIcon /></button></div><div style={styles.modalBody}><p style={{ color: ts.text }}>Are you sure you want to delete <strong>{selected.size}</strong> coupon(s)?</p><p style={{ fontSize: "12px", color: ts.textMuted }}>This action cannot be undone.</p></div><div style={styles.modalFooter}><button style={styles.btnCancel} onClick={() => setConfirmDelete(false)}>Cancel</button><button style={{ ...styles.btnSave, background: ts.error }} onClick={handleDeleteSelected} disabled={actionLoading}>{actionLoading ? "Deleting..." : "Yes, Delete"}</button></div></div></div>)}
+      {confirmDelete && (<div style={styles.modalOverlay} onClick={() => setConfirmDelete(false)}><div style={{ ...styles.modal, width: "400px" }} onClick={e => e.stopPropagation()}><div style={styles.modalHeader}><div style={styles.modalTitle}><TrashIcon /> Delete Coupons</div><button onClick={() => setConfirmDelete(false)} style={{ background: "none", border: "none", cursor: "pointer", color: ts.textMuted }}><CloseIcon /></button></div><div style={styles.modalBody}><p style={{ color: ts.textPrimary }}>Are you sure you want to delete <strong>{selected.size}</strong> coupon(s)?</p><p style={{ fontSize: "12px", color: ts.textMuted }}>This action cannot be undone.</p></div><div style={styles.modalFooter}><button style={styles.btnCancel} onClick={() => setConfirmDelete(false)}>Cancel</button><button style={{ ...styles.btnSave, background: ts.error }} onClick={handleDeleteSelected} disabled={actionLoading}>{actionLoading ? "Deleting..." : "Yes, Delete"}</button></div></div></div>)}
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} ts={ts} />}
     </div>
   );
 };
 
-// Theme Provider Wrapper
-export const CouponsPage = () => {
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
-  const toggleTheme = () => { const newTheme = theme === "dark" ? "light" : "dark"; setTheme(newTheme); localStorage.setItem("theme", newTheme); };
-  return (<ThemeContext.Provider value={{ theme, toggleTheme }}><CouponsTable /></ThemeContext.Provider>);
+// Export component that accepts isDark prop directly
+const CouponsPage = ({ isDark = true }) => {
+  return <CouponsTable isDark={isDark} />;
 };
 
 export default CouponsPage;

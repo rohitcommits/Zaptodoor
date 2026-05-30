@@ -15,20 +15,20 @@ const getAuthHeaders = () => ({
 // API FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
-const apiUpdateDriver = async (id, payload) => {
-  try {
-    const res = await fetch(`${API_BASE}/drivers/${id}`, {
-      method: "PUT",
-      headers: getAuthHeaders(),
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-    return res.json();
-  } catch (error) {
-    console.error("Update driver error:", error);
-    throw error;
-  }
-};
+// const apiUpdateDriver = async (id, payload) => {
+//   try {
+//     const res = await fetch(`${API_BASE}/drivers/${id}`, {
+//       method: "PUT",
+//       headers: getAuthHeaders(),
+//       body: JSON.stringify(payload),
+//     });
+//     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+//     return res.json();
+//   } catch (error) {
+//     console.error("Update driver error:", error);
+//     throw error;
+//   }
+// };
 
 const apiDeleteDrivers = async (ids) => {
   try {
@@ -171,10 +171,10 @@ const EarningsIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill
 const CheckIcon = () => (<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTS
+// SUB-COMPONENTS (Updated to accept theme)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const StatusBadge = ({ status }) => {
+const StatusBadge = ({ status, theme }) => {
   const config = { 
     Active: { bg: "rgba(20,184,166,0.15)", color: "#14b8a6", dot: "#14b8a6" }, 
     Inactive: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8", dot: "#94a3b8" } 
@@ -188,7 +188,7 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const ReadyBadge = ({ ready }) => {
+const ReadyBadge = ({ ready, theme }) => {
   const config = { 
     Yes: { bg: "rgba(20,184,166,0.15)", color: "#14b8a6" }, 
     No: { bg: "rgba(245,158,11,0.12)", color: "#f59e0b" } 
@@ -201,7 +201,7 @@ const ReadyBadge = ({ ready }) => {
   );
 };
 
-const OnOffBadge = ({ value }) => {
+const OnOffBadge = ({ value, theme }) => {
   const config = { 
     ON: { bg: "rgba(34,197,94,0.15)", color: "#22c55e" }, 
     OFF: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" } 
@@ -214,7 +214,7 @@ const OnOffBadge = ({ value }) => {
   );
 };
 
-const VerificationBadge = ({ verified }) => {
+const VerificationBadge = ({ verified, theme }) => {
   return (
     <span style={{ padding: "3px 10px", borderRadius: "12px", fontSize: "11px", fontWeight: 600, background: verified ? "rgba(20,184,166,0.15)" : "rgba(245,158,11,0.12)", color: verified ? "#14b8a6" : "#f59e0b" }}>
       {verified ? "Verified" : "Pending"}
@@ -222,57 +222,98 @@ const VerificationBadge = ({ verified }) => {
   );
 };
 
-const Checkbox = ({ checked, onChange }) => (
-  <div onClick={onChange} style={{ 
-    width: "16px", height: "16px", borderRadius: "4px", 
-    border: checked ? "2px solid #3b82f6" : "2px solid #3a4460", 
-    background: checked ? "#3b82f6" : "transparent", 
-    display: "flex", alignItems: "center", justifyContent: "center", 
-    cursor: "pointer", transition: "all 0.15s ease" 
-  }}>
-    {checked && (
-      <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
-        <path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    )}
-  </div>
-);
+const Checkbox = ({ checked, onChange, theme }) => {
+  const borderColor = checked ? "#3b82f6" : (theme === 'dark' ? "#3a4460" : "#d1d5db");
+  return (
+    <div onClick={onChange} style={{ 
+      width: "16px", height: "16px", borderRadius: "4px", 
+      border: checked ? "2px solid #3b82f6" : `2px solid ${borderColor}`, 
+      background: checked ? "#3b82f6" : "transparent", 
+      display: "flex", alignItems: "center", justifyContent: "center", 
+      cursor: "pointer", transition: "all 0.15s ease" 
+    }}>
+      {checked && (
+        <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
+          <path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      )}
+    </div>
+  );
+};
 
-const AvatarPlaceholder = ({ name }) => { 
+const AvatarPlaceholder = ({ name, theme }) => { 
   const initial = name ? name.charAt(0).toUpperCase() : "D"; 
+  const borderColor = theme === 'dark' ? "#2a3145" : "#e5e7eb";
   return (
     <div style={{ 
       width: "34px", height: "34px", borderRadius: "50%", 
       background: "linear-gradient(135deg, #3b82f6, #8b5cf6)", 
       display: "flex", alignItems: "center", justifyContent: "center", 
-      fontSize: "14px", fontWeight: 600, color: "#fff", border: "2px solid #2a3145" 
+      fontSize: "14px", fontWeight: 600, color: "#fff", border: `2px solid ${borderColor}` 
     }}>
       {initial}
     </div>
   ); 
 };
 
-const Toast = ({ message, type, onClose }) => (
-  <div style={{ 
-    position: "fixed", bottom: "24px", right: "24px", zIndex: 999, 
-    background: type === "error" ? "#1a0a0a" : "#0a1a0a", 
-    border: `1px solid ${type === "error" ? "rgba(239,68,68,0.4)" : "rgba(16,185,129,0.4)"}`, 
-    borderRadius: "10px", padding: "12px 18px", 
-    display: "flex", alignItems: "center", gap: "10px", 
-    boxShadow: "0 8px 32px rgba(0,0,0,0.5)", 
-    animation: "slideUp 0.25s ease" 
-  }}>
-    <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: type === "error" ? "#ef4444" : "#10b981" }} />
-    <span style={{ fontSize: "13px", color: type === "error" ? "#fca5a5" : "#6ee7b7", flex: 1 }}>{message}</span>
-    <span onClick={onClose} style={{ cursor: "pointer", color: "#64748b", fontSize: "16px" }}>×</span>
-  </div>
-);
+const Toast = ({ message, type, onClose, theme }) => {
+  const bg = type === "error" ? (theme === 'dark' ? "#1a0a0a" : "#fef2f2") : (theme === 'dark' ? "#0a1a0a" : "#f0fdf4");
+  const border = type === "error" ? "rgba(239,68,68,0.4)" : "rgba(16,185,129,0.4)";
+  const textColor = type === "error" ? (theme === 'dark' ? "#fca5a5" : "#dc2626") : (theme === 'dark' ? "#6ee7b7" : "#059669");
+  return (
+    <div style={{ 
+      position: "fixed", bottom: "24px", right: "24px", zIndex: 999, 
+      background: bg, 
+      border: `1px solid ${border}`, 
+      borderRadius: "10px", padding: "12px 18px", 
+      display: "flex", alignItems: "center", gap: "10px", 
+      boxShadow: theme === 'dark' ? "0 8px 32px rgba(0,0,0,0.5)" : "0 8px 32px rgba(0,0,0,0.1)", 
+      animation: "slideUp 0.25s ease" 
+    }}>
+      <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: type === "error" ? "#ef4444" : "#10b981" }} />
+      <span style={{ fontSize: "13px", color: textColor, flex: 1 }}>{message}</span>
+      <span onClick={onClose} style={{ cursor: "pointer", color: "#64748b", fontSize: "16px" }}>×</span>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
+// MAIN COMPONENT (Updated to accept isDark prop)
 // ─────────────────────────────────────────────────────────────────────────────
-const DriverTable = () => {
+const DriverTable = ({ isDark = true }) => {
   const navigate = useNavigate();
+  const theme = isDark ? 'dark' : 'light';
+  
+  // Theme-specific colors
+  const colors = {
+    background: isDark ? "#0d1117" : "#f9fafb",
+    surface: isDark ? "#141824" : "#ffffff",
+    surfaceHover: isDark ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.02)",
+    surfaceLighter: isDark ? "#1a2035" : "#f3f4f6",
+    border: isDark ? "#1e2740" : "#e5e7eb",
+    borderLight: isDark ? "#1a2035" : "#f3f4f6",
+    textPrimary: isDark ? "#f1f5f9" : "#111827",
+    textSecondary: isDark ? "#94a3b8" : "#6b7280",
+    textMuted: isDark ? "#64748b" : "#9ca3af",
+    inputBg: isDark ? "#0f1520" : "#f9fafb",
+    inputBorder: isDark ? "#1e2740" : "#e5e7eb",
+    selectedBg: isDark ? "rgba(59,130,246,0.07)" : "rgba(79,70,229,0.05)",
+    buttonPrimaryBg: isDark ? "#1e3a8a" : "#eef2ff",
+    buttonPrimaryColor: isDark ? "#93c5fd" : "#4f46e5",
+    modalBg: isDark ? "#141824" : "#ffffff",
+    modalBorder: isDark ? "#1e2740" : "#e5e7eb",
+    deleteBg: isDark ? "rgba(239,68,68,0.15)" : "#fef2f2",
+    deleteColor: "#ef4444",
+    addBtnBg: "#4a6cf7",
+    exportBtnBg: "#28a745",
+    filterBtnActiveBg: "#3b82f6",
+    filterBtnActiveColor: "#fff",
+    filterBtnInactiveBg: "transparent",
+    filterBtnInactiveColor: isDark ? "#64748b" : "#6b7280",
+    filterBtnInactiveBorder: isDark ? "#1e2740" : "#e5e7eb",
+    tableHeaderBg: isDark ? "#0f1520" : "#f9fafb",
+    tableRowBorder: isDark ? "#1a2035" : "#f3f4f6",
+  };
   
   // State
   const [drivers, setDrivers] = useState(DUMMY_DRIVERS);
@@ -575,32 +616,38 @@ const DriverTable = () => {
   };
 
   const styles = {
-    container: { minHeight: "100vh", background: "#0d1117", fontFamily: "'DM Sans', sans-serif", padding: "20px 24px" },
+    container: { minHeight: "100vh", background: colors.background, fontFamily: "'DM Sans', sans-serif", padding: "20px 24px" },
     headerActions: { display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" },
-    addBtn: { background: "#4a6cf7", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px", display: "flex", alignItems: "center", gap: "6px" },
-    exportBtn: { background: "#28a745", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px" },
+    addBtn: { background: colors.addBtnBg, color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px", display: "flex", alignItems: "center", gap: "6px" },
+    exportBtn: { background: colors.exportBtnBg, color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: 600, fontSize: "13px" },
     filtersBar: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "15px" },
     searchWrapper: { position: "relative", flex: 1, maxWidth: "350px" },
-    searchInput: { width: "100%", padding: "10px 12px 10px 35px", background: "#141824", border: "1px solid #1e2740", borderRadius: "8px", fontSize: "13px", color: "#f1f5f9", outline: "none" },
+    searchInput: { width: "100%", padding: "10px 12px 10px 35px", background: colors.inputBg, border: `1px solid ${colors.inputBorder}`, borderRadius: "8px", fontSize: "13px", color: colors.textPrimary, outline: "none" },
     searchIcon: { position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#3b82f6" },
     filterControls: { display: "flex", gap: "20px", alignItems: "center", flexWrap: "wrap" },
-    filterGroup: { display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "#64748b" },
+    filterGroup: { display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: colors.textMuted },
     filterButtons: { display: "flex", gap: "6px" },
-    filterBtn: (isActive) => ({ padding: "4px 10px", borderRadius: "6px", fontSize: "12px", background: isActive ? "#3b82f6" : "transparent", color: isActive ? "#fff" : "#64748b", border: isActive ? "1px solid #3b82f6" : "1px solid #1e2740", cursor: "pointer" }),
+    filterBtn: (isActive) => ({ 
+      padding: "4px 10px", borderRadius: "6px", fontSize: "12px", 
+      background: isActive ? colors.filterBtnActiveBg : colors.filterBtnInactiveBg, 
+      color: isActive ? colors.filterBtnActiveColor : colors.filterBtnInactiveColor, 
+      border: isActive ? `1px solid ${colors.filterBtnActiveBg}` : `1px solid ${colors.filterBtnInactiveBorder}`, 
+      cursor: "pointer" 
+    }),
     selectionBar: { display: "flex", alignItems: "center", gap: "12px", background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)", borderRadius: "8px", padding: "8px 16px", marginBottom: "12px" },
-    tableWrapper: { background: "#141824", border: "1px solid #1e2740", borderRadius: "12px", overflow: "hidden" },
+    tableWrapper: { background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: "12px", overflow: "hidden" },
     table: { width: "100%", borderCollapse: "collapse", minWidth: "1400px" },
-    th: { padding: "13px 14px", textAlign: "left", fontSize: "12px", fontWeight: 700, color: "#3b82f6", borderBottom: "1px solid #1e2740", background: "#0f1520" },
-    td: { padding: "12px 14px", borderBottom: "1px solid #1a2035", fontSize: "13px", color: "#e2e8f0" },
-    pagination: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #1e2740", background: "#0f1520" },
-    actionButton: { background: "none", border: "none", cursor: "pointer", color: "#64748b", padding: "4px", borderRadius: "4px", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px" },
+    th: { padding: "13px 14px", textAlign: "left", fontSize: "12px", fontWeight: 700, color: "#3b82f6", borderBottom: `1px solid ${colors.border}`, background: colors.tableHeaderBg },
+    td: { padding: "12px 14px", borderBottom: `1px solid ${colors.tableRowBorder}`, fontSize: "13px", color: colors.textPrimary },
+    pagination: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: `1px solid ${colors.border}`, background: colors.tableHeaderBg },
+    actionButton: { background: "none", border: "none", cursor: "pointer", color: colors.textMuted, padding: "4px", borderRadius: "4px", display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "11px" },
   };
 
   return (
     <div style={styles.container}>
       <style>{`
         @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} } 
-        input::placeholder { color: #3a4a6b; }
+        input::placeholder { color: ${isDark ? "#3a4a6b" : "#9ca3af"}; }
         button:hover { opacity: 0.9; transform: translateY(-1px); }
         button:active { transform: translateY(0); }
       `}</style>
@@ -654,10 +701,10 @@ const DriverTable = () => {
             ✓ {selected.size} driver{selected.size > 1 ? "s" : ""} selected
           </span>
           <div style={{ flex: 1 }} />
-          <button onClick={clearSelection} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid #3b4460", background: "#1e2740", color: "#94a3b8", fontSize: "12px", cursor: "pointer" }}>
+          <button onClick={clearSelection} style={{ padding: "4px 12px", borderRadius: "6px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, fontSize: "12px", cursor: "pointer" }}>
             Clear
           </button>
-          <button onClick={() => setConfirmDelete(true)} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.1)", color: "#ef4444", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+          <button onClick={() => setConfirmDelete(true)} style={{ padding: "4px 12px", borderRadius: "6px", border: "1px solid rgba(239,68,68,0.3)", background: colors.deleteBg, color: colors.deleteColor, fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
             <TrashIcon /> Delete Selected
           </button>
         </div>
@@ -666,92 +713,221 @@ const DriverTable = () => {
       {/* Table */}
       <div style={styles.tableWrapper}>
         <div style={{ overflowX: "auto" }}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={{ ...styles.th, width: "40px" }}><Checkbox checked={allPageSelected} onChange={toggleAll} /></th>
-                <th style={styles.th}>SN</th>
-                <th style={styles.th}>ID</th>
-                <th style={styles.th}>Pic</th>
-                <th style={styles.th}>Status</th>
-                <th style={styles.th}>Date</th>
-                <th style={styles.th}>Ready</th>
-                <th style={styles.th}>ON/OFF</th>
-                <th style={styles.th}>Driver Name</th>
-                <th style={styles.th}>Contact</th>
-                <th style={styles.th}>Verification</th>
-                <th style={styles.th}>Wallet</th>
-                <th style={styles.th}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                Array.from({ length: perPage }).map((_, i) => (
-                  <tr key={i}>
-                    {Array.from({ length: 13 }).map((_, j) => (
-                      <td key={j} style={styles.td}>
-                        <div style={{ height: "14px", background: "#1e2740", borderRadius: "4px", width: j === 0 ? "16px" : "70%" }} />
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : mappedDrivers.length === 0 ? (
-                <tr>
-                  <td colSpan={13} style={{ padding: "60px", textAlign: "center", color: "#64748b" }}>
-                    {debouncedSearch ? "No drivers match your search" : "No drivers found"}
-                  </td>
-                </tr>
-              ) : (
-                mappedDrivers.map((driver) => (
-                  <tr key={driver.id} style={{ background: selected.has(driver.id) ? "rgba(59,130,246,0.07)" : "transparent" }}>
-                    <td style={styles.td}><Checkbox checked={selected.has(driver.id)} onChange={() => toggleOne(driver.id)} /></td>
-                    <td style={styles.td}>{driver.sn}</td>
-                    <td style={styles.td}>{driver.driverId}</td>
-                    <td style={styles.td}><AvatarPlaceholder name={driver.name} /></td>
-                    <td style={styles.td}><StatusBadge status={driver.status} /></td>
-                    <td style={styles.td}>{driver.date}</td>
-                    <td style={styles.td}><ReadyBadge ready={driver.ready} /></td>
-                    <td style={styles.td}><OnOffBadge value={driver.onOff} /></td>
-                    <td style={styles.td}><strong>{driver.name}</strong></td>
-                    <td style={styles.td}>{driver.contact}</td>
-                    <td style={styles.td}><VerificationBadge verified={driver.verified} /></td>
-                    <td style={styles.td}>{driver.wallet}</td>
-                    <td style={styles.td}>
-                      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                        <button style={styles.actionButton} onClick={() => handleEditDriverNavigate(driver)} title="Edit"><EditIcon /></button>
-                        <button style={styles.actionButton} onClick={() => handleVerifyDocuments(driver)} title="Verify Documents"><DocumentIcon /></button>
-                        <button style={styles.actionButton} onClick={() => handleViewEarnings(driver)} title="Earnings"><EarningsIcon /></button>
-                        <button style={styles.actionButton} onClick={() => handleViewWallet(driver)} title="Wallet"><WalletIcon /></button>
-                        <button style={styles.actionButton} onClick={() => handleViewLocation(driver)} title="Live Location"><LocationIcon /></button>
-                        <button style={styles.actionButton} onClick={() => handleViewHistory(driver)} title="Delivery History"><HistoryIcon /></button>
-                        <button style={styles.actionButton} onClick={() => handleAssignOrder(driver)} title="Assign Order"><OrderIcon /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+         <table style={styles.table}>
+  <thead>
+    <tr>
+      <th style={{ ...styles.th, width: "40px" }}>
+        <Checkbox
+          checked={allPageSelected}
+          onChange={toggleAll}
+          theme={theme}
+        />
+      </th>
+      <th style={styles.th}>SN</th>
+      <th style={styles.th}>ID</th>
+      <th style={styles.th}>Pic</th>
+      <th style={styles.th}>Status</th>
+      <th style={styles.th}>Date</th>
+      <th style={styles.th}>Ready</th>
+      <th style={styles.th}>ON/OFF</th>
+      <th style={styles.th}>Driver Name</th>
+      <th style={styles.th}>Contact</th>
+      <th style={styles.th}>Verification</th>
+      <th style={styles.th}>Wallet</th>
+      <th style={styles.th}>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {loading ? (
+      Array.from({ length: perPage }).map((_, i) => (
+        <tr key={i}>
+          {Array.from({ length: 13 }).map((_, j) => (
+            <td key={j} style={styles.td}>
+              <div
+                style={{
+                  height: "14px",
+                  background: colors.border,
+                  borderRadius: "4px",
+                  width: j === 0 ? "16px" : "70%",
+                }}
+              />
+            </td>
+          ))}
+        </tr>
+      ))
+    ) : mappedDrivers.length === 0 ? (
+      <tr>
+        <td
+          colSpan={13}
+          style={{
+            padding: "60px",
+            textAlign: "center",
+            color: colors.textMuted,
+          }}
+        >
+          {debouncedSearch
+            ? "No drivers match your search"
+            : "No drivers found"}
+        </td>
+      </tr>
+    ) : (
+      mappedDrivers.map((driver) => (
+        <tr
+          key={driver.id}
+          style={{
+            background: selected.has(driver.id)
+              ? colors.selectedBg
+              : "transparent",
+          }}
+        >
+          <td style={styles.td}>
+            <Checkbox
+              checked={selected.has(driver.id)}
+              onChange={() => toggleOne(driver.id)}
+              theme={theme}
+            />
+          </td>
+
+          <td style={styles.td}>{driver.sn}</td>
+
+          <td style={styles.td}>{driver.driverId}</td>
+
+          <td style={styles.td}>
+            <AvatarPlaceholder
+              name={driver.name}
+              theme={theme}
+            />
+          </td>
+
+          <td style={styles.td}>
+            <StatusBadge
+              status={driver.status}
+              theme={theme}
+            />
+          </td>
+
+          <td style={styles.td}>{driver.date}</td>
+
+          <td style={styles.td}>
+            <ReadyBadge
+              ready={driver.ready}
+              theme={theme}
+            />
+          </td>
+
+          <td style={styles.td}>
+            <OnOffBadge
+              value={driver.onOff}
+              theme={theme}
+            />
+          </td>
+
+          <td style={styles.td}>
+            <strong>{driver.name}</strong>
+          </td>
+
+          <td style={styles.td}>{driver.contact}</td>
+
+          <td style={styles.td}>
+            <VerificationBadge
+              verified={driver.verified}
+              theme={theme}
+            />
+          </td>
+
+          <td style={styles.td}>{driver.wallet}</td>
+
+          <td style={styles.td}>
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                flexWrap: "wrap",
+              }}
+            >
+              <button
+                style={styles.actionButton}
+                onClick={() => handleEditDriverNavigate(driver)}
+                title="Edit"
+              >
+                <EditIcon />
+              </button>
+
+              <button
+                style={styles.actionButton}
+                onClick={() => handleVerifyDocuments(driver)}
+                title="Verify Documents"
+              >
+                <DocumentIcon />
+              </button>
+
+              <button
+                style={styles.actionButton}
+                onClick={() => handleViewEarnings(driver)}
+                title="Earnings"
+              >
+                <EarningsIcon />
+              </button>
+
+              <button
+                style={styles.actionButton}
+                onClick={() => handleViewWallet(driver)}
+                title="Wallet"
+              >
+                <WalletIcon />
+              </button>
+
+              <button
+                style={styles.actionButton}
+                onClick={() => handleViewLocation(driver)}
+                title="Live Location"
+              >
+                <LocationIcon />
+              </button>
+
+              <button
+                style={styles.actionButton}
+                onClick={() => handleViewHistory(driver)}
+                title="Delivery History"
+              >
+                <HistoryIcon />
+              </button>
+
+              <button
+                style={styles.actionButton}
+                onClick={() => handleAssignOrder(driver)}
+                title="Assign Order"
+              >
+                <OrderIcon />
+              </button>
+            </div>
+          </td>
+        </tr>
+      ))
+    )}
+  </tbody>
+</table>
         </div>
 
         {/* Pagination */}
         <div style={styles.pagination}>
-          <span style={{ fontSize: "12px", color: "#64748b" }}>
+          <span style={{ fontSize: "12px", color: colors.textMuted }}>
             {loading ? "Loading..." : `Showing ${Math.min((page-1)*perPage+1, total)}–${Math.min(page*perPage, total)} of ${total} drivers`}
           </span>
           <div style={{ display: "flex", gap: "6px" }}>
-            <button onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1 || loading} style={{ width: "30px", height: "30px", borderRadius: "6px", border: "1px solid #1e2740", background: "#141824", color: page === 1 ? "#2d3a55" : "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setPage(p => Math.max(1, p-1))} disabled={page === 1 || loading} style={{ width: "30px", height: "30px", borderRadius: "6px", border: `1px solid ${colors.border}`, background: colors.surface, color: page === 1 ? colors.textMuted : colors.textSecondary, cursor: "pointer" }}>
               <ChevronLeftIcon />
             </button>
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => { 
               let p = page <= 3 ? i + 1 : page >= totalPages - 2 ? totalPages - 4 + i : page - 2 + i; 
               return p <= totalPages && (
-                <button key={p} onClick={() => setPage(p)} style={{ width: "30px", height: "30px", borderRadius: "6px", border: page === p ? "1px solid #3b82f6" : "1px solid #1e2740", background: page === p ? "#1e3a8a" : "#141824", color: page === p ? "#93c5fd" : "#64748b", cursor: "pointer" }}>
+                <button key={p} onClick={() => setPage(p)} style={{ width: "30px", height: "30px", borderRadius: "6px", border: page === p ? `1px solid #3b82f6` : `1px solid ${colors.border}`, background: page === p ? colors.buttonPrimaryBg : colors.surface, color: page === p ? colors.buttonPrimaryColor : colors.textSecondary, cursor: "pointer" }}>
                   {p}
                 </button>
               ); 
             })}
-            <button onClick={() => setPage(p => Math.min(totalPages, p+1))} disabled={page === totalPages || loading} style={{ width: "30px", height: "30px", borderRadius: "6px", border: "1px solid #1e2740", background: "#141824", color: page === totalPages ? "#2d3a55" : "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setPage(p => Math.min(totalPages, p+1))} disabled={page === totalPages || loading} style={{ width: "30px", height: "30px", borderRadius: "6px", border: `1px solid ${colors.border}`, background: colors.surface, color: page === totalPages ? colors.textMuted : colors.textSecondary, cursor: "pointer" }}>
               <ChevronRightIcon />
             </button>
           </div>
@@ -761,21 +937,21 @@ const DriverTable = () => {
       {/* Add Driver Modal */}
       {showAddModal && (
         <div onClick={() => setShowAddModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "420px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Add New Driver</h3>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "420px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Add New Driver</h3>
             {[{ label: "Driver Name", key: "name" }, { label: "Contact", key: "contact" }, { label: "Password", key: "password" }].map(f => (
               <div key={f.key} style={{ marginBottom: "14px" }}>
-                <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>{f.label}</label>
+                <label style={{ fontSize: "11px", color: colors.textMuted, display: "block", marginBottom: "5px" }}>{f.label}</label>
                 <input 
                   value={newDriver[f.key] || ""} 
                   onChange={e => setNewDriver(p => ({ ...p, [f.key]: e.target.value }))} 
-                  style={{ width: "100%", padding: "9px 12px", background: "#0f1520", border: "1px solid #1e2740", borderRadius: "8px", color: "#f1f5f9" }} 
+                  style={{ width: "100%", padding: "9px 12px", background: colors.inputBg, border: `1px solid ${colors.inputBorder}`, borderRadius: "8px", color: colors.textPrimary }} 
                 />
               </div>
             ))}
             <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <button onClick={() => setShowAddModal(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>Cancel</button>
-              <button onClick={handleAddDriver} disabled={actionLoading} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "#1e3a8a", color: "#93c5fd", cursor: "pointer" }}>
+              <button onClick={() => setShowAddModal(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>Cancel</button>
+              <button onClick={handleAddDriver} disabled={actionLoading} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: colors.buttonPrimaryBg, color: colors.buttonPrimaryColor, cursor: "pointer" }}>
                 {actionLoading ? "Adding..." : "Add Driver"}
               </button>
             </div>
@@ -786,12 +962,12 @@ const DriverTable = () => {
       {/* Document Verification Modal */}
       {showDocumentsModal && selectedDriver && (
         <div onClick={() => setShowDocumentsModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "400px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Document Verification</h3>
-            <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>Driver: <strong>{selectedDriver.name}</strong></p>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "400px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Document Verification</h3>
+            <p style={{ fontSize: "13px", color: colors.textMuted, marginBottom: "20px" }}>Driver: <strong>{selectedDriver.name}</strong></p>
             <div style={{ marginBottom: "15px" }}>
               {Object.entries(selectedDriver.documents || { aadhar: "Pending", license: "Pending", rc: "Pending" }).map(([doc, status]) => (
-                <div key={doc} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #1e2740" }}>
+                <div key={doc} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${colors.border}` }}>
                   <span style={{ fontSize: "13px", textTransform: "capitalize" }}>{doc === "aadhar" ? "Aadhar Card" : doc === "license" ? "Driver License" : "RC Book"}</span>
                   {status === "Verified" ? (
                     <span style={{ color: "#14b8a6" }}>Verified <CheckIcon /></span>
@@ -803,7 +979,7 @@ const DriverTable = () => {
                 </div>
               ))}
             </div>
-            <button onClick={() => setShowDocumentsModal(false)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setShowDocumentsModal(false)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
               Close
             </button>
           </div>
@@ -813,19 +989,19 @@ const DriverTable = () => {
       {/* Earnings Modal */}
       {showEarningsModal && selectedDriver && (
         <div onClick={() => setShowEarningsModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "400px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Driver Earnings</h3>
-            <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>{selectedDriver.name}</p>
-            <div style={{ background: "#0f1520", borderRadius: "12px", padding: "20px", marginBottom: "20px", textAlign: "center" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "400px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Driver Earnings</h3>
+            <p style={{ fontSize: "13px", color: colors.textMuted, marginBottom: "20px" }}>{selectedDriver.name}</p>
+            <div style={{ background: colors.inputBg, borderRadius: "12px", padding: "20px", marginBottom: "20px", textAlign: "center" }}>
               <div style={{ fontSize: "28px", fontWeight: 700, color: "#14b8a6" }}>{driverEarnings?.total || selectedDriver.earnings}</div>
-              <div style={{ fontSize: "12px", color: "#64748b", marginTop: "5px" }}>Total Earnings</div>
+              <div style={{ fontSize: "12px", color: colors.textMuted, marginTop: "5px" }}>Total Earnings</div>
             </div>
             <div style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid #1e2740" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: `1px solid ${colors.border}` }}>
                 <span>Weekly</span>
                 <span style={{ fontWeight: 600 }}>{driverEarnings?.breakdown?.weekly || "₹8,500"}</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid #1e2740" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: `1px solid ${colors.border}` }}>
                 <span>Monthly</span>
                 <span style={{ fontWeight: 600 }}>{driverEarnings?.breakdown?.monthly || "₹32,000"}</span>
               </div>
@@ -834,7 +1010,7 @@ const DriverTable = () => {
                 <span style={{ fontWeight: 600 }}>{driverEarnings?.breakdown?.yearly || "₹1,85,000"}</span>
               </div>
             </div>
-            <button onClick={() => setShowEarningsModal(false)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setShowEarningsModal(false)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
               Close
             </button>
           </div>
@@ -844,23 +1020,23 @@ const DriverTable = () => {
       {/* Wallet Modal */}
       {showWalletModal && selectedDriver && (
         <div onClick={() => setShowWalletModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "450px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Driver Wallet</h3>
-            <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>{selectedDriver.name}</p>
-            <div style={{ background: "#0f1520", borderRadius: "12px", padding: "20px", marginBottom: "20px", textAlign: "center" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "450px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Driver Wallet</h3>
+            <p style={{ fontSize: "13px", color: colors.textMuted, marginBottom: "20px" }}>{selectedDriver.name}</p>
+            <div style={{ background: colors.inputBg, borderRadius: "12px", padding: "20px", marginBottom: "20px", textAlign: "center" }}>
               <div style={{ fontSize: "28px", fontWeight: 700, color: "#f59e0b" }}>{driverWallet?.balance || selectedDriver.wallet}</div>
-              <div style={{ fontSize: "12px", color: "#64748b", marginTop: "5px" }}>Current Balance</div>
+              <div style={{ fontSize: "12px", color: colors.textMuted, marginTop: "5px" }}>Current Balance</div>
             </div>
             <h4 style={{ fontSize: "13px", color: "#3b82f6", marginBottom: "10px" }}>Recent Transactions</h4>
             <div>
               {(driverWallet?.transactions || []).map((tx, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid #1e2740" }}>
-                  <span style={{ fontSize: "12px", color: "#64748b" }}>{tx.date}</span>
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${colors.border}` }}>
+                  <span style={{ fontSize: "12px", color: colors.textMuted }}>{tx.date}</span>
                   <span style={{ fontWeight: 600, color: tx.type === "credit" ? "#14b8a6" : "#ef4444" }}>{tx.amount}</span>
                 </div>
               ))}
             </div>
-            <button onClick={() => setShowWalletModal(false)} style={{ width: "100%", marginTop: "20px", padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setShowWalletModal(false)} style={{ width: "100%", marginTop: "20px", padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
               Close
             </button>
           </div>
@@ -870,19 +1046,19 @@ const DriverTable = () => {
       {/* Live Location Modal */}
       {showLocationModal && selectedDriver && (
         <div onClick={() => setShowLocationModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "500px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Live Location</h3>
-            <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>{selectedDriver.name} • Status: {selectedDriver.onOff}</p>
-            <div style={{ background: "#0f1520", borderRadius: "12px", padding: "20px", textAlign: "center", minHeight: "200px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "500px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Live Location</h3>
+            <p style={{ fontSize: "13px", color: colors.textMuted, marginBottom: "20px" }}>{selectedDriver.name} • Status: {selectedDriver.onOff}</p>
+            <div style={{ background: colors.inputBg, borderRadius: "12px", padding: "20px", textAlign: "center", minHeight: "200px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
               <LocationIcon />
-              <div style={{ fontSize: "12px", color: "#64748b", marginTop: "10px" }}>Latitude: {driverLocation?.lat || "28.6139"}</div>
-              <div style={{ fontSize: "12px", color: "#64748b" }}>Longitude: {driverLocation?.lng || "77.2090"}</div>
+              <div style={{ fontSize: "12px", color: colors.textMuted, marginTop: "10px" }}>Latitude: {driverLocation?.lat || "28.6139"}</div>
+              <div style={{ fontSize: "12px", color: colors.textMuted }}>Longitude: {driverLocation?.lng || "77.2090"}</div>
               <div style={{ fontSize: "11px", color: "#14b8a6", marginTop: "10px" }}>📍 Last updated: Just now</div>
-              <div style={{ marginTop: "15px", padding: "8px 16px", background: "#1e3a8a", borderRadius: "8px", fontSize: "12px", color: "#93c5fd" }}>
+              <div style={{ marginTop: "15px", padding: "8px 16px", background: colors.buttonPrimaryBg, borderRadius: "8px", fontSize: "12px", color: colors.buttonPrimaryColor }}>
                 Map integration available with Google Maps API
               </div>
             </div>
-            <button onClick={() => setShowLocationModal(false)} style={{ width: "100%", marginTop: "20px", padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setShowLocationModal(false)} style={{ width: "100%", marginTop: "20px", padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
               Close
             </button>
           </div>
@@ -892,12 +1068,12 @@ const DriverTable = () => {
       {/* Delivery History Modal */}
       {showHistoryModal && selectedDriver && (
         <div onClick={() => setShowHistoryModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "650px", maxHeight: "80vh", overflow: "auto" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Delivery History</h3>
-            <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>{selectedDriver.name} • Total Deliveries: {selectedDriver.totalDeliveries} • Rating: ⭐ {selectedDriver.rating}</p>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "650px", maxHeight: "80vh", overflow: "auto" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Delivery History</h3>
+            <p style={{ fontSize: "13px", color: colors.textMuted, marginBottom: "20px" }}>{selectedDriver.name} • Total Deliveries: {selectedDriver.totalDeliveries} • Rating: ⭐ {selectedDriver.rating}</p>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
-                <tr style={{ borderBottom: "1px solid #1e2740" }}>
+                <tr style={{ borderBottom: `1px solid ${colors.border}` }}>
                   <th style={{ textAlign: "left", padding: "10px", fontSize: "12px", color: "#3b82f6" }}>Order ID</th>
                   <th style={{ textAlign: "left", padding: "10px", fontSize: "12px", color: "#3b82f6" }}>Date</th>
                   <th style={{ textAlign: "left", padding: "10px", fontSize: "12px", color: "#3b82f6" }}>Restaurant</th>
@@ -908,12 +1084,12 @@ const DriverTable = () => {
               </thead>
               <tbody>
                 {driverHistory.map((delivery, i) => (
-                  <tr key={i} style={{ borderBottom: "1px solid #1a2035" }}>
-                    <td style={{ padding: "10px", fontSize: "12px" }}>{delivery.id}</td>
-                    <td style={{ padding: "10px", fontSize: "12px", color: "#64748b" }}>{delivery.date}</td>
-                    <td style={{ padding: "10px", fontSize: "12px" }}>{delivery.restaurant}</td>
-                    <td style={{ padding: "10px", fontSize: "12px" }}>{delivery.customer}</td>
-                    <td style={{ padding: "10px", fontSize: "12px", fontWeight: 600 }}>{delivery.amount}</td>
+                  <tr key={i} style={{ borderBottom: `1px solid ${colors.tableRowBorder}` }}>
+                    <td style={{ padding: "10px", fontSize: "12px", color: colors.textPrimary }}>{delivery.id}</td>
+                    <td style={{ padding: "10px", fontSize: "12px", color: colors.textMuted }}>{delivery.date}</td>
+                    <td style={{ padding: "10px", fontSize: "12px", color: colors.textPrimary }}>{delivery.restaurant}</td>
+                    <td style={{ padding: "10px", fontSize: "12px", color: colors.textPrimary }}>{delivery.customer}</td>
+                    <td style={{ padding: "10px", fontSize: "12px", fontWeight: 600, color: colors.textPrimary }}>{delivery.amount}</td>
                     <td style={{ padding: "10px" }}>
                       <span style={{ color: delivery.status === "completed" ? "#14b8a6" : "#ef4444", fontSize: "11px", fontWeight: 600 }}>
                         {delivery.status}
@@ -923,7 +1099,7 @@ const DriverTable = () => {
                 ))}
               </tbody>
             </table>
-            <button onClick={() => setShowHistoryModal(false)} style={{ width: "100%", marginTop: "20px", padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+            <button onClick={() => setShowHistoryModal(false)} style={{ width: "100%", marginTop: "20px", padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
               Close
             </button>
           </div>
@@ -933,34 +1109,34 @@ const DriverTable = () => {
       {/* Assign Order Modal */}
       {showAssignOrderModal && selectedDriver && (
         <div onClick={() => setShowAssignOrderModal(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid #1e2740", borderRadius: "16px", padding: "28px", width: "400px" }}>
-            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: "#f1f5f9" }}>Assign Order</h3>
-            <p style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>Driver: <strong>{selectedDriver.name}</strong></p>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: `1px solid ${colors.modalBorder}`, borderRadius: "16px", padding: "28px", width: "400px" }}>
+            <h3 style={{ margin: "0 0 20px", fontSize: "16px", color: colors.textPrimary }}>Assign Order</h3>
+            <p style={{ fontSize: "13px", color: colors.textMuted, marginBottom: "20px" }}>Driver: <strong>{selectedDriver.name}</strong></p>
             <div style={{ marginBottom: "15px" }}>
-              <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>Order ID</label>
+              <label style={{ fontSize: "11px", color: colors.textMuted, display: "block", marginBottom: "5px" }}>Order ID</label>
               <input 
                 value={assignOrderData.orderId} 
                 onChange={e => setAssignOrderData(p => ({ ...p, orderId: e.target.value }))} 
                 placeholder="Enter Order ID" 
-                style={{ width: "100%", padding: "9px 12px", background: "#0f1520", border: "1px solid #1e2740", borderRadius: "8px", color: "#f1f5f9" }} 
+                style={{ width: "100%", padding: "9px 12px", background: colors.inputBg, border: `1px solid ${colors.inputBorder}`, borderRadius: "8px", color: colors.textPrimary }} 
               />
             </div>
             <div style={{ marginBottom: "20px" }}>
-              <label style={{ fontSize: "11px", color: "#64748b", display: "block", marginBottom: "5px" }}>Assignment Type</label>
+              <label style={{ fontSize: "11px", color: colors.textMuted, display: "block", marginBottom: "5px" }}>Assignment Type</label>
               <select 
                 value={assignOrderData.type} 
                 onChange={e => setAssignOrderData(p => ({ ...p, type: e.target.value }))} 
-                style={{ width: "100%", padding: "9px 12px", background: "#0f1520", border: "1px solid #1e2740", borderRadius: "8px", color: "#f1f5f9" }}
+                style={{ width: "100%", padding: "9px 12px", background: colors.inputBg, border: `1px solid ${colors.inputBorder}`, borderRadius: "8px", color: colors.textPrimary }}
               >
                 <option value="manual">Manual Assignment</option>
                 <option value="auto">Auto Assignment</option>
               </select>
             </div>
             <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={() => setShowAssignOrderModal(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+              <button onClick={() => setShowAssignOrderModal(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
                 Cancel
               </button>
-              <button onClick={submitAssignOrder} disabled={actionLoading} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "#1e3a8a", color: "#93c5fd", cursor: "pointer" }}>
+              <button onClick={submitAssignOrder} disabled={actionLoading} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: colors.buttonPrimaryBg, color: colors.buttonPrimaryColor, cursor: "pointer" }}>
                 {actionLoading ? "Assigning..." : "Assign Order"}
               </button>
             </div>
@@ -971,17 +1147,17 @@ const DriverTable = () => {
       {/* Delete Confirmation Modal */}
       {confirmDelete && (
         <div onClick={() => setConfirmDelete(false)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#141824", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "16px", padding: "28px", width: "340px", textAlign: "center" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: colors.modalBg, border: "1px solid rgba(239,68,68,0.3)", borderRadius: "16px", padding: "28px", width: "340px", textAlign: "center" }}>
             <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "rgba(239,68,68,0.12)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
               <TrashIcon />
             </div>
-            <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: "#f1f5f9" }}>Delete {selected.size} driver{selected.size > 1 ? "s" : ""}?</h3>
-            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>This action cannot be undone.</p>
+            <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: colors.textPrimary }}>Delete {selected.size} driver{selected.size > 1 ? "s" : ""}?</h3>
+            <p style={{ margin: "0 0 20px", fontSize: "13px", color: colors.textMuted }}>This action cannot be undone.</p>
             <div style={{ display: "flex", gap: "10px" }}>
-              <button onClick={() => setConfirmDelete(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #1e2740", background: "#1a2035", color: "#94a3b8", cursor: "pointer" }}>
+              <button onClick={() => setConfirmDelete(false)} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.surfaceLighter, color: colors.textSecondary, cursor: "pointer" }}>
                 Cancel
               </button>
-              <button onClick={handleDeleteSelected} disabled={actionLoading} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: "rgba(239,68,68,0.15)", color: "#ef4444", cursor: "pointer", fontWeight: 700 }}>
+              <button onClick={handleDeleteSelected} disabled={actionLoading} style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "none", background: colors.deleteBg, color: colors.deleteColor, cursor: "pointer", fontWeight: 700 }}>
                 {actionLoading ? "Deleting..." : "Yes, Delete"}
               </button>
             </div>
@@ -989,7 +1165,7 @@ const DriverTable = () => {
         </div>
       )}
 
-      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} theme={theme} />}
     </div>
   );
 };

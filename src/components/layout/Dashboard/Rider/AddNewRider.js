@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THEME STYLES
@@ -95,7 +95,7 @@ const ChevronLeftIcon = () => (
 // ─────────────────────────────────────────────────────────────────────────────
 const AddNewDriver = ({ isDark = true, onBack }) => {
   const t = getThemeStyles(isDark);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("contact");
   
   // Form data state
